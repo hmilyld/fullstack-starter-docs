@@ -8,6 +8,7 @@ const t = {
     back: '后端',
     output: '生成结果',
     name: 'my-project',
+    icName: ['全栈', '工坊'],
     modules: '内置模块',
     modulesValue: '认证 · 用户 · 角色 · 权限 · AI 模型 · 审计',
     ports: ['前端 :5173', '后端 :8088'],
@@ -19,6 +20,7 @@ const t = {
     back: 'BACKEND',
     output: 'OUTPUT',
     name: 'my-project',
+    icName: ['FULL', 'FORGE'],
     modules: 'BUILT-IN',
     modulesValue: 'auth · users · roles · permissions · ai models · audit',
     ports: ['frontend :5173', 'backend :8088'],
@@ -74,8 +76,8 @@ const t = {
     </div>
 
     <div class="board__ic" data-ic>
-      <span class="board__ic-name">create</span>
-      <span class="board__ic-name">-app</span>
+      <span class="board__ic-name">{t.icName[0]}</span>
+      <span class="board__ic-name">{t.icName[1]}</span>
       <span class="board__ic-pins" aria-hidden="true"></span>
     </div>
 

@@ -6,8 +6,8 @@ export default defineConfig({
   integrations: [
     starlight({
       title: {
-        'zh-CN': 'create-fullstack-app 文档',
-        en: 'create-fullstack-app Docs',
+        'zh-CN': '全栈工坊',
+        en: 'Fullstack Forge',
       },
       description:
         '一条命令生成包含完整后台管理系统的全栈应用：React / Vue 前端，Python FastAPI / Java Spring Boot 后端。',

@@ -1,0 +1,42 @@
+---
+title: create-fullstack-app
+description: 一条命令生成包含完整后台管理系统的全栈应用：React / Vue 前端，Python FastAPI / Java Spring Boot 后端。
+template: splash
+hero:
+  tagline: 一条命令，生成整套后台管理系统。React / Vue 前端，FastAPI / Spring Boot 后端。
+  actions:
+    - text: 开始生成
+      link: /getting-started/quickstart/
+      icon: right-arrow
+    - text: 查看 API
+      link: /reference/api/
+      variant: minimal
+---
+
+import StackBoard from '../../components/StackBoard.astro';
+import { CardGrid, LinkCard } from '@astrojs/starlight/components';
+
+<StackBoard />
+
+<CardGrid>
+  <LinkCard
+    title="快速开始"
+    href="/getting-started/quickstart/"
+    description="三步生成、启动并登录你的第一个项目。"
+  />
+  <LinkCard
+    title="技术栈与组合"
+    href="/generated/overview/"
+    description="四种前后端组合，逐一说明各自的技术选型。"
+  />
+  <LinkCard
+    title="核心功能"
+    href="/features/authentication/"
+    description="认证、权限、系统设置、AI 模型与审计日志。"
+  />
+  <LinkCard
+    title="注意事项"
+    href="/notes/"
+    description="生产部署前必须处理的安全与配置事项。"
+  />
+</CardGrid>

@@ -1,0 +1,77 @@
+---
+title: 配置与环境变量
+description: Python 的 .env、Java 的 application.yml，以及 Docker 环境变量。
+---
+
+import { Tabs, TabItem } from '@astrojs/starlight/components';
+
+## Python：`.env`
+
+后端通过 `pydantic-settings` 读取环境变量，并在存在时加载 `backend/.env`。模板提供了 `backend/.env.example`：
+
+| 变量 | 说明 | 默认值 |
+| --- | --- | --- |
+| `DATABASE_URL` | 数据库连接串 | `sqlite+aiosqlite:///./app.db` |
+| `JWT_SECRET_KEY` | 强随机密钥 | 无，**必须设置** |
+| `JWT_ALGORITHM` | 签名算法 | `HS256` |
+| `JWT_ACCESS_TOKEN_EXPIRE_MINUTES` | 令牌有效期（分钟） | `1440` |
+| `CORS_ORIGINS` | 允许来源，JSON 数组 | `["http://localhost:5173"]` |
+
+```bash
+# backend/.env
+DATABASE_URL=sqlite+aiosqlite:///./app.db
+JWT_SECRET_KEY=<openssl rand -base64 48 的输出>
+JWT_ALGORITHM=HS256
+JWT_ACCESS_TOKEN_EXPIRE_MINUTES=1440
+CORS_ORIGINS=["http://localhost:5173"]
+```
+
+:::danger[弱密钥拒绝启动]
+`JWT_SECRET_KEY` 为空或属于弱值集合（如 `secret`、`123456`、`changeme`、`your-secret-key`）时，后端会抛出错误并拒绝启动；长度小于 32 会发出警告。
+:::
+
+## Java：`application.yml`
+
+Java 后端配置位于 `src/main/resources/application.yml`：
+
+| 配置 | 默认值 | 说明 |
+| --- | --- | --- |
+| `server.port` | `8088` | 后端端口 |
+| `spring.datasource.url` | `jdbc:sqlite:./data/app.db` | SQLite 文件 |
+| `spring.jpa.hibernate.ddl-auto` | `none` | 结构由 Flyway 管理 |
+| `spring.flyway.enabled` | `true` | 启用数据库迁移 |
+| `sa-token.token-style` | `uuid` | 令牌风格 |
+| `sa-token.timeout` | `86400` | 令牌有效期（秒） |
+| `app.cors-origins` | `http://localhost:5173` | 允许来源 |
+| `app.audit.exclude-paths` | `/api/auth` | 审计排除路径 |
+
+Java 版使用 Sa-Token，**不需要 `JWT_SECRET_KEY`**。
+
+## Docker 环境变量
+
+| 变量 | 说明 |
+| --- | --- |
+| `JWT_SECRET_KEY` | 必填（Python 后端），compose 未设置会报错 |
+| `TZ` | 默认 `Asia/Shanghai` |
+| `DATABASE_URL` | Python 镜像内指向 `/app/data/app.db` |
+| `PYTHONUNBUFFERED` | Python 镜像内为 `1` |
+
+## 前端配置
+
+前端**没有 `.env` 文件**：
+
+- 请求基础地址在 `src/api/client.ts` 中固定为 `/api`。
+- 开发时由 `vite.config.ts` 将 `/api` 代理到 `http://localhost:8088`；生产由 Nginx 反代。
+
+## 端口
+
+| 环境 | 前端 | 后端 |
+| --- | --- | --- |
+| 开发 | 5173 | 8088 |
+| Docker | 5173（对外） | 8088（容器内，经 Nginx） |
+
+## 相关页面
+
+- [Python 后端](/generated/backend-python/)
+- [Java 后端](/generated/backend-java/)
+- [Docker 部署](/deployment/docker/)

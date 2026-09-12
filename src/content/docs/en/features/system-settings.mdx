@@ -1,0 +1,72 @@
+---
+title: System Settings
+description: Site information, maintenance mode, open registration, manual review, and email configuration.
+---
+
+System settings are a singleton configuration, read and written through the following endpoints:
+
+| Method | Path | Description | Auth |
+| --- | --- | --- | --- |
+| GET | `/api/system/config` | Read configuration | Yes (`settings`) |
+| PUT | `/api/system/config` | Update configuration | Yes (`settings.edit`) |
+| POST | `/api/system/test-email` | Send a test email | Yes (`settings.edit`) |
+| GET | `/api/public/config` | Public configuration (used by the login page) | No |
+
+## Configuration Items
+
+### Site Information
+
+| Field | Description | Default |
+| --- | --- | --- |
+| `siteName` | Site name | Admin Panel (管理系统) |
+| `siteDescription` | Site description | Empty |
+| `keywords` | Keywords | Empty |
+| `welcomeMessage` | Welcome message | Empty |
+
+### Behavior Switches
+
+| Field | Description | Default |
+| --- | --- | --- |
+| `maintenanceEnabled` | Maintenance mode; blocks non-admin logins | `false` |
+| `maintenanceMessage` | Maintenance message text | Empty |
+| `openRegistration` | Whether registration is open | `true` |
+| `manualReview` | Whether registration requires manual review | `false` |
+| `defaultRoleId` | Default role | `user` |
+
+:::note
+Registration role assignment currently decides between `user` or `pending_review` directly based on `manualReview`; the `defaultRoleId` field is kept as configuration and does not yet participate in the registration logic.
+:::
+
+### Email (SMTP)
+
+| Field | Description | Default |
+| --- | --- | --- |
+| `smtpEnabled` | Whether enabled | `false` |
+| `smtpHost` / `smtpPort` | Server and port | Empty / `587` |
+| `smtpUsername` / `smtpPassword` | Account and password | Empty |
+| `smtpFromName` / `smtpFromEmail` | Sender name and address | Admin Panel (管理系统) / Empty |
+| `smtpUseSsl` | Use SSL (otherwise STARTTLS) | `true` |
+
+Clicking "Test Email" (测试邮件) sends one email to the specified address (`POST /api/system/test-email`, request body `{ "email": "..." }`), with a 10-second connection timeout, and returns a Chinese error message for authentication/connection/timeout failures respectively.
+
+## Password Masking
+
+When reading the configuration, `smtpPassword` always returns `****`. When updating:
+
+- Submitting a value containing `*` is rejected, to prevent writing the mask back and overwriting the real password.
+- Submitting an empty string clears the password.
+
+This lets the frontend safely echo the configuration without leaking the real password.
+
+## Public Configuration
+
+`GET /api/public/config`, which is accessible without logging in, exposes only the following fields:
+
+`siteName`, `siteDescription`, `maintenanceEnabled`, `maintenanceMessage`, `openRegistration`, `manualReview`.
+
+**SMTP-related fields never appear in the public configuration.**
+
+## Related Pages
+
+- [Authentication and Accounts](/en/features/authentication/)
+- [Configuration and Environment Variables](/en/deployment/configuration/)

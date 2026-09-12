@@ -1,0 +1,89 @@
+---
+title: Docker Deployment
+description: Single-image architecture, build and run, data persistence, and health checks.
+---
+
+import { Tabs, TabItem } from '@astrojs/starlight/components';
+
+The generated project uses a **single Docker image** that contains both Nginx and the backend, exposing just one port.
+
+## Architecture
+
+```
+Browser ──▶ :5173 (Nginx)
+              ├─ /          Frontend static files (/usr/share/nginx/html)
+              ├─ /api/      Reverse proxy to 127.0.0.1:8088 (backend in the same container)
+              └─ /docs      Proxy to the backend API docs (Python)
+```
+
+- The frontend is built into static files by the Node stage, served by Nginx, with the SPA fallback `try_files ... /index.html`.
+- The backend listens on `127.0.0.1:8088` inside the container and is exposed externally only through Nginx.
+- The image has `EXPOSE 5173`, and `docker-compose.yml` maps `5173:5173`.
+
+## Multi-Stage Build
+
+<Tabs>
+<TabItem label="Python">
+
+1. `node:22-alpine`: build the frontend.
+2. `python:3.12-slim`: install Nginx and the backend dependencies (`uv pip install --system -e .`), and copy the frontend build output and `nginx.conf`.
+
+</TabItem>
+<TabItem label="Java">
+
+1. `node:22-alpine`: build the frontend.
+2. `maven:3.9-eclipse-temurin-21`: `mvn package -DskipTests`.
+3. `eclipse-temurin:21-jre-alpine`: install Nginx and copy the JAR and frontend build output.
+
+</TabItem>
+</Tabs>
+
+## Build and Run
+
+```bash
+# Build the image
+docker build -t my-project .
+
+# Run (a strong random JWT_SECRET_KEY is required)
+docker run -d -p 5173:5173 \
+  -e JWT_SECRET_KEY="$(openssl rand -base64 48)" \
+  my-project
+
+# Or use docker compose
+JWT_SECRET_KEY="$(openssl rand -base64 48)" docker compose up -d
+```
+
+Visit http://localhost:5173.
+
+:::danger[Missing key fails immediately]
+`docker-compose.yml` uses the `JWT_SECRET_KEY=${JWT_SECRET_KEY:?...}` syntax: when the variable is not set, `docker compose up` immediately errors and exits rather than starting with a weak default. This is an intentional security design.
+:::
+
+## Data Persistence
+
+- The database file lives at `/app/data` in the container, mounted from the named volume `app-data`.
+- `docker compose down` preserves the data; running `up -d` again does not lose it.
+- To clear the data, run:
+
+```bash
+docker compose down -v   # deletes the data volume; data is unrecoverable
+```
+
+## Health Check
+
+The image has a built-in health check (interval 30s, timeout 5s, startup grace 15s, 3 retries) that accesses `http://127.0.0.1:5173/api/public/config`. The Python image uses the built-in `urllib`, and the Java image uses `wget`.
+
+## Environment Variables
+
+| Variable | Description |
+| --- | --- |
+| `JWT_SECRET_KEY` | Required (Python backend), strong random |
+| `TZ` | Time zone, defaults to `Asia/Shanghai` |
+| `DATABASE_URL` | Already set to `sqlite+aiosqlite:////app/data/app.db` inside the Python image |
+| `PYTHONUNBUFFERED` | Already set to `1` inside the Python image |
+
+## Related Pages
+
+- [Development and Build Scripts](/en/deployment/scripts/)
+- [Configuration and Environment Variables](/en/deployment/configuration/)
+- [Notes](/en/notes/)

@@ -1,0 +1,21 @@
+{
+  "name": "fullstack-starter-docs",
+  "version": "1.0.0",
+  "description": "create-fullstack-app 使用文档",
+  "type": "module",
+  "scripts": {
+    "dev": "astro dev",
+    "start": "astro dev",
+    "build": "astro build",
+    "preview": "astro preview",
+    "astro": "astro"
+  },
+  "dependencies": {
+    "@astrojs/starlight": "^0.42.0",
+    "@fontsource/ibm-plex-mono": "^5.3.0",
+    "@fontsource/ibm-plex-sans": "^5.3.0",
+    "@fontsource/space-grotesk": "^5.3.0",
+    "astro": "^7.3.2",
+    "sharp": "^0.35.4"
+  }
+}

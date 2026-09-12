@@ -1,0 +1,538 @@
+---
+const lang = Astro.url.pathname.startsWith('/en') ? 'en' : 'zh';
+
+const t = {
+  zh: {
+    eyebrow: 'FULLSTACK · 拼装板',
+    front: '前端',
+    back: '后端',
+    output: '生成结果',
+    name: 'my-project',
+    modules: '内置模块',
+    modulesValue: '认证 · 用户 · 角色 · 权限 · AI 模型 · 审计',
+    ports: ['前端 :5173', '后端 :8088'],
+    hint: '选择前端与后端，查看将生成的项目。',
+  },
+  en: {
+    eyebrow: 'FULLSTACK · STACKBOARD',
+    front: 'FRONTEND',
+    back: 'BACKEND',
+    output: 'OUTPUT',
+    name: 'my-project',
+    modules: 'BUILT-IN',
+    modulesValue: 'auth · users · roles · permissions · ai models · audit',
+    ports: ['frontend :5173', 'backend :8088'],
+    hint: 'Pick a frontend and a backend to see what you get.',
+  },
+}[lang];
+---
+
+<section class="board" aria-label={t.hint} data-lang={lang}>
+  <div class="board__head">
+    <span class="ff-eyebrow">{t.eyebrow}</span>
+    <span class="board__hint">{t.hint}</span>
+  </div>
+
+  <div class="board__grid" data-grid>
+    <svg class="board__traces" data-traces aria-hidden="true" preserveAspectRatio="none">
+      <path class="trace" data-trace-front></path>
+      <path class="trace" data-trace-back></path>
+      <g class="pads">
+        <circle class="pad" data-pad-front-a r="3.5"></circle>
+        <circle class="pad" data-pad-front-b r="3.5"></circle>
+        <circle class="pad" data-pad-back-a r="3.5"></circle>
+        <circle class="pad" data-pad-back-b r="3.5"></circle>
+      </g>
+    </svg>
+
+    <div class="board__col board__col--front">
+      <span class="board__label">{t.front}</span>
+      <div class="chips" role="radiogroup" aria-label={t.front}>
+        <button
+          type="button"
+          class="chip"
+          role="radio"
+          aria-checked="true"
+          tabindex="0"
+          data-side="front"
+          data-value="react"
+        >
+          <span class="chip__pad"></span>React
+        </button>
+        <button
+          type="button"
+          class="chip"
+          role="radio"
+          aria-checked="false"
+          tabindex="-1"
+          data-side="front"
+          data-value="vue"
+        >
+          <span class="chip__pad"></span>Vue
+        </button>
+      </div>
+    </div>
+
+    <div class="board__ic" data-ic>
+      <span class="board__ic-name">create</span>
+      <span class="board__ic-name">-app</span>
+      <span class="board__ic-pins" aria-hidden="true"></span>
+    </div>
+
+    <div class="board__col board__col--back">
+      <span class="board__label">{t.back}</span>
+      <div class="chips" role="radiogroup" aria-label={t.back}>
+        <button
+          type="button"
+          class="chip"
+          role="radio"
+          aria-checked="true"
+          tabindex="0"
+          data-side="back"
+          data-value="python"
+        >
+          <span class="chip__pad"></span>Python
+        </button>
+        <button
+          type="button"
+          class="chip"
+          role="radio"
+          aria-checked="false"
+          tabindex="-1"
+          data-side="back"
+          data-value="java"
+        >
+          <span class="chip__pad"></span>Java
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <div class="board__out">
+    <div class="board__out-head">
+      <span class="ff-eyebrow">{t.output}</span>
+      <code class="board__name">{t.name}/</code>
+    </div>
+    <pre class="board__tree" data-tree></pre>
+    <div class="board__meta">
+      <span><span class="ff-eyebrow">{t.modules}</span> {t.modulesValue}</span>
+      <span class="board__ports">
+        {
+          t.ports.map((p) => (
+            <b>
+              <span class="board__port-dot" /> {p}
+            </b>
+          ))
+        }
+      </span>
+    </div>
+  </div>
+</section>
+
+<style>
+  .board {
+    margin: 2.5rem 0 1rem;
+    padding: 1.25rem;
+    border: 1px solid var(--sl-color-hairline);
+    border-radius: 0.75rem;
+    background:
+      linear-gradient(var(--ff-grid) 1px, transparent 1px) 0 0 / 100% 22px,
+      linear-gradient(90deg, var(--ff-grid) 1px, transparent 1px) 0 0 / 22px 100%,
+      var(--ff-panel);
+    box-shadow: var(--sl-shadow-md);
+  }
+
+  .board__head {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    gap: 0.5rem 1rem;
+    margin-bottom: 1.25rem;
+  }
+
+  .board__hint {
+    font-size: var(--sl-text-sm);
+    color: var(--sl-color-gray-3);
+  }
+
+  .board__grid {
+    position: relative;
+    display: grid;
+    grid-template-columns: 1fr auto 1fr;
+    align-items: center;
+    gap: 1.5rem;
+    padding: 0.5rem 0;
+  }
+
+  .board__traces {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    overflow: visible;
+    pointer-events: none;
+  }
+
+  .trace {
+    fill: none;
+    stroke: var(--ff-copper);
+    stroke-width: 2;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+    filter: drop-shadow(0 0 6px var(--ff-copper-soft));
+  }
+
+  .pad {
+    fill: var(--ff-board);
+    stroke: var(--ff-copper);
+    stroke-width: 1.5;
+  }
+
+  .board__col {
+    position: relative;
+    z-index: 2;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+
+  .board__col--front {
+    align-items: flex-end;
+  }
+
+  .board__col--back {
+    align-items: flex-start;
+  }
+
+  .board__col--front .chips,
+  .board__col--back .chips {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+
+  .board__label {
+    font-family: var(--sl-font-mono);
+    font-size: var(--sl-text-2xs);
+    letter-spacing: 0.14em;
+    color: var(--sl-color-gray-3);
+  }
+
+  .chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    min-width: 8.5rem;
+    padding: 0.5rem 0.85rem;
+    border: 1px solid var(--sl-color-hairline-light);
+    border-radius: 0.5rem;
+    background: var(--ff-board);
+    color: var(--sl-color-gray-2);
+    font-family: var(--sl-font-mono);
+    font-size: var(--sl-text-sm);
+    cursor: pointer;
+    transition:
+      border-color 0.18s ease,
+      color 0.18s ease,
+      box-shadow 0.18s ease,
+      transform 0.18s ease;
+  }
+
+  .board__col--front .chip {
+    flex-direction: row-reverse;
+  }
+
+  .chip:hover {
+    border-color: var(--ff-copper);
+    color: var(--sl-color-white);
+    transform: translateY(-1px);
+  }
+
+  .chip[aria-checked='true'] {
+    border-color: var(--ff-copper);
+    color: var(--sl-color-white);
+    box-shadow:
+      0 0 0 3px var(--ff-copper-soft),
+      inset 0 0 0 1px var(--ff-copper-soft);
+  }
+
+  .chip__pad {
+    width: 0.5rem;
+    height: 0.5rem;
+    border-radius: 999px;
+    border: 1.5px solid var(--ff-copper);
+    background: transparent;
+    transition: background 0.18s ease;
+  }
+
+  .chip[aria-checked='true'] .chip__pad {
+    background: var(--ff-copper);
+  }
+
+  .board__ic {
+    position: relative;
+    z-index: 2;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    width: 7rem;
+    height: 7rem;
+    border: 1px solid var(--sl-color-hairline-light);
+    border-radius: 0.75rem;
+    background: var(--sl-color-bg);
+    box-shadow: var(--sl-shadow-sm);
+    font-family: var(--ff-display);
+    font-weight: 600;
+    line-height: 1;
+    color: var(--sl-color-white);
+  }
+
+  .board__ic-name {
+    font-size: var(--sl-text-lg);
+  }
+
+  .board__ic-pins {
+    position: absolute;
+    inset: 0.5rem;
+    border: 1px dashed var(--ff-copper);
+    border-radius: 0.5rem;
+    opacity: 0.45;
+  }
+
+  .board__out {
+    margin-top: 1.5rem;
+    padding-top: 1.25rem;
+    border-top: 1px solid var(--sl-color-hairline);
+  }
+
+  .board__out-head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    margin-bottom: 0.75rem;
+  }
+
+  .board__name {
+    font-family: var(--sl-font-mono);
+    font-size: var(--sl-text-sm);
+    color: var(--sl-color-white);
+    background: none;
+    border: none;
+    padding: 0;
+  }
+
+  .board__tree {
+    margin: 0;
+    padding: 0.9rem 1rem;
+    border: 1px solid var(--sl-color-hairline);
+    border-radius: 0.5rem;
+    background: var(--sl-color-bg);
+    font-family: var(--sl-font-mono);
+    font-size: var(--sl-text-xs);
+    line-height: 1.7;
+    color: var(--sl-color-gray-2);
+    overflow-x: auto;
+  }
+
+  .board__meta {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    gap: 0.5rem 1.5rem;
+    margin-top: 0.85rem;
+    font-size: var(--sl-text-xs);
+    color: var(--sl-color-gray-2);
+  }
+
+  .board__ports {
+    display: inline-flex;
+    flex-wrap: wrap;
+    gap: 0.4rem 1rem;
+    font-family: var(--sl-font-mono);
+  }
+
+  .board__ports b {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
+    font-weight: 500;
+    color: var(--sl-color-white);
+  }
+
+  .board__port-dot {
+    width: 0.45rem;
+    height: 0.45rem;
+    border-radius: 999px;
+    background: var(--ff-copper);
+  }
+
+  @media (max-width: 44em) {
+    .board__grid {
+      grid-template-columns: 1fr;
+      justify-items: center;
+      gap: 1rem;
+    }
+
+    .board__col--front,
+    .board__col--back {
+      align-items: center;
+    }
+
+    .board__traces {
+      display: none;
+    }
+
+    .board__col--front .chip {
+      flex-direction: row;
+    }
+  }
+</style>
+
+<script>
+  type Side = 'front' | 'back';
+
+  interface Config {
+    front: string;
+    back: string;
+  }
+
+  const BOARDS = document.querySelectorAll<HTMLElement>('.board');
+
+  BOARDS.forEach((board) => {
+    const grid = board.querySelector<HTMLElement>('[data-grid]');
+    const ic = board.querySelector<HTMLElement>('[data-ic]');
+    const treeEl = board.querySelector<HTMLElement>('[data-tree]');
+    const traceFront = board.querySelector<SVGPathElement>('[data-trace-front]');
+    const traceBack = board.querySelector<SVGPathElement>('[data-trace-back]');
+    const pane = ([...board.querySelectorAll<HTMLButtonElement>('.chip')] as HTMLElement[]).reduce(
+      (acc, el) => {
+        (acc[el.dataset.side as Side] ??= []).push(el);
+        return acc;
+      },
+      {} as Record<Side, HTMLButtonElement[]>
+    );
+
+    const lang = board.dataset.lang === 'en' ? 'en' : 'zh';
+    const state: Config = { front: 'react', back: 'python' };
+
+    const stacks: Record<string, Record<string, string>> = {
+      react: {
+        python: 'React + Vite + Tailwind · FastAPI + SQLAlchemy async',
+        java: 'React + Vite + Tailwind · Spring Boot 3.2 + JPA',
+      },
+      vue: {
+        python: 'Vue 3 + Vite + DaisyUI · FastAPI + SQLAlchemy async',
+        java: 'Vue 3 + Vite + DaisyUI · Spring Boot 3.2 + JPA',
+      },
+    };
+
+    const labels = {
+      zh: { frontend: '前端', backend: '后端', nginx: 'Nginx', single: '单镜像' },
+      en: { frontend: 'frontend', backend: 'backend', nginx: 'Nginx', single: 'single image' },
+    }[lang];
+
+    function renderTree() {
+      const stack = stacks[state.front][state.back];
+      const [fe, be] = stack.split(' · ');
+      treeEl!.textContent =
+        `my-project/\n` +
+        `├─ frontend/          # ${fe}\n` +
+        `├─ backend/           # ${be}\n` +
+        `├─ Dockerfile         # ${labels.nginx} + ${labels.backend} · ${labels.single}\n` +
+        `├─ docker-compose.yml\n` +
+        `└─ dev.sh             # ./dev.sh start`;
+    }
+
+    function setSide(side: Side, value: string) {
+      state[side] = value;
+      pane[side].forEach((chip) => {
+        const on = chip.dataset.value === value;
+        chip.setAttribute('aria-checked', String(on));
+        chip.tabIndex = on ? 0 : -1;
+      });
+      renderTree();
+      draw(true);
+    }
+
+    function bindGroup(side: Side) {
+      const chips = pane[side];
+      chips.forEach((chip, i) => {
+        chip.addEventListener('click', () => setSide(side, chip.dataset.value!));
+        chip.addEventListener('keydown', (e) => {
+          const keys = ['ArrowRight', 'ArrowDown', 'ArrowLeft', 'ArrowUp'];
+          if (!keys.includes(e.key)) return;
+          e.preventDefault();
+          const dir = e.key === 'ArrowRight' || e.key === 'ArrowDown' ? 1 : -1;
+          const next = chips[(i + dir + chips.length) % chips.length];
+          next.focus();
+          setSide(side, next.dataset.value!);
+        });
+      });
+    }
+
+    const prefersReduced =
+      window.matchMedia?.('(prefers-reduced-motion: reduce)').matches ?? false;
+
+    function stepPath(x1: number, y1: number, x2: number, y2: number) {
+      const mx = x1 + (x2 - x1) / 2;
+      return `M ${x1} ${y1} H ${mx} V ${y2} H ${x2}`;
+    }
+
+    function endpoint(el: Element, side: 'left' | 'right', g: DOMRect) {
+      const r = (el as HTMLElement).getBoundingClientRect();
+      return {
+        x: (side === 'right' ? r.right : r.left) - g.left,
+        y: r.top + r.height / 2 - g.top,
+      };
+    }
+
+    function draw(animate: boolean) {
+      if (window.matchMedia('(max-width: 44em)').matches) return;
+      const g = grid!.getBoundingClientRect();
+      const fc = pane.front.find((c) => c.dataset.value === state.front)!;
+      const bc = pane.back.find((c) => c.dataset.value === state.back)!;
+      const a = endpoint(fc, 'right', g);
+      const b = endpoint(ic!, 'left', g);
+      const c = endpoint(ic!, 'right', g);
+      const d = endpoint(bc, 'left', g);
+
+      traceFront!.setAttribute('d', stepPath(a.x, a.y, b.x, b.y));
+      traceBack!.setAttribute('d', stepPath(c.x, c.y, d.x, d.y));
+
+      const set = (sel: string, p: { x: number; y: number }) => {
+        const el = board.querySelector<SVGCircleElement>(sel);
+        el?.setAttribute('cx', String(p.x));
+        el?.setAttribute('cy', String(p.y));
+      };
+      set('[data-pad-front-a]', a);
+      set('[data-pad-front-b]', b);
+      set('[data-pad-back-a]', c);
+      set('[data-pad-back-b]', d);
+
+      if (!animate || prefersReduced) return;
+      [traceFront, traceBack].forEach((p) => {
+        if (!p) return;
+        const len = p.getTotalLength();
+        p.style.transition = 'none';
+        p.style.strokeDasharray = String(len);
+        p.style.strokeDashoffset = String(len);
+        void p.getBoundingClientRect();
+        p.style.transition = 'stroke-dashoffset 0.45s ease-out';
+        p.style.strokeDashoffset = '0';
+      });
+    }
+
+    bindGroup('front');
+    bindGroup('back');
+    renderTree();
+    requestAnimationFrame(() => draw(true));
+
+    if ('ResizeObserver' in window) {
+      new ResizeObserver(() => draw(false)).observe(grid!);
+    } else {
+      window.addEventListener('resize', () => draw(false));
+    }
+  });
+</script>

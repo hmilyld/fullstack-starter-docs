@@ -1,0 +1,42 @@
+---
+title: create-fullstack-app
+description: "Generate a full-stack application with a complete admin panel in one command: React / Vue frontend, Python FastAPI / Java Spring Boot backend."
+template: splash
+hero:
+  tagline: One command to generate a complete admin panel. React / Vue frontend, FastAPI / Spring Boot backend.
+  actions:
+    - text: Start Generating
+      link: /en/getting-started/quickstart/
+      icon: right-arrow
+    - text: View API
+      link: /en/reference/api/
+      variant: minimal
+---
+
+import StackBoard from '../../../components/StackBoard.astro';
+import { CardGrid, LinkCard } from '@astrojs/starlight/components';
+
+<StackBoard />
+
+<CardGrid>
+  <LinkCard
+    title="Quick Start"
+    href="/en/getting-started/quickstart/"
+    description="Generate, start, and log in to your first project in three steps."
+  />
+  <LinkCard
+    title="Stacks and Combinations"
+    href="/en/generated/overview/"
+    description="Four frontend/backend combinations, each explained stack by stack."
+  />
+  <LinkCard
+    title="Core Features"
+    href="/en/features/authentication/"
+    description="Authentication, permissions, system settings, AI models, and audit logs."
+  />
+  <LinkCard
+    title="Notes"
+    href="/en/notes/"
+    description="Security and configuration items you must handle before deploying to production."
+  />
+</CardGrid>

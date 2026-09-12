@@ -1,0 +1,64 @@
+---
+title: Adding Templates
+description: The complete steps to add a frontend or backend template to the scaffold.
+---
+
+import { Steps } from '@astrojs/starlight/components';
+
+React / Vue frontends and Python / Java backends are currently supported. Adding a framework requires changing both the template and the generator logic.
+
+<Steps>
+
+1. Create the template directory
+
+   ```bash
+   mkdir -p templates/frontend-svelte
+   ```
+
+   Build a complete project inside it with features equivalent to the existing templates, taking care to follow the established conventions of `templates/`.
+
+2. Update the type definitions
+
+   Extend the union types in `src/generator.ts`:
+
+   ```ts
+   export type FrontendType = 'react' | 'vue' | 'svelte';
+   export type BackendType = 'python' | 'java';
+   ```
+
+3. Update the interactive options
+
+   Add the new option to `select()` in `src/index.ts`:
+
+   ```ts
+   { value: 'svelte', label: 'Svelte' }
+   ```
+
+4. Update the generation logic
+
+   Check the branches in `src/generator.ts` that depend on the template name:
+
+   - `generateDevSh()`: the new framework's start command and dependency installation.
+   - `generateBuildSh()`: the new framework's build/check command.
+   - `generateDockerfile()`: the new stack's multi-stage build image.
+   - `generateReadme()`: the stack table and explanations.
+
+5. Sync the documentation
+
+   When changing features, update in sync:
+
+   - The root `README.md`
+   - `AGENTS.md` (conventions and business rules)
+   - `generateReadme()` (the README shipped with generated projects)
+   - The corresponding page of this documentation site
+
+6. Verify
+
+   Run the scaffold to generate a project with the new combination, then complete the build and startup verification.
+
+</Steps>
+
+## Related Pages
+
+- [Template Conventions](/en/development/templates/)
+- [Testing and Verification](/en/development/testing/)

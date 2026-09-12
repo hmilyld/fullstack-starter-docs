@@ -1,0 +1,161 @@
+---
+title: Project Structure
+description: The scaffold's own directory layout and the file structure of a generated project.
+---
+
+import { Tabs, TabItem, FileTree } from '@astrojs/starlight/components';
+
+## The Scaffold Itself
+
+```
+fullstack-starter/
+├── src/
+│   ├── index.ts              # CLI entry: interactive selection of frontend / backend / project name
+│   └── generator.ts          # Generator: copy templates + generate config and script files
+├── templates/
+│   ├── base/                 # Shared files (.gitignore)
+│   ├── frontend-react/       # React frontend template
+│   ├── frontend-vue/         # Vue frontend template
+│   ├── backend-python/       # FastAPI backend template
+│   └── backend-java/         # Spring Boot backend template
+├── package.json
+└── tsconfig.json
+```
+
+The files under `templates/` are exactly what users end up with; the generator only copies templates and dynamically generates `dev.sh`, `build.sh`, `Dockerfile`, `docker-compose.yml`, `.dockerignore`, `nginx.conf`, and each project's README.
+
+## The Generated Project
+
+```
+my-project/
+├── frontend/                 # Frontend project
+├── backend/                  # Backend project
+├── dev.sh                    # Development script: start / stop / restart / install
+├── build.sh                  # Build script: frontend build + backend check
+├── Dockerfile                # Single image: frontend build + backend + Nginx
+├── docker-compose.yml        # Docker orchestration
+├── .dockerignore             # Docker build exclusions
+├── nginx.conf                # Nginx config: static files + /api reverse proxy
+└── README.md                 # Project documentation
+```
+
+### Frontend Directory
+
+<Tabs>
+<TabItem label="React">
+
+<FileTree>
+- src
+  - api
+    - client.ts   fetch wrapper, auto logout on 401
+    - auth.ts  user.ts  role.ts  permission.ts  system.ts
+    - dashboard.ts  ai-model.ts  audit-log.ts
+  - types
+    - common.ts  auth.ts  user.ts  role.ts  permission.ts
+    - system.ts  dashboard.ts  ai-model.ts  audit-log.ts
+  - components
+    - admin-layout.tsx  app-sidebar.tsx  header.tsx  login-form.tsx
+    - protected-route.tsx  theme-provider.tsx  theme-toggle.tsx
+    - shared  pagination / delete confirmation / table state / loading button
+    - ui  24 shadcn/ui components
+  - lib
+    - auth-context.tsx  site-config.tsx  toast.ts  utils.ts
+  - pages
+    - auth  login.tsx  register.tsx
+    - dashboard  index.tsx
+    - settings
+      - user  role  permission  system  ai-model  audit-log  profile
+    - not-found.tsx
+  - router.tsx
+  - App.tsx
+  - main.tsx
+- components.json   shadcn config
+- vite.config.ts    dev proxy /api → localhost:8088
+- package.json
+</FileTree>
+
+</TabItem>
+<TabItem label="Vue">
+
+<FileTree>
+- src
+  - api  same as React, split by business domain (client.ts + 8 domain files)
+  - types  split by business domain
+  - components
+    - AppHeader.vue  AppSidebar.vue  ThemeToggle.vue
+    - ToastContainer.vue  UnsupportedViewport.vue
+    - shared  pagination / delete confirmation / table state / loading button / skeleton
+  - layouts  AdminLayout.vue
+  - pages
+    - auth  Login.vue  Register.vue
+    - dashboard  Index.vue
+    - settings  AiModel / AuditLog / PermissionManage / Profile / RoleManage / System / UserManage
+    - NotFound.vue
+  - router  index.ts
+  - stores  auth.ts  site-config.ts  theme.ts
+  - composables  use-toast.ts
+  - App.vue
+  - main.ts
+- vite.config.ts    dev proxy /api → localhost:8088
+- package.json
+</FileTree>
+
+</TabItem>
+</Tabs>
+
+### Backend Directory
+
+<Tabs>
+<TabItem label="Python (FastAPI)">
+
+<FileTree>
+- app
+  - main.py   FastAPI app, CORS, audit middleware, route registration
+  - core
+    - config.py  database.py  security.py  deps.py
+    - audit.py  permissions_catalog.py  seed.py  schemas.py
+  - auth  user  role  permission
+  - system  ai_model  audit  dashboard  public
+  - each domain contains models / schemas / crud / router
+- pyproject.toml
+- .env.example
+</FileTree>
+
+Domain-modular organization: one package per business domain, with infrastructure kept together under `core/`.
+
+</TabItem>
+<TabItem label="Java (Spring Boot)">
+
+<FileTree>
+- src/main/java/com/hmilyld/fullstack
+  - FullstackApplication.java
+  - common   ApiResponse / PageResult / global exception handling
+  - config   audit, CORS, Sa-Token, permission catalog and sync task
+  - controller
+  - dto
+  - entity
+  - repository
+  - security  RateLimiter / StpInterfaceImpl
+  - service
+- src/main/resources
+  - application.yml
+  - db/migration/V1__init.sql   Flyway initialization and seed data
+- pom.xml
+</FileTree>
+
+Organized by layer: `controller / service / repository / entity / dto`, with infrastructure under `common/`, `config/`, and `security/`.
+
+</TabItem>
+</Tabs>
+
+## Key Files
+
+| File | Purpose |
+| --- | --- |
+| `dev.sh` | Development script; installs dependencies and starts frontend and backend together |
+| `build.sh` | Frontend build + backend code check |
+| `Dockerfile` | Multi-stage build producing a single image with Nginx and the backend |
+| `nginx.conf` | Listens on 5173, serves frontend static files, and proxies `/api/` to the backend |
+| `frontend/vite.config.ts` | Proxies `/api` to `localhost:8088` during development |
+
+For more detail, see [Frontend Structure](/en/generated/frontend/), [Python Backend](/en/generated/backend-python/), and [Java Backend](/en/generated/backend-java/).

@@ -1,0 +1,77 @@
+---
+title: Configuration and Environment Variables
+description: Python's .env, Java's application.yml, and Docker environment variables.
+---
+
+import { Tabs, TabItem } from '@astrojs/starlight/components';
+
+## Python: `.env`
+
+The backend reads environment variables via `pydantic-settings` and loads `backend/.env` when present. The template provides `backend/.env.example`:
+
+| Variable | Description | Default |
+| --- | --- | --- |
+| `DATABASE_URL` | Database connection string | `sqlite+aiosqlite:///./app.db` |
+| `JWT_SECRET_KEY` | Strong random key | None, **must be set** |
+| `JWT_ALGORITHM` | Signing algorithm | `HS256` |
+| `JWT_ACCESS_TOKEN_EXPIRE_MINUTES` | Token validity (minutes) | `1440` |
+| `CORS_ORIGINS` | Allowed origins, JSON array | `["http://localhost:5173"]` |
+
+```bash
+# backend/.env
+DATABASE_URL=sqlite+aiosqlite:///./app.db
+JWT_SECRET_KEY=<output of openssl rand -base64 48>
+JWT_ALGORITHM=HS256
+JWT_ACCESS_TOKEN_EXPIRE_MINUTES=1440
+CORS_ORIGINS=["http://localhost:5173"]
+```
+
+:::danger[Weak keys refuse to start]
+When `JWT_SECRET_KEY` is empty or belongs to the weak-value set (such as `secret`, `123456`, `changeme`, `your-secret-key`), the backend throws an error and refuses to start; a length under 32 emits a warning.
+:::
+
+## Java: `application.yml`
+
+The Java backend configuration is at `src/main/resources/application.yml`:
+
+| Config | Default | Description |
+| --- | --- | --- |
+| `server.port` | `8088` | Backend port |
+| `spring.datasource.url` | `jdbc:sqlite:./data/app.db` | SQLite file |
+| `spring.jpa.hibernate.ddl-auto` | `none` | Schema managed by Flyway |
+| `spring.flyway.enabled` | `true` | Enable database migrations |
+| `sa-token.token-style` | `uuid` | Token style |
+| `sa-token.timeout` | `86400` | Token validity (seconds) |
+| `app.cors-origins` | `http://localhost:5173` | Allowed origins |
+| `app.audit.exclude-paths` | `/api/auth` | Audit excluded paths |
+
+The Java version uses Sa-Token and **does not need `JWT_SECRET_KEY`**.
+
+## Docker Environment Variables
+
+| Variable | Description |
+| --- | --- |
+| `JWT_SECRET_KEY` | Required (Python backend); compose errors if it is not set |
+| `TZ` | Defaults to `Asia/Shanghai` |
+| `DATABASE_URL` | Points to `/app/data/app.db` inside the Python image |
+| `PYTHONUNBUFFERED` | `1` inside the Python image |
+
+## Frontend Configuration
+
+The frontend **has no `.env` file**:
+
+- The request base URL is fixed at `/api` in `src/api/client.ts`.
+- During development, `vite.config.ts` proxies `/api` to `http://localhost:8088`; in production, Nginx does the reverse proxying.
+
+## Ports
+
+| Environment | Frontend | Backend |
+| --- | --- | --- |
+| Development | 5173 | 8088 |
+| Docker | 5173 (external) | 8088 (inside the container, behind Nginx) |
+
+## Related Pages
+
+- [Python Backend](/en/generated/backend-python/)
+- [Java Backend](/en/generated/backend-java/)
+- [Docker Deployment](/en/deployment/docker/)

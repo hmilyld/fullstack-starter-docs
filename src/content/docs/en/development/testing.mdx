@@ -1,0 +1,67 @@
+---
+title: Testing and Verification
+description: The scaffold has no automated test framework; here is the verification process for changes.
+---
+
+import { Steps } from '@astrojs/starlight/components';
+
+The scaffold itself has no automated test framework, so verification uses a manual process.
+
+<Steps>
+
+1. Generate a test project
+
+   ```bash
+   npm run dev
+   ```
+
+   Choose a frontend / backend combination and a project name to generate into the working directory.
+
+2. Verify the frontend
+
+   ```bash
+   cd <project>/frontend
+   npm install
+   npm run build
+   ```
+
+   The build should complete without errors. During development, `npm run dev` lets you check page rendering and API integration.
+
+3. Verify the backend
+
+   ```bash
+   # Python
+   cd <project>/backend
+   uv sync
+   JWT_SECRET_KEY="$(openssl rand -base64 48)" uv run uvicorn app.main:app --reload --port 8088
+
+   # Java
+   cd <project>/backend
+   mvn spring-boot:run
+   ```
+
+   Confirm the backend starts, initializes the database and writes seed data, and that you can log in with `admin / 123456`.
+
+4. Verify Docker
+
+   ```bash
+   docker build -t test .
+   docker run -p 5173:5173 -e JWT_SECRET_KEY="$(openssl rand -base64 48)" test
+   ```
+
+   Visit http://localhost:5173 to confirm the frontend loads and login works.
+
+</Steps>
+
+## Combinations to Cover
+
+At minimum, verify the combinations affected by your changes. Because frontend and backend pair freely, when changing a frontend template you should also verify it against both the Python and Java backends; the same applies when changing a backend template.
+
+## Quick Verification Checklist
+
+- [ ] `npm run build` (scaffold) passes
+- [ ] The generated project's frontend build passes
+- [ ] The backend starts and completes initialization
+- [ ] `admin / 123456` can log in
+- [ ] Permission menus display correctly by role
+- [ ] The Docker image builds and runs

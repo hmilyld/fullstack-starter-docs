@@ -1,0 +1,86 @@
+---
+title: Quick Start
+description: Generate, start, and log in to your first admin panel in three steps.
+---
+
+import { Steps } from '@astrojs/starlight/components';
+
+<Steps>
+
+1. Generate a project
+
+   Run this in the scaffold directory:
+
+   ```bash
+   npm run dev
+   ```
+
+   Follow the prompts to choose the frontend framework and backend framework, then enter a project name (only lowercase letters, digits, and hyphens are allowed; the default is `my-fullstack-app`).
+
+   ```
+   ? Select a frontend framework: React / Vue
+   ? Select a backend framework: Python (FastAPI) / Java (Spring Boot)
+   ? Enter a project name: my-project
+   ```
+
+   The generated project appears in the current directory, with `git init` and an initial commit performed automatically.
+
+2. Start the development environment
+
+   ```bash
+   cd my-project
+   ./dev.sh start
+   ```
+
+   `dev.sh` first installs the frontend and backend dependencies, then starts both services and automatically opens the logs:
+
+   ```
+   Frontend:  http://localhost:5173
+   Backend API:  http://localhost:8088
+   API Docs:  http://localhost:8088/docs
+   ```
+
+3. Log in to the system
+
+   Open http://localhost:5173 and log in with the default administrator account:
+
+   | Username | Password | Role |
+   | --- | --- | --- |
+   | `admin` | `123456` | Administrator |
+
+   :::danger[You must change the password in production]
+   The default password `123456` is for development and debugging only. After deploying to production, log in immediately and change the administrator password.
+   :::
+
+</Steps>
+
+## Default Accounts
+
+In addition to the administrator, the template includes four regular users, all with the password `123456`:
+
+| Username | Name | Role |
+| --- | --- | --- |
+| `admin` | Administrator | `admin` (all permissions) |
+| `zhangsan` | Zhang San | `user` |
+| `lisi` | Li Si | `user` |
+| `wangwu` | Wang Wu | `user` |
+| `zhaoliu` | Zhao Liu | `user` |
+
+See [Default Accounts](/en/reference/default-accounts/).
+
+## Ports
+
+| Environment | Frontend | Backend |
+| --- | --- | --- |
+| Development | 5173 | 8088 |
+| Docker | 5173 | 8088 (inside the container, behind the Nginx reverse proxy) |
+
+:::caution[JWT key for local development]
+The Python backend validates `JWT_SECRET_KEY` at startup. If it is not configured in the environment or `backend/.env`, `dev.sh` automatically generates a random key and warns that "logins will be invalid after a restart" (重启后登录会失效). This is normal; to pin a key, write it into `backend/.env` yourself.
+:::
+
+## Next Steps
+
+- [Project Structure](/en/getting-started/project-structure/) — what is in the generated directories.
+- [Authentication and Accounts](/en/features/authentication/) — login, registration, maintenance mode, and manual review.
+- [Docker Deployment](/en/deployment/docker/) — package it as a single image and go live.

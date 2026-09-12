@@ -1,0 +1,67 @@
+---
+title: 测试验证
+description: 脚手架没有自动化测试框架，改动的验证流程。
+---
+
+import { Steps } from '@astrojs/starlight/components';
+
+脚手架本身没有自动化测试框架，验证采用手动流程。
+
+<Steps>
+
+1. 生成测试项目
+
+   ```bash
+   npm run dev
+   ```
+
+   选择一个前端 / 后端组合与项目名，生成到工作目录。
+
+2. 验证前端
+
+   ```bash
+   cd <项目>/frontend
+   npm install
+   npm run build
+   ```
+
+   构建应无错误。开发态可 `npm run dev` 检查页面与接口联调。
+
+3. 验证后端
+
+   ```bash
+   # Python
+   cd <项目>/backend
+   uv sync
+   JWT_SECRET_KEY="$(openssl rand -base64 48)" uv run uvicorn app.main:app --reload --port 8088
+
+   # Java
+   cd <项目>/backend
+   mvn spring-boot:run
+   ```
+
+   确认后端能启动、数据库初始化并写入种子数据，且能用 `admin / 123456` 登录。
+
+4. 验证 Docker
+
+   ```bash
+   docker build -t test .
+   docker run -p 5173:5173 -e JWT_SECRET_KEY="$(openssl rand -base64 48)" test
+   ```
+
+   访问 http://localhost:5173 确认前端可加载、登录可用。
+
+</Steps>
+
+## 建议覆盖的组合
+
+至少验证你改动影响的组合。由于前后端自由搭配，改动前端模板时也应在 Python 与 Java 两种后端下各验证一次；改动后端模板同理。
+
+## 快速验证清单
+
+- [ ] `npm run build`（脚手架）通过
+- [ ] 生成的项目前端构建通过
+- [ ] 后端可启动并完成初始化
+- [ ] `admin / 123456` 可登录
+- [ ] 权限菜单按角色正确显示
+- [ ] Docker 镜像可构建并运行

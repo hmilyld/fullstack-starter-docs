@@ -1,0 +1,86 @@
+---
+title: 快速开始
+description: 三步生成、启动并登录你的第一个后台管理系统。
+---
+
+import { Steps } from '@astrojs/starlight/components';
+
+<Steps>
+
+1. 生成项目
+
+   在脚手架目录运行：
+
+   ```bash
+   npm run dev
+   ```
+
+   按提示依次选择前端框架、后端框架，并输入项目名称（只能包含小写字母、数字和连字符，默认 `my-fullstack-app`）。
+
+   ```
+   ? 请选择前端框架: React / Vue
+   ? 请选择后端框架: Python (FastAPI) / Java (Spring Boot)
+   ? 请输入项目名称: my-project
+   ```
+
+   生成的项目会出现在当前目录下，并自动完成 `git init` 与初始提交。
+
+2. 启动开发环境
+
+   ```bash
+   cd my-project
+   ./dev.sh start
+   ```
+
+   `dev.sh` 会先安装前端与后端依赖，然后同时启动两个服务，并自动打开日志：
+
+   ```
+   前端页面:  http://localhost:5173
+   后端 API:  http://localhost:8088
+   API 文档:  http://localhost:8088/docs
+   ```
+
+3. 登录系统
+
+   打开 http://localhost:5173，使用默认管理员账号登录：
+
+   | 用户名 | 密码 | 角色 |
+   | --- | --- | --- |
+   | `admin` | `123456` | 管理员 |
+
+   :::danger[生产环境必须修改密码]
+   默认密码 `123456` 仅用于开发调试。部署到生产后请立即登录并修改管理员密码。
+   :::
+
+</Steps>
+
+## 默认账号
+
+除管理员外，模板还预置了四个普通用户，密码同为 `123456`：
+
+| 用户名 | 姓名 | 角色 |
+| --- | --- | --- |
+| `admin` | 管理员 | `admin`（全部权限） |
+| `zhangsan` | 张三 | `user` |
+| `lisi` | 李四 | `user` |
+| `wangwu` | 王五 | `user` |
+| `zhaoliu` | 赵六 | `user` |
+
+详见[默认账号](/reference/default-accounts/)。
+
+## 端口
+
+| 环境 | 前端 | 后端 |
+| --- | --- | --- |
+| 开发 | 5173 | 8088 |
+| Docker | 5173 | 8088（容器内，经 Nginx 反代） |
+
+:::caution[本地开发的 JWT 密钥]
+Python 后端启动时会校验 `JWT_SECRET_KEY`。若未在环境变量或 `backend/.env` 中配置，`dev.sh` 会自动生成一个随机密钥并提示「重启后登录会失效」。这是正常现象；固定密钥请自行写入 `backend/.env`。
+:::
+
+## 下一步
+
+- [项目结构](/getting-started/project-structure/) —— 生成的目录里都有什么。
+- [认证与账号](/features/authentication/) —— 登录、注册、维护模式与人工审核。
+- [Docker 部署](/deployment/docker/) —— 打包成单个镜像上线。

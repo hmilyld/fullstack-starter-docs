@@ -1,0 +1,72 @@
+---
+title: 系统设置
+description: 站点信息、维护模式、开放注册、人工审核与邮件配置。
+---
+
+系统设置是单例配置，通过以下接口读写：
+
+| 方法 | 路径 | 说明 | 认证 |
+| --- | --- | --- | --- |
+| GET | `/api/system/config` | 读取配置 | 是（`settings`） |
+| PUT | `/api/system/config` | 更新配置 | 是（`settings.edit`） |
+| POST | `/api/system/test-email` | 发送测试邮件 | 是（`settings.edit`） |
+| GET | `/api/public/config` | 公开配置（登录页用） | 否 |
+
+## 配置项
+
+### 站点信息
+
+| 字段 | 说明 | 默认值 |
+| --- | --- | --- |
+| `siteName` | 站点名称 | 管理系统 |
+| `siteDescription` | 站点描述 | 空 |
+| `keywords` | 关键词 | 空 |
+| `welcomeMessage` | 欢迎语 | 空 |
+
+### 行为开关
+
+| 字段 | 说明 | 默认值 |
+| --- | --- | --- |
+| `maintenanceEnabled` | 维护模式，拦截非管理员登录 | `false` |
+| `maintenanceMessage` | 维护提示文案 | 空 |
+| `openRegistration` | 是否开放注册 | `true` |
+| `manualReview` | 注册是否需人工审核 | `false` |
+| `defaultRoleId` | 默认角色 | `user` |
+
+:::note
+注册时的角色分配目前按 `manualReview` 直接决定为 `user` 或 `pending_review`，`defaultRoleId` 字段作为配置保留，暂未参与注册逻辑。
+:::
+
+### 邮件（SMTP）
+
+| 字段 | 说明 | 默认值 |
+| --- | --- | --- |
+| `smtpEnabled` | 是否启用 | `false` |
+| `smtpHost` / `smtpPort` | 服务器与端口 | 空 / `587` |
+| `smtpUsername` / `smtpPassword` | 账号与密码 | 空 |
+| `smtpFromName` / `smtpFromEmail` | 发件人名称与地址 | 管理系统 / 空 |
+| `smtpUseSsl` | 使用 SSL（否则 STARTTLS） | `true` |
+
+点击「测试邮件」会向指定地址发送一封邮件（`POST /api/system/test-email`，请求体 `{ "email": "..." }`），连接超时为 10 秒，并根据认证/连接/超时分别返回中文错误提示。
+
+## 密码掩码
+
+读取配置时，`smtpPassword` 始终返回 `****`。更新时：
+
+- 提交包含 `*` 的值会被拒绝，避免把掩码写回覆盖真实密码。
+- 提交空字符串表示清空密码。
+
+因此前端可以安全地回显配置而不泄露真实密码。
+
+## 公开配置
+
+未登录也能访问的 `GET /api/public/config` 只暴露以下字段：
+
+`siteName`、`siteDescription`、`maintenanceEnabled`、`maintenanceMessage`、`openRegistration`、`manualReview`。
+
+**SMTP 相关字段不会出现在公开配置中。**
+
+## 相关页面
+
+- [认证与账号](/features/authentication/)
+- [配置与环境变量](/deployment/configuration/)

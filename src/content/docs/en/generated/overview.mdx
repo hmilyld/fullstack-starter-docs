@@ -1,0 +1,61 @@
+---
+title: Stacks and Combinations
+description: Technology choices and a difference comparison for the four frontend/backend combinations.
+---
+
+import { Tabs, TabItem } from '@astrojs/starlight/components';
+
+All four combinations share the same feature set, API conventions, and response format, so you can choose freely based on your team's familiarity.
+
+## Combination Matrix
+
+| | Python (FastAPI) | Java (Spring Boot) |
+| --- | --- | --- |
+| **React** | React 19 + Vite + shadcn/ui · FastAPI async | React 19 + Vite + shadcn/ui · Spring Boot 3.2 |
+| **Vue** | Vue 3 + Vite + DaisyUI · FastAPI async | Vue 3 + Vite + DaisyUI · Spring Boot 3.2 |
+
+## Frontend Stack
+
+| Component | React template | Vue template |
+| --- | --- | --- |
+| Framework | React 19 | Vue 3.5+ (Composition API) |
+| Build | Vite | Vite |
+| Language | TypeScript | TypeScript |
+| Styling | Tailwind CSS v4 + shadcn/ui (with PWA) | Tailwind CSS v4 + DaisyUI |
+| HTTP | Native fetch wrapper (auto logout on 401) | Native fetch wrapper (auto logout on 401) |
+| Routing | react-router v7 | vue-router v4 |
+| State | React Context (`lib/`) | Pinia (`stores/`) |
+| Icons | lucide-react | lucide-vue-next |
+
+## Backend Stack
+
+| Component | Python template | Java template |
+| --- | --- | --- |
+| Framework | FastAPI | Spring Boot 3.2 |
+| ORM | SQLAlchemy 2.0 (async) | Spring Data JPA |
+| Database | SQLite (aiosqlite) | SQLite file (`./data/app.db`, Flyway migrations) |
+| Authentication | PyJWT + bcrypt | Sa-Token (uuid-style tokens) + BCrypt |
+| Key | Environment variable `JWT_SECRET_KEY` (weak keys refuse to start) | No key needed (server-side session tokens) |
+| API docs | Built-in Swagger `/docs` | No built-in Swagger; the controllers are the source of truth |
+
+:::caution[Tokens are not interchangeable]
+Python uses JWT and Java uses Sa-Token's UUID tokens; the formats differ and are incompatible. Switching backends requires the frontend to log in again, and already-issued tokens are invalid.
+:::
+
+## Behavioral Differences
+
+The two backends have the same features and permission model, with only a few small differences:
+
+- **`logout`**: Python requires login; Java tolerates unauthenticated calls and also returns success.
+- **Permission-denied response**: both stacks return 403 when permission is missing and record an audit log entry.
+- **Startup initialization**: Python runs `create_all` + seed data + permission sync at startup; Java uses Flyway migrations and runs a permission sync task.
+
+## Response Format
+
+All endpoints return uniformly:
+
+```json
+{ "code": 0, "message": "success", "data": {} }
+```
+
+On error, `code` is `-1` and `message` is a Chinese message. Paginated data uniformly takes the form `{ list, total, page, pageSize }`. See [API Reference](/en/reference/api/).

@@ -1,0 +1,49 @@
+---
+title: Introduction
+description: What create-fullstack-app is, what it can generate, and who it is for.
+---
+
+`create-fullstack-app` is a full-stack application scaffold. Run the interactive command line, choose a frontend and backend framework, and it generates an admin panel in the current directory that you can develop, build, and deploy right away.
+
+The generated project is not a hollow shell: login and registration, user management, roles and permissions, system settings, AI model management, audit logs, and a dashboard are all built in.
+
+## What It Can Generate
+
+- **Choice of frontend**: React 19 (Vite + TypeScript + Tailwind CSS v4 + shadcn/ui, with PWA) or Vue 3 (Vite + TypeScript + Tailwind CSS v4 + DaisyUI).
+- **Choice of backend**: Python (FastAPI + SQLAlchemy async + SQLite) or Java (Spring Boot 3.2 + JPA + SQLite/Flyway).
+- **Authentication built in**: login, registration, logout; Python uses JWT, Java uses Sa-Token; includes login/registration rate limiting and automatic logout on 401.
+- **Complete admin panel**: users, roles, permissions, system settings, AI models and presets, audit logs, dashboard, and profile.
+- **Deployment ready**: a single Docker image containing Nginx and the backend, started with one command.
+
+## Four Combinations
+
+| Frontend | Backend | Description |
+| --- | --- | --- |
+| React | Python | Vite + shadcn/ui, FastAPI async |
+| React | Java | Vite + shadcn/ui, Spring Boot + JPA |
+| Vue | Python | Vite + DaisyUI + Pinia, FastAPI async |
+| Vue | Java | Vite + DaisyUI + Pinia, Spring Boot + JPA |
+
+All four combinations implement the same feature set and API conventions, so frontend and backend behave identically and you can choose freely based on your team's stack. See [Stacks and Combinations](/en/generated/overview/).
+
+## Who It Is For
+
+- Teams that need to quickly stand up an admin panel with a permission system.
+- Developers who want to freely combine a React/Vue frontend with a Python/Java backend without reimplementing authentication and permissions.
+- Scenarios that need a complete, readable, modifiable codebase rather than a black-box framework.
+
+## Permission Model
+
+API authorization is based on **permission points (RBAC)** rather than checking role names. Default roles:
+
+- `admin` (Administrator): has all permissions.
+- `user` (Regular user): only view permission for the three menus `dashboard`, `users`, and `settings`.
+- `pending_review` (Pending review): no permissions.
+
+Newly registered accounts enter either `user` or `pending_review` according to the "manual review" switch in system settings. See [Permission System](/en/features/rbac/).
+
+## Next Steps
+
+- [Installation and Environment](/en/getting-started/installation/) — confirm your local dependencies.
+- [Quick Start](/en/getting-started/quickstart/) — generate and run your first project.
+- [Project Structure](/en/getting-started/project-structure/) — learn the directory layout of the scaffold and generated projects.

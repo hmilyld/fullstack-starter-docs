@@ -1,0 +1,64 @@
+---
+title: 新增模板
+description: 为脚手架增加一个前端或后端模板的完整步骤。
+---
+
+import { Steps } from '@astrojs/starlight/components';
+
+目前支持 React / Vue 前端与 Python / Java 后端。新增一种框架需要同时改模板与生成器逻辑。
+
+<Steps>
+
+1. 创建模板目录
+
+   ```bash
+   mkdir -p templates/frontend-svelte
+   ```
+
+   在里面搭建一个功能与现有模板对等的完整项目，注意遵守 `templates/` 的既有约定。
+
+2. 更新类型定义
+
+   在 `src/generator.ts` 中扩展联合类型：
+
+   ```ts
+   export type FrontendType = 'react' | 'vue' | 'svelte';
+   export type BackendType = 'python' | 'java';
+   ```
+
+3. 更新交互选项
+
+   在 `src/index.ts` 的 `select()` 中加入新选项：
+
+   ```ts
+   { value: 'svelte', label: 'Svelte' }
+   ```
+
+4. 更新生成逻辑
+
+   检查 `src/generator.ts` 中依赖模板名称的分支：
+
+   - `generateDevSh()`：新框架的启动命令与依赖安装方式。
+   - `generateBuildSh()`：新框架的构建/检查命令。
+   - `generateDockerfile()`：新栈的多阶段构建镜像。
+   - `generateReadme()`：技术栈表格与说明。
+
+5. 同步文档
+
+   修改功能时需同步更新：
+
+   - 根目录 `README.md`
+   - `AGENTS.md`（约定与业务规则）
+   - `generateReadme()`（生成项目自带的 README）
+   - 本文档站对应页面
+
+6. 验证
+
+   运行脚手架生成新组合的项目，并完成构建与启动验证。
+
+</Steps>
+
+## 相关页面
+
+- [模板约定](/development/templates/)
+- [测试验证](/development/testing/)

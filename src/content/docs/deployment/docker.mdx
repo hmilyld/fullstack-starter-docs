@@ -1,0 +1,89 @@
+---
+title: Docker 部署
+description: 单镜像架构、构建运行、数据持久化与健康检查。
+---
+
+import { Tabs, TabItem } from '@astrojs/starlight/components';
+
+生成的项目使用**单个 Docker 镜像**同时包含 Nginx 与后端，只需暴露一个端口。
+
+## 架构
+
+```
+浏览器 ──▶ :5173 (Nginx)
+              ├─ /          前端静态文件（/usr/share/nginx/html）
+              ├─ /api/      反向代理到 127.0.0.1:8088（同容器后端）
+              └─ /docs      代理后端接口文档（Python）
+```
+
+- 前端由 Node 阶段构建为静态文件，交给 Nginx 提供，并带 SPA 回退 `try_files ... /index.html`。
+- 后端在容器内监听 `127.0.0.1:8088`，只经 Nginx 对外暴露。
+- 镜像内 `EXPOSE 5173`，`docker-compose.yml` 映射 `5173:5173`。
+
+## 多阶段构建
+
+<Tabs>
+<TabItem label="Python">
+
+1. `node:22-alpine`：构建前端。
+2. `python:3.12-slim`：安装 Nginx 与后端依赖（`uv pip install --system -e .`），复制前端产物与 `nginx.conf`。
+
+</TabItem>
+<TabItem label="Java">
+
+1. `node:22-alpine`：构建前端。
+2. `maven:3.9-eclipse-temurin-21`：`mvn package -DskipTests`。
+3. `eclipse-temurin:21-jre-alpine`：安装 Nginx、复制 JAR 与前端产物。
+
+</TabItem>
+</Tabs>
+
+## 构建与运行
+
+```bash
+# 构建镜像
+docker build -t my-project .
+
+# 运行（必须提供强随机 JWT_SECRET_KEY）
+docker run -d -p 5173:5173 \
+  -e JWT_SECRET_KEY="$(openssl rand -base64 48)" \
+  my-project
+
+# 或使用 docker compose
+JWT_SECRET_KEY="$(openssl rand -base64 48)" docker compose up -d
+```
+
+访问 http://localhost:5173。
+
+:::danger[未设置密钥会直接失败]
+`docker-compose.yml` 使用 `JWT_SECRET_KEY=${JWT_SECRET_KEY:?...}` 语法：未设置该变量时，`docker compose up` 会直接报错退出，而不是使用弱默认值启动。这是有意为之的安全设计。
+:::
+
+## 数据持久化
+
+- 数据库文件位于容器的 `/app/data`，由命名卷 `app-data` 挂载。
+- `docker compose down` 会保留数据，重新 `up -d` 后不丢失。
+- 需要清空数据时执行：
+
+```bash
+docker compose down -v   # 删除数据卷，数据不可恢复
+```
+
+## 健康检查
+
+镜像内置健康检查（间隔 30s、超时 5s、启动宽限 15s、重试 3 次），访问 `http://127.0.0.1:5173/api/public/config`。Python 镜像用内置 `urllib`，Java 镜像用 `wget`。
+
+## 环境变量
+
+| 变量 | 说明 |
+| --- | --- |
+| `JWT_SECRET_KEY` | 必填（Python 后端），强随机 |
+| `TZ` | 时区，默认 `Asia/Shanghai` |
+| `DATABASE_URL` | Python 镜像内已设为 `sqlite+aiosqlite:////app/data/app.db` |
+| `PYTHONUNBUFFERED` | Python 镜像内已设为 `1` |
+
+## 相关页面
+
+- [开发与构建脚本](/deployment/scripts/)
+- [配置与环境变量](/deployment/configuration/)
+- [注意事项](/notes/)

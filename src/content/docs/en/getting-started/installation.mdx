@@ -1,0 +1,72 @@
+---
+title: Installation and Environment
+description: Software dependencies and installation steps needed to run the scaffold and generated projects.
+---
+
+import { Tabs, TabItem, Steps } from '@astrojs/starlight/components';
+
+## Requirements
+
+| Dependency | Version | Purpose |
+| --- | --- | --- |
+| Node.js | ≥ 18 (20 / 22 recommended) | Run the scaffold, build the frontend |
+| npm | Installed with Node | Install dependencies, build |
+| Python + uv | Python ≥ 3.12 | Only needed when choosing the Python backend |
+| JDK + Maven | JDK 21, Maven 3.9+ | Only needed when choosing the Java backend |
+| OpenSSL | Any version | `dev.sh` generates a random JWT key (Python backend) |
+| Docker | Optional | Build and run the deployment image |
+
+<Tabs>
+<TabItem label="Python track">
+- Install [uv](https://docs.astral.sh/uv/) (dependency management and execution).
+- Python must be ≥ 3.12; `uv` handles the virtual environment automatically.
+- Linting uses `ruff` (installed as a development dependency by `uv sync`).
+</TabItem>
+<TabItem label="Java track">
+- Install JDK 21 and Maven 3.9+.
+- Maven manages dependencies automatically and downloads them on the first build.
+- Formatting checks use `mvn spotless:check`.
+</TabItem>
+</Tabs>
+
+## Install the Scaffold
+
+<Steps>
+
+1. Install dependencies
+
+   ```bash
+   npm install
+   ```
+
+2. Compile TypeScript
+
+   ```bash
+   npm run build
+   ```
+
+   Output goes to `dist/`. You can also use `npm run dev` to skip compilation and run the source directly with `tsx`.
+
+3. Verify the installation
+
+   ```bash
+   node dist/index.js
+   ```
+
+   An interactive prompt appearing means the installation succeeded.
+
+</Steps>
+
+:::note
+The generator's own npm package name is `create-fullstack-app`, and installing it provides a command with the same name. Running it via `npm run dev` or `node dist/index.js` has the same effect.
+:::
+
+## Dependencies of the Generated Project
+
+After the scaffold finishes, the generated project needs its own toolchain:
+
+- **Frontend**: install dependencies with npm (the template includes `package-lock.json`).
+- **Python backend**: install dependencies with `uv sync`; `pyproject.toml` defines them.
+- **Java backend**: build with Maven; `pom.xml` defines the dependencies.
+
+The `install` subcommand of `dev.sh` installs the frontend and Python backend dependencies for you. See [Development and Build Scripts](/en/deployment/scripts/).

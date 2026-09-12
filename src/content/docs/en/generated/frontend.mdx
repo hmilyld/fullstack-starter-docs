@@ -1,0 +1,99 @@
+---
+title: Frontend Structure
+description: The generated project's frontend directories, request layer, routing, state, and UI conventions.
+---
+
+import { Tabs, TabItem } from '@astrojs/starlight/components';
+
+The React and Vue templates use the same feature split: APIs and types are split by business domain, pages live under `pages/`, and shared technical code lives under `components/` and `lib/` (`stores/`, `composables/` for Vue).
+
+## Request Layer
+
+The frontend HTTP layer is a lightweight native `fetch` wrapper, `src/api/client.ts`, and **does not use axios**.
+
+- The base URL is fixed at `/api`; during development Vite proxies it to `localhost:8088`.
+- Automatically attaches `Authorization: Bearer <token>`.
+- On a **401** response, clears the login state and redirects to the login page.
+- Uniformly parses `{ code, message, data }` and throws an error message when `code !== 0`.
+
+The calls for each business domain are split under `src/api/`: `auth.ts`, `user.ts`, `role.ts`, `permission.ts`, `system.ts`, `dashboard.ts`, `ai-model.ts`, `audit-log.ts`.
+
+<Tabs>
+<TabItem label="React">
+```ts
+// src/api/client.ts (illustrative)
+const BASE_URL = '/api';
+
+export async function request<T>(path: string, options?: RequestInit): Promise<T> {
+  const res = await fetch(`${BASE_URL}${path}`, {
+    ...options,
+    headers: { 'Content-Type': 'application/json', ...options?.headers },
+  });
+  // 401 → clear token and redirect to /login
+  // code !== 0 → throw new Error(message)
+  return body.data;
+}
+```
+</TabItem>
+<TabItem label="Vue">
+```ts
+// src/api/client.ts (illustrative)
+const BASE_URL = '/api';
+
+export async function request<T>(path: string, options?: RequestInit): Promise<T> {
+  const res = await fetch(`${BASE_URL}${path}`, {
+    ...options,
+    headers: { 'Content-Type': 'application/json', ...options?.headers },
+  });
+  // 401 → clear token and redirect to /login
+  // code !== 0 → throw new Error(message)
+  return body.data;
+}
+```
+</TabItem>
+</Tabs>
+
+## Routing and Authorization
+
+- Routing uses `react-router` (React) or `vue-router` (Vue).
+- `ProtectedRoute` (a route guard in Vue) checks only whether the user **is logged in**; if not, it redirects to the login page.
+- Menus are filtered by the permission points the current user holds; without the `users` permission, the user management entry is not visible.
+- **The real access control is in the backend**: hiding menus on the frontend is only a UX improvement, and the backend still rejects unauthorized requests by permission point.
+
+Security tip: do not rely solely on frontend routing for permission decisions; the server is authoritative. See [Permission System](/en/features/rbac/).
+
+## State Management
+
+| | React | Vue |
+| --- | --- | --- |
+| Auth state | `lib/auth-context.tsx` | `stores/auth.ts` (Pinia) |
+| Site config | `lib/site-config.tsx` | `stores/site-config.ts` |
+| Theme | `components/theme-provider.tsx` | `stores/theme.ts` |
+
+Site config comes from the public endpoint `GET /api/public/config` and is used on the login page to display the site name and maintenance message, and to determine whether registration is open.
+
+## UI Conventions and Theming
+
+- The admin UI is designed for **computers and tablets**; accessing it from a phone shows a "Please switch devices" (请更换设备) prompt component (`UnsupportedViewport`).
+- Light/dark theme switching is provided (`ThemeToggle`), and the preference is persisted.
+- The React version integrates shadcn/ui, and the Vue version uses DaisyUI; shared components such as forms, tables, pagination, and delete confirmation live under `components/shared/`.
+
+<Tabs>
+<TabItem label="React">
+The React version includes PWA support, so the build output can be installed as a desktop/mobile app. Icons use `lucide-react`.
+</TabItem>
+<TabItem label="Vue">
+The Vue version uses `lucide-vue-next` icons and the `use-toast` composable to manage notifications. Note: the template's `package.json` still lists the `axios` dependency, but all requests go through the `api/client.ts` fetch wrapper, so it can be safely removed.
+</TabItem>
+</Tabs>
+
+## Adding a Page
+
+Taking React as an example:
+
+1. Create a new page component under `src/pages/`.
+2. Register the route in `router.tsx`.
+3. Add a menu item in `components/app-sidebar.tsx` and control its visibility with a permission point.
+4. Add the domain's calls and types under `src/api/` and `src/types/`.
+
+For Vue, modify the corresponding `pages/`, `router/index.ts`, `components/AppSidebar.vue`, `api/`, and `types/`.

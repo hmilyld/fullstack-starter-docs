@@ -1,0 +1,177 @@
+/* ==========================================================================
+   create-fullstack-app docs — visual identity
+   "The Board": a cool indigo PCB / blueprint-paper world with copper traces.
+   Light = blueprint paper. Dark = printed circuit board.
+   ========================================================================== */
+
+@import '@fontsource/space-grotesk/500.css';
+@import '@fontsource/space-grotesk/600.css';
+@import '@fontsource/space-grotesk/700.css';
+@import '@fontsource/ibm-plex-sans/400.css';
+@import '@fontsource/ibm-plex-sans/500.css';
+@import '@fontsource/ibm-plex-sans/600.css';
+@import '@fontsource/ibm-plex-mono/400.css';
+@import '@fontsource/ibm-plex-mono/500.css';
+
+/* --------------------------------------------------------------------------
+   Tokens — DARK (default): the PCB
+   -------------------------------------------------------------------------- */
+:root {
+  --ff-board: #0c0e20;
+  --ff-panel: #12152b;
+  --ff-copper: #c87a4a;
+  --ff-copper-soft: rgba(200, 122, 74, 0.16);
+  --ff-grid: rgba(140, 158, 255, 0.06);
+  --ff-display: 'Space Grotesk', 'HarmonyOS Sans SC', 'PingFang SC', 'Hiragino Sans GB',
+    'Microsoft YaHei', 'Noto Sans SC', sans-serif;
+  --ff-cjk: 'HarmonyOS Sans SC', 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei',
+    'Noto Sans SC', sans-serif;
+
+  /* Starlight color system */
+  --sl-color-black: #0c0e20;
+  --sl-color-white: #f5f7ff;
+  --sl-color-gray-1: #d7dcf5;
+  --sl-color-gray-2: #a9b0d8;
+  --sl-color-gray-3: #717ab0;
+  --sl-color-gray-4: #39406e;
+  --sl-color-gray-5: #232848;
+  --sl-color-gray-6: #12152b;
+  --sl-color-gray-7: #0e1124;
+
+  --sl-color-accent-low: #1b2050;
+  --sl-color-accent: #6366f1;
+  --sl-color-accent-high: #a5b0ff;
+
+  --sl-color-bg: #0c0e20;
+  --sl-color-bg-nav: #12152b;
+  --sl-color-bg-sidebar: #0e1124;
+  --sl-color-bg-inline-code: #1b2044;
+  --sl-color-hairline: #1d2244;
+  --sl-color-hairline-light: #2a3060;
+
+  /* Typography */
+  --sl-font:
+    'IBM Plex Sans', 'HarmonyOS Sans SC', 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei',
+    'Noto Sans SC', system-ui, sans-serif;
+  --sl-font-mono: 'IBM Plex Mono', ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+}
+
+/* --------------------------------------------------------------------------
+   Tokens — LIGHT: the blueprint paper
+   -------------------------------------------------------------------------- */
+:root[data-theme='light'] {
+  --ff-board: #f2f4fc;
+  --ff-panel: #ffffff;
+  --ff-copper: #b5643a;
+  --ff-copper-soft: rgba(181, 100, 58, 0.13);
+  --ff-grid: rgba(79, 70, 229, 0.07);
+
+  --sl-color-black: #f2f4fc;
+  --sl-color-white: #0f1330;
+  --sl-color-gray-1: #1b2036;
+  --sl-color-gray-2: #3a4166;
+  --sl-color-gray-3: #5c658c;
+  --sl-color-gray-4: #8a93b8;
+  --sl-color-gray-5: #c4cbe4;
+  --sl-color-gray-6: #dde3f2;
+  --sl-color-gray-7: #eaedf9;
+
+  --sl-color-accent-low: #dfe2ff;
+  --sl-color-accent: #4f46e5;
+  --sl-color-accent-high: #3730a3;
+
+  --sl-color-bg: #f2f4fc;
+  --sl-color-bg-nav: #e9edf9;
+  --sl-color-bg-sidebar: #f2f4fc;
+  --sl-color-bg-inline-code: #e2e7f6;
+  --sl-color-hairline: #d5dbee;
+  --sl-color-hairline-light: #c4cbe4;
+}
+
+/* --------------------------------------------------------------------------
+   Typography character
+   -------------------------------------------------------------------------- */
+h1,
+h2 {
+  font-family: var(--ff-display);
+  letter-spacing: -0.02em;
+  font-weight: 600;
+}
+
+.site-title {
+  font-family: var(--ff-display);
+  letter-spacing: -0.01em;
+}
+
+/* Utility: mono eyebrow label */
+.ff-eyebrow {
+  font-family: var(--sl-font-mono);
+  font-size: var(--sl-text-2xs);
+  text-transform: uppercase;
+  letter-spacing: 0.14em;
+  font-weight: 500;
+  color: var(--sl-color-text-accent);
+}
+
+/* --------------------------------------------------------------------------
+   Signature motif: copper trace on the active sidebar item(s)
+   -------------------------------------------------------------------------- */
+.sidebar-content a[aria-current='page'] {
+  position: relative;
+  color: var(--sl-color-text-accent);
+}
+
+.sidebar-content a[aria-current='page']::before {
+  content: '';
+  position: absolute;
+  left: -0.7rem;
+  top: 50%;
+  width: 0.5rem;
+  height: 0.5rem;
+  transform: translateY(-50%);
+  border-radius: 999px;
+  background: var(--ff-copper);
+  box-shadow:
+    0 0 0 3px var(--ff-copper-soft),
+    0 0 10px var(--ff-copper-soft);
+}
+
+/* A quiet copper trace running down the sidebar rail */
+.sidebar-content {
+  border-inline-end: 1px solid var(--sl-color-hairline);
+}
+
+/* --------------------------------------------------------------------------
+   Focus + selection — copper is the "live signal"
+   -------------------------------------------------------------------------- */
+:focus-visible {
+  outline: 2px solid var(--ff-copper);
+  outline-offset: 2px;
+  border-radius: 0.25rem;
+}
+
+::selection {
+  background: color-mix(in srgb, var(--ff-copper) 32%, transparent);
+}
+
+/* --------------------------------------------------------------------------
+   Links: subtle copper underline on hover
+   -------------------------------------------------------------------------- */
+.sl-markdown-content a:not([class]):hover {
+  text-decoration-color: var(--ff-copper);
+  text-underline-offset: 0.22em;
+}
+
+/* --------------------------------------------------------------------------
+   Accessibility: honor reduced motion everywhere
+   -------------------------------------------------------------------------- */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+    scroll-behavior: auto !important;
+  }
+}

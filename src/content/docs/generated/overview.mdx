@@ -1,0 +1,61 @@
+---
+title: 技术栈与组合
+description: 四种前后端组合的技术选型与差异对照。
+---
+
+import { Tabs, TabItem } from '@astrojs/starlight/components';
+
+四种组合共享同一套功能、接口约定与响应格式，因此可以按团队熟悉的技术栈自由选择。
+
+## 组合矩阵
+
+| | Python (FastAPI) | Java (Spring Boot) |
+| --- | --- | --- |
+| **React** | React 19 + Vite + shadcn/ui · FastAPI async | React 19 + Vite + shadcn/ui · Spring Boot 3.2 |
+| **Vue** | Vue 3 + Vite + DaisyUI · FastAPI async | Vue 3 + Vite + DaisyUI · Spring Boot 3.2 |
+
+## 前端技术栈
+
+| 组件 | React 模板 | Vue 模板 |
+| --- | --- | --- |
+| 框架 | React 19 | Vue 3.5+（Composition API） |
+| 构建 | Vite | Vite |
+| 语言 | TypeScript | TypeScript |
+| 样式 | Tailwind CSS v4 + shadcn/ui（含 PWA） | Tailwind CSS v4 + DaisyUI |
+| HTTP | 原生 fetch 封装（401 自动登出） | 原生 fetch 封装（401 自动登出） |
+| 路由 | react-router v7 | vue-router v4 |
+| 状态 | React Context（`lib/`） | Pinia（`stores/`） |
+| 图标 | lucide-react | lucide-vue-next |
+
+## 后端技术栈
+
+| 组件 | Python 模板 | Java 模板 |
+| --- | --- | --- |
+| 框架 | FastAPI | Spring Boot 3.2 |
+| ORM | SQLAlchemy 2.0（async） | Spring Data JPA |
+| 数据库 | SQLite（aiosqlite） | SQLite 文件（`./data/app.db`，Flyway 迁移） |
+| 认证 | PyJWT + bcrypt | Sa-Token（uuid 风格令牌）+ BCrypt |
+| 密钥 | 环境变量 `JWT_SECRET_KEY`（弱密钥拒绝启动） | 无需密钥（服务端会话令牌） |
+| 接口文档 | 内置 Swagger `/docs` | 无内置 Swagger，接口以控制器为准 |
+
+:::caution[令牌不通用]
+Python 使用 JWT，Java 使用 Sa-Token 的 UUID 令牌，两者格式不同、互不兼容。切换后端时前端需要重新登录，已签发的令牌无效。
+:::
+
+## 行为差异
+
+两套后端的功能与权限模型一致，只有少数细节不同：
+
+- **`logout`**：Python 要求已登录；Java 兼容未登录调用并同样返回成功。
+- **权限拦截返回**：两栈在无权限时都返回 403，并记录一条审计日志。
+- **启动初始化**：Python 在启动时 `create_all` + 种子数据 + 权限同步；Java 由 Flyway 迁移并执行权限同步任务。
+
+## 响应格式
+
+所有接口统一返回：
+
+```json
+{ "code": 0, "message": "success", "data": {} }
+```
+
+出错时 `code` 为 `-1`，`message` 为中文提示。分页数据统一为 `{ list, total, page, pageSize }`。详见 [API 接口](/reference/api/)。

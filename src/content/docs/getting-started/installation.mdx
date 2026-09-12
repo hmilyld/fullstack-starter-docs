@@ -1,0 +1,72 @@
+---
+title: 安装与环境
+description: 运行脚手架与生成项目所需的软件依赖和安装步骤。
+---
+
+import { Tabs, TabItem, Steps } from '@astrojs/starlight/components';
+
+## 环境要求
+
+| 依赖 | 版本 | 用途 |
+| --- | --- | --- |
+| Node.js | ≥ 18（推荐 20 / 22） | 运行脚手架、构建前端 |
+| npm | 随 Node 安装 | 安装依赖、构建 |
+| Python + uv | Python ≥ 3.12 | 仅选择 Python 后端时需要 |
+| JDK + Maven | JDK 21、Maven 3.9+ | 仅选择 Java 后端时需要 |
+| OpenSSL | 任意版本 | `dev.sh` 生成随机 JWT 密钥（Python 后端） |
+| Docker | 可选 | 构建与运行部署镜像 |
+
+<Tabs>
+<TabItem label="Python 路线">
+- 安装 [uv](https://docs.astral.sh/uv/)（依赖管理与运行）。
+- Python 版本需 ≥ 3.12，`uv` 会自动处理虚拟环境。
+- 代码检查使用 `ruff`（作为开发依赖由 `uv sync` 安装）。
+</TabItem>
+<TabItem label="Java 路线">
+- 安装 JDK 21 与 Maven 3.9+。
+- 依赖由 Maven 自动管理，首次构建会下载。
+- 代码格式化检查使用 `mvn spotless:check`。
+</TabItem>
+</Tabs>
+
+## 安装脚手架
+
+<Steps>
+
+1. 安装依赖
+
+   ```bash
+   npm install
+   ```
+
+2. 编译 TypeScript
+
+   ```bash
+   npm run build
+   ```
+
+   产物输出到 `dist/`。也可以用 `npm run dev` 跳过编译，直接以 `tsx` 运行源码。
+
+3. 验证安装
+
+   ```bash
+   node dist/index.js
+   ```
+
+   出现交互式提问即表示安装成功。
+
+</Steps>
+
+:::note
+生成器自身的 npm 包名为 `create-fullstack-app`，安装后提供同名命令。若通过 `npm run dev` 或 `node dist/index.js` 运行，效果一致。
+:::
+
+## 生成项目的依赖
+
+脚手架运行结束后，生成的项目需要各自的工具链：
+
+- **前端**：使用 npm 安装依赖（模板含 `package-lock.json`）。
+- **Python 后端**：使用 `uv sync` 安装依赖，`pyproject.toml` 定义依赖。
+- **Java 后端**：使用 Maven 构建，`pom.xml` 定义依赖。
+
+`dev.sh` 的 `install` 子命令会替你完成前端与 Python 后端的依赖安装。详见[开发与构建脚本](/deployment/scripts/)。

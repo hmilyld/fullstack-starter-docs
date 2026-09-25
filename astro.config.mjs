@@ -93,6 +93,16 @@ export default defineConfig({
               translations: { en: 'RBAC' },
             },
             {
+              slug: 'features/menu-management',
+              label: '菜单管理',
+              translations: { en: 'Menu Management' },
+            },
+            {
+              slug: 'features/data-management',
+              label: '数据管理',
+              translations: { en: 'Data Management' },
+            },
+            {
               slug: 'features/system-settings',
               label: '系统设置',
               translations: { en: 'System Settings' },

@@ -11,8 +11,8 @@ Java 后端使用 Spring Boot 3.2 + Spring Data JPA + SQLite，代码按**层**�
 src/main/java/com/hmilyld/fullstack/
 ├── FullstackApplication.java
 ├── common/            # ApiResponse、PageResult、全局异常处理
-├── config/            # 审计、CORS、Sa-Token、权限目录与同步任务
-├── controller/        # 9 个控制器：auth / user / role / permission / system ...
+├── config/            # 审计、CORS、Sa-Token、菜单/权限目录、导入冻结与同步任务
+├── controller/        # 12 个控制器：auth / user / role / permission / menu / data ...
 ├── service/           # 业务逻辑
 ├── repository/        # Spring Data JPA 仓储
 ├── entity/            # JPA 实体
@@ -23,9 +23,9 @@ src/main/java/com/hmilyld/fullstack/
 ## 数据库与迁移
 
 - 数据库为 SQLite 文件，默认 `./data/app.db`。
-- 使用 **Flyway** 管理结构：`src/main/resources/db/migration/V1__init.sql` 建表并写入种子数据。
+- 使用 **Flyway** 管理结构：`V1__init.sql` 建表与基础种子，`V2__menu_and_app_state.sql` 创建菜单和运行状态表。
 - JPA 设为 `ddl-auto: none`，结构完全由迁移脚本控制。
-- 启动后 `PermissionSyncRunner` 会同步权限目录并补齐 `admin` 角色权限。
+- 启动后 `PermissionSyncRunner` 先同步权限，`MenuSyncRunner` 再补齐内置菜单，不覆盖管理员调整的顺序。
 
 ## 认证：Sa-Token
 
@@ -33,6 +33,7 @@ Java 版使用 **Sa-Token** 的服务端会话令牌（UUID 风格），**不需
 
 - 令牌默认有效期 86400 秒（24 小时）。
 - `BearerTokenFilter` 将 `Authorization: Bearer <token>` 转换为 Sa-Token 需要的 `satoken` 头。
+- 登录时在 Sa-Token Session 中记录全局 `session_epoch`，每次请求都会与数据库状态校验；数据导入成功后所有会话失效。
 - 接口权限通过 `@SaCheckPermission(...)` 注解声明，支持 `SaMode.OR` 组合多个权限码。
 - `BCrypt` 用于密码哈希。
 
@@ -54,6 +55,9 @@ Sa-Token 的 UUID 令牌与 Python 版的 JWT 格式不同，切换后端时前�
 | `sa-token.timeout` | `86400` | 令牌有效期（秒） |
 | `app.cors-origins` | `http://localhost:5173` | 允许的前端来源 |
 | `app.audit.exclude-paths` | `/api/auth` | 审计中间件排除路径 |
+| `app.data.tmp-dir` | `./data/tmp` | 导入导出临时目录 |
+| `app.data.max-import-size-bytes` | `1073741824` | 导入包大小上限 |
+| `spring.servlet.multipart.max-file-size` | `1GB` | multipart 上传上限 |
 
 ## 手动启动
 

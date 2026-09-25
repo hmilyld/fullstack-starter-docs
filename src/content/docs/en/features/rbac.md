@@ -10,11 +10,13 @@ API authorization is based on **permission codes**, not on checking role names. 
 
 ## Permission Codes
 
-There are 24 permission codes in total, split into menu permissions and operation permissions. The complete catalog is in [Permission Codes](/en/reference/permissions/).
+There are 32 permission codes in total: 9 menu permissions and 23 operation permissions. The complete catalog is in [Permission Codes](/en/reference/permissions/).
 
-**Menu permissions (7)**: `dashboard`, `users`, `roles`, `permissions`, `settings`, `ai_models`, `audit_logs`.
+**Menu permissions (9)**: `dashboard`, `users`, `roles`, `permissions`, `menus`, `settings`, `ai_models`, `audit_logs`, `data_management`.
 
-**Operation permissions (17)**: `users.create`, `users.edit`, `users.delete`, `users.assign_role`, `roles.create`, `roles.edit`, `roles.delete`, `permissions.create`, `permissions.edit`, `permissions.delete`, `settings.edit`, `ai_models.create`, `ai_models.edit`, `ai_models.delete`, `ai_models.presets.create`, `ai_models.presets.edit`, `ai_models.presets.delete`.
+**Operation permissions (23)**: `users.create`, `users.edit`, `users.delete`, `users.assign_role`, `roles.create`, `roles.edit`, `roles.delete`, `permissions.create`, `permissions.edit`, `permissions.delete`, `menus.create`, `menus.edit`, `menus.delete`, `menus.reorder`, `settings.edit`, `ai_models.create`, `ai_models.edit`, `ai_models.delete`, `ai_models.presets.create`, `ai_models.presets.edit`, `ai_models.presets.delete`, `data_management.export`, `data_management.import`.
+
+Menu permissions must be created through menu management or synchronized from the built-in menu catalog. The general permission API does not create or delete them, preventing an authorization record with no sidebar presentation metadata.
 
 ## Default Roles
 
@@ -52,5 +54,7 @@ The user and role endpoints have the following constraints built in:
 ## Related Pages
 
 - [Permission Codes](/en/reference/permissions/)
+- [Menu Management](/en/features/menu-management/)
+- [Data Management](/en/features/data-management/)
 - [Audit Logs](/en/features/audit-logs/)
 - [API Reference](/en/reference/api/)

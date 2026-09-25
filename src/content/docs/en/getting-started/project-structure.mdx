@@ -48,10 +48,10 @@ my-project/
 - src
   - api
     - client.ts   fetch wrapper, auto logout on 401
-    - auth.ts  user.ts  role.ts  permission.ts  system.ts
-    - dashboard.ts  ai-model.ts  audit-log.ts
+    - auth.ts  user.ts  role.ts  permission.ts  menu.ts
+    - system.ts  dashboard.ts  ai-model.ts  audit-log.ts  data-management.ts
   - types
-    - common.ts  auth.ts  user.ts  role.ts  permission.ts
+    - common.ts  auth.ts  user.ts  role.ts  permission.ts  menu.ts
     - system.ts  dashboard.ts  ai-model.ts  audit-log.ts
   - components
     - admin-layout.tsx  app-sidebar.tsx  header.tsx  login-form.tsx
@@ -64,7 +64,7 @@ my-project/
     - auth  login.tsx  register.tsx
     - dashboard  index.tsx
     - settings
-      - user  role  permission  system  ai-model  audit-log  profile
+      - user  role  permission  menu  system  ai-model  audit-log  data-management  profile
     - not-found.tsx
   - router.tsx
   - App.tsx
@@ -79,7 +79,7 @@ my-project/
 
 <FileTree>
 - src
-  - api  same as React, split by business domain (client.ts + 8 domain files)
+  - api  same as React, split by business domain (client.ts + domain files)
   - types  split by business domain
   - components
     - AppHeader.vue  AppSidebar.vue  ThemeToggle.vue
@@ -89,7 +89,7 @@ my-project/
   - pages
     - auth  Login.vue  Register.vue
     - dashboard  Index.vue
-    - settings  AiModel / AuditLog / PermissionManage / Profile / RoleManage / System / UserManage
+    - settings  AiModel / AuditLog / DataManagement / MenuManage / PermissionManage / Profile / RoleManage / System / UserManage
     - NotFound.vue
   - router  index.ts
   - stores  auth.ts  site-config.ts  theme.ts
@@ -113,9 +113,10 @@ my-project/
   - main.py   FastAPI app, CORS, audit middleware, route registration
   - core
     - config.py  database.py  security.py  deps.py
-    - audit.py  permissions_catalog.py  seed.py  schemas.py
-  - auth  user  role  permission
-  - system  ai_model  audit  dashboard  public
+    - audit.py  permissions_catalog.py  menu_catalog.py
+    - app_state.py  seed.py  schemas.py
+  - auth  user  role  permission  menu
+  - system  ai_model  audit  data_management  dashboard  public
   - each domain contains models / schemas / crud / router
 - pyproject.toml
 - .env.example
@@ -139,7 +140,8 @@ Domain-modular organization: one package per business domain, with infrastructur
   - service
 - src/main/resources
   - application.yml
-  - db/migration/V1__init.sql   Flyway initialization and seed data
+  - db/migration/V1__init.sql   Base tables and seed data
+  - db/migration/V2__menu_and_app_state.sql   Menu tables and runtime state
 - pom.xml
 </FileTree>
 

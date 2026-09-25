@@ -17,10 +17,12 @@ app/
 │   ├── deps.py             # 依赖：当前用户、权限校验
 │   ├── audit.py            # 审计中间件
 │   ├── permissions_catalog.py  # 权限码目录（唯一来源）
+│   ├── menu_catalog.py     # 内置菜单与分组目录
+│   ├── app_state.py        # 会话世代与菜单布局版本
 │   ├── seed.py             # 种子数据
 │   └── schemas.py          # ApiResponse / PaginatedData
-├── auth/  user/  role/  permission/
-├── system/  ai_model/  audit/  dashboard/  public/
+├── auth/  user/  role/  permission/  menu/
+├── system/  ai_model/  audit/  data_management/  dashboard/  public/
 └── ...                     # 每个域含 models / schemas / crud / router
 ```
 
@@ -31,12 +33,15 @@ app/
 1. `init_db()` —— 建表（`create_all`）。
 2. `seed_data()` —— 写入默认角色、权限与用户（幂等：已有数据则跳过）。
 3. `sync_permissions()` —— 将权限目录与数据库同步，并补齐 `admin` 角色缺失的权限。
-4. `init_default_presets()` —— 初始化 AI 模型预设（表为空时）。
+4. `sync_menu_catalog()` —— 补齐内置菜单分组和菜单项，不覆盖已有顺序。
+5. 初始化 `app_state` 与菜单布局版本。
+6. `init_default_presets()` —— 初始化 AI 模型预设（表为空时）。
 
 ## 安全
 
 - **密码**：bcrypt 哈希。
 - **令牌**：PyJWT，HS256，默认有效期 1440 分钟（24 小时），`sub` 为用户名 ID。
+- **会话世代**：JWT 包含 `epoch`。数据导入成功后会轮换 `app_state.session_epoch`，立即使所有旧令牌失效。
 - **JWT 密钥校验**：`JWT_SECRET_KEY` 为空或属于弱密钥集合（如 `secret`、`123456`、`changeme`）时**拒绝启动**；长度不足 32 会警告但仍启动。
 - **速率限制**：登录与注册按 IP 限制，每分钟最多 5 次，超出返回中文提示。
 - **权限**：接口通过 `require_permission(...)` 依赖按权限码鉴权，而非判断角色名。
@@ -62,6 +67,8 @@ openssl rand -base64 48
 | `JWT_ALGORITHM` | 默认 `HS256` |
 | `JWT_ACCESS_TOKEN_EXPIRE_MINUTES` | 默认 `1440` |
 | `CORS_ORIGINS` | 允许的前端来源，JSON 数组 |
+| `DATA_TMP_DIR` | 导入导出临时目录，默认 `./data/tmp` |
+| `MAX_IMPORT_SIZE_BYTES` | 导入包大小上限，默认 1 GB |
 
 ## 手动启动
 

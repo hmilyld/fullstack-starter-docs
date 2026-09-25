@@ -10,11 +10,13 @@ description: 基于权限点的 RBAC 模型、默认角色、权限同步与越�
 
 ## 权限码
 
-共 24 个权限码，分为菜单权限与操作权限。完整的权限码目录见[权限码](/reference/permissions/)。
+共 32 个权限码，分为 9 个菜单权限与 23 个操作权限。完整的权限码目录见[权限码](/reference/permissions/)。
 
-**菜单权限（7 个）**：`dashboard`、`users`、`roles`、`permissions`、`settings`、`ai_models`、`audit_logs`。
+**菜单权限（9 个）**：`dashboard`、`users`、`roles`、`permissions`、`menus`、`settings`、`ai_models`、`audit_logs`、`data_management`。
 
-**操作权限（17 个）**：`users.create`、`users.edit`、`users.delete`、`users.assign_role`、`roles.create`、`roles.edit`、`roles.delete`、`permissions.create`、`permissions.edit`、`permissions.delete`、`settings.edit`、`ai_models.create`、`ai_models.edit`、`ai_models.delete`、`ai_models.presets.create`、`ai_models.presets.edit`、`ai_models.presets.delete`。
+**操作权限（23 个）**：`users.create`、`users.edit`、`users.delete`、`users.assign_role`、`roles.create`、`roles.edit`、`roles.delete`、`permissions.create`、`permissions.edit`、`permissions.delete`、`menus.create`、`menus.edit`、`menus.delete`、`menus.reorder`、`settings.edit`、`ai_models.create`、`ai_models.edit`、`ai_models.delete`、`ai_models.presets.create`、`ai_models.presets.edit`、`ai_models.presets.delete`、`data_management.export`、`data_management.import`。
+
+菜单权限必须通过菜单管理创建或由内置菜单目录同步。普通权限接口不会创建或删除菜单权限，以避免只有鉴权记录、没有侧边栏展示元数据的状态。
 
 ## 默认角色
 
@@ -52,5 +54,7 @@ description: 基于权限点的 RBAC 模型、默认角色、权限同步与越�
 ## 相关页面
 
 - [权限码](/reference/permissions/)
+- [菜单管理](/features/menu-management/)
+- [数据管理](/features/data-management/)
 - [审计日志](/features/audit-logs/)
 - [API 接口](/reference/api/)

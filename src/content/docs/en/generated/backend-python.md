@@ -17,10 +17,12 @@ app/
 │   ├── deps.py             # Dependencies: current user, permission checks
 │   ├── audit.py            # Audit middleware
 │   ├── permissions_catalog.py  # Permission code catalog (single source of truth)
+│   ├── menu_catalog.py     # Built-in menu and group catalog
+│   ├── app_state.py        # Session epoch and menu layout version
 │   ├── seed.py             # Seed data
 │   └── schemas.py          # ApiResponse / PaginatedData
-├── auth/  user/  role/  permission/
-├── system/  ai_model/  audit/  dashboard/  public/
+├── auth/  user/  role/  permission/  menu/
+├── system/  ai_model/  audit/  data_management/  dashboard/  public/
 └── ...                     # each domain contains models / schemas / crud / router
 ```
 
@@ -31,12 +33,15 @@ On application startup (lifespan), the following run in order:
 1. `init_db()` — create tables (`create_all`).
 2. `seed_data()` — write default roles, permissions, and users (idempotent: skipped if data already exists).
 3. `sync_permissions()` — sync the permission catalog with the database and fill in permissions missing from the `admin` role.
-4. `init_default_presets()` — initialize AI model presets (when the table is empty).
+4. `sync_menu_catalog()` — fill in built-in groups and items without overwriting saved order.
+5. Initialize `app_state` and the menu layout version.
+6. `init_default_presets()` — initialize AI model presets (when the table is empty).
 
 ## Security
 
 - **Passwords**: bcrypt hashing.
 - **Tokens**: PyJWT, HS256, valid for 1440 minutes (24 hours) by default, with `sub` as the user ID.
+- **Session epoch**: JWTs contain an `epoch`. A successful data import rotates `app_state.session_epoch`, immediately invalidating every old token.
 - **JWT key validation**: if `JWT_SECRET_KEY` is empty or belongs to the weak-key set (such as `secret`, `123456`, `changeme`), startup is **refused**; a length under 32 triggers a warning but still starts.
 - **Rate limiting**: login and registration are limited by IP to at most 5 times per minute; exceeding this returns a Chinese message.
 - **Permissions**: endpoints authorize by permission code via the `require_permission(...)` dependency, not by checking role names.
@@ -62,6 +67,8 @@ Configuration is read from environment variables and `backend/.env` (based on `p
 | `JWT_ALGORITHM` | Defaults to `HS256` |
 | `JWT_ACCESS_TOKEN_EXPIRE_MINUTES` | Defaults to `1440` |
 | `CORS_ORIGINS` | Allowed frontend origins, as a JSON array |
+| `DATA_TMP_DIR` | Temporary import/export directory, default `./data/tmp` |
+| `MAX_IMPORT_SIZE_BYTES` | Import archive size limit, default 1 GB |
 
 ## Starting Manually
 

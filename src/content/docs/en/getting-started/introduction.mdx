@@ -5,14 +5,14 @@ description: What create-fullstack-app is, what it can generate, and who it is f
 
 `create-fullstack-app` is a full-stack application scaffold. Run the interactive command line, choose a frontend and backend framework, and it generates an admin panel in the current directory that you can develop, build, and deploy right away.
 
-The generated project is not a hollow shell: login and registration, user management, roles and permissions, system settings, AI model management, audit logs, and a dashboard are all built in.
+The generated project is not a hollow shell: login and registration, user management, roles and permissions, dynamic menus, system settings, AI model management, audit logs, full-data import/export, and a dashboard are all built in.
 
 ## What It Can Generate
 
 - **Choice of frontend**: React 19 (Vite + TypeScript + Tailwind CSS v4 + shadcn/ui, with PWA) or Vue 3 (Vite + TypeScript + Tailwind CSS v4 + DaisyUI).
 - **Choice of backend**: Python (FastAPI + SQLAlchemy async + SQLite) or Java (Spring Boot 3.2 + JPA + SQLite/Flyway).
 - **Authentication built in**: login, registration, logout; Python uses JWT, Java uses Sa-Token; includes login/registration rate limiting and automatic logout on 401.
-- **Complete admin panel**: users, roles, permissions, system settings, AI models and presets, audit logs, dashboard, and profile.
+- **Complete admin panel**: users, roles, permissions, menus, system settings, AI models and presets, audit logs, data management, dashboard, and profile.
 - **Deployment ready**: a single Docker image containing Nginx and the backend, started with one command.
 
 ## Four Combinations
@@ -41,6 +41,11 @@ API authorization is based on **permission points (RBAC)** rather than checking 
 - `pending_review` (Pending review): no permissions.
 
 Newly registered accounts enter either `user` or `pending_review` according to the "manual review" switch in system settings. See [Permission System](/en/features/rbac/).
+
+## Dynamic Menus and Data Management
+
+- The sidebar is generated from database-backed groups and items, with global ordering, cross-group dragging, and permission filtering. See [Menu Management](/en/features/menu-management/).
+- Data management provides same-version full export and import. Export uses a one-time random password, import freezes ordinary requests, and a successful restore invalidates every session. See [Data Management](/en/features/data-management/).
 
 ## Next Steps
 

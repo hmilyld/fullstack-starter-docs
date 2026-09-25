@@ -48,14 +48,16 @@ The two backends have the same features and permission model, with only a few sm
 
 - **`logout`**: Python requires login; Java tolerates unauthenticated calls and also returns success.
 - **Permission-denied response**: both stacks return 403 when permission is missing and record an audit log entry.
-- **Startup initialization**: Python runs `create_all` + seed data + permission sync at startup; Java uses Flyway migrations and runs a permission sync task.
+- **Startup initialization**: Python runs `create_all` + seed data + permission/menu sync at startup; Java uses Flyway migrations and runs permission and menu sync tasks in order.
 
 ## Response Format
 
-All endpoints return uniformly:
+Except for data-export files, all endpoints return uniformly:
 
 ```json
 { "code": 0, "message": "success", "data": {} }
 ```
 
 On error, `code` is `-1` and `message` is a Chinese message. Paginated data uniformly takes the form `{ list, total, page, pageSize }`. See [API Reference](/en/reference/api/).
+
+`POST /api/data/export` returns a ZIP file on success; the one-time password is returned in the `X-Export-Password` response header.

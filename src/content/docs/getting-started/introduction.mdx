@@ -5,14 +5,14 @@ description: create-fullstack-app 是什么，能生成什么，适合谁使用�
 
 `create-fullstack-app` 是一个全栈应用脚手架。运行交互式命令行，选择前端与后端框架，它会在当前目录生成一个可直接开发、构建和部署的后台管理系统。
 
-生成的项目不是空壳：登录注册、用户管理、角色权限、系统设置、AI 模型管理、审计日志和仪表盘都已内置。
+生成的项目不是空壳：登录注册、用户管理、角色权限、动态菜单、系统设置、AI 模型管理、审计日志、完整数据导入导出和仪表盘都已内置。
 
 ## 能生成什么
 
 - **前端二选一**：React 19（Vite + TypeScript + Tailwind CSS v4 + shadcn/ui，含 PWA）或 Vue 3（Vite + TypeScript + Tailwind CSS v4 + DaisyUI）。
 - **后端二选一**：Python（FastAPI + SQLAlchemy async + SQLite）或 Java（Spring Boot 3.2 + JPA + SQLite/Flyway）。
 - **认证内置**：登录、注册、登出；Python 走 JWT，Java 走 Sa-Token；含登录/注册速率限制与 401 自动登出。
-- **完整后台**：用户、角色、权限、系统设置、AI 模型与预设、审计日志、仪表盘、个人中心。
+- **完整后台**：用户、角色、权限、菜单、系统设置、AI 模型与预设、审计日志、数据管理、仪表盘、个人中心。
 - **部署就绪**：单个 Docker 镜像内含 Nginx 与后端，一条命令启动。
 
 ## 四种组合
@@ -41,6 +41,11 @@ description: create-fullstack-app 是什么，能生成什么，适合谁使用�
 - `pending_review`（待审核）：无任何权限。
 
 注册的新账号根据系统设置的「人工审核」开关进入 `user` 或 `pending_review`。详见[权限系统](/features/rbac/)。
+
+## 动态菜单与数据管理
+
+- 侧边栏由数据库中的分组和菜单项生成，支持全局排序、跨组拖拽和按权限过滤，详见[菜单管理](/features/menu-management/)。
+- 数据管理提供同版本完整导出与导入；导出使用一次性随机密码，导入期间冻结系统，成功后所有会话失效，详见[数据管理](/features/data-management/)。
 
 ## 下一步
 

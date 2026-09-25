@@ -13,7 +13,7 @@ The generated project is ready for development as-is, but there are a few things
 - [ ] **Delete or disable the sample users** (`zhangsan`, `lisi`, `wangwu`, `zhaoliu`).
 - [ ] **Tighten CORS**: keep only the real frontend origin in `CORS_ORIGINS` / `app.cors-origins`.
 - [ ] **Enable HTTPS**: add a TLS-terminating layer or reverse proxy in front of Nginx.
-- [ ] **Plan for backups**: SQLite is a single-file database; back up the data volume or file regularly.
+- [ ] **Plan two backup layers**: snapshot the Docker data volume regularly and use data management to export a checksummed encrypted business archive.
 
 ## Security Notes
 
@@ -45,6 +45,14 @@ The AI model connection test refuses to access localhost, intranet, and cloud me
 
 Audit logs record the operator, IP, and details. This is compliance data, so restrict access to it and plan a retention period.
 
+### Full export archives are highly sensitive
+
+The archive contains password hashes, AI API keys, SMTP passwords, and all business data. The export password is displayed only once and is never stored; it cannot be recovered if lost. Move the file to controlled storage immediately and never leave it in a server temp directory or distribute it through an uncontrolled channel.
+
+### Import freezes the system and invalidates every session
+
+During import, ordinary requests return `503` except the one-time job-status endpoint. After commit, the global session epoch rotates and every user must log in again. Perform imports in a maintenance window and ensure the disk can hold the database, snapshot, upload, and export archive.
+
 ## Common Pitfalls
 
 | Symptom | Cause and handling |
@@ -58,6 +66,13 @@ Audit logs record the operator, IP, and details. This is compliance data, so res
 | Dashboard revenue/activity are fixed values | Some dashboard fields are sample data; see [Dashboard](/en/features/dashboard/) |
 | Creating a user with a non-default role fails | You additionally need the `users.assign_role` permission |
 | Permission code changes do not take effect | Restart the backend to trigger a sync, or call `POST /api/permissions/sync` |
+| A custom menu leads to a 404 | Routes may be entered freely, but the corresponding page still has to be registered in code |
+| A built-in menu or group cannot be deleted | Built-in entries have `is_system=true` and can only be moved or reordered |
+| Menu save reports a version conflict | Another administrator changed the layout; refresh menu management and reapply the change |
+| The export password is gone after closing the dialog | It is displayed only once; generate a new export |
+| The import archive cannot be restored | Restore supports only the same backend, application version, and schema version |
+| APIs return 503 during import | A full-database import is running; only the status endpoint accepts the `jobToken` |
+| Every account is logged out after import | A successful import rotates `session_epoch`; this is expected |
 
 ## FAQ
 
@@ -75,6 +90,12 @@ The admin UI is designed for computers and tablets; accessing it from a phone sh
 
 **Where is the data stored?**
 During development it is a SQLite file in the backend directory; in Docker it lives at `/app/data` in the container, persisted by the named volume `app-data`.
+
+**Is data management the same as automatic server-side backup?**
+No. It currently provides manual export and import, not scheduled backups, a history of server-side copies, incremental restore, or cross-version migration. Volume-level disaster recovery still requires external snapshots of `app-data`.
+
+**Why can't a Python export be imported into Java?**
+The archive records backend and schema versions. The current implementation guarantees only same-version restore and does not translate between two ORM stacks, time formats, or migration histories.
 
 ## Related Pages
 

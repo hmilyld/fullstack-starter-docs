@@ -16,6 +16,8 @@ import { Tabs, TabItem } from '@astrojs/starlight/components';
 | `JWT_ALGORITHM` | 签名算法 | `HS256` |
 | `JWT_ACCESS_TOKEN_EXPIRE_MINUTES` | 令牌有效期（分钟） | `1440` |
 | `CORS_ORIGINS` | 允许来源，JSON 数组 | `["http://localhost:5173"]` |
+| `DATA_TMP_DIR` | 导入导出临时目录 | `./data/tmp` |
+| `MAX_IMPORT_SIZE_BYTES` | 导入包大小上限 | `1073741824` |
 
 ```bash
 # backend/.env
@@ -24,6 +26,8 @@ JWT_SECRET_KEY=<openssl rand -base64 48 的输出>
 JWT_ALGORITHM=HS256
 JWT_ACCESS_TOKEN_EXPIRE_MINUTES=1440
 CORS_ORIGINS=["http://localhost:5173"]
+DATA_TMP_DIR=./data/tmp
+MAX_IMPORT_SIZE_BYTES=1073741824
 ```
 
 :::danger[弱密钥拒绝启动]
@@ -44,6 +48,10 @@ Java 后端配置位于 `src/main/resources/application.yml`：
 | `sa-token.timeout` | `86400` | 令牌有效期（秒） |
 | `app.cors-origins` | `http://localhost:5173` | 允许来源 |
 | `app.audit.exclude-paths` | `/api/auth` | 审计排除路径 |
+| `app.data.tmp-dir` | `./data/tmp` | 导入导出临时目录 |
+| `app.data.max-import-size-bytes` | `1073741824` | 导入包大小上限 |
+| `spring.servlet.multipart.max-file-size` | `1GB` | multipart 文件上限 |
+| `spring.servlet.multipart.max-request-size` | `1GB` | multipart 请求上限 |
 
 Java 版使用 Sa-Token，**不需要 `JWT_SECRET_KEY`**。
 

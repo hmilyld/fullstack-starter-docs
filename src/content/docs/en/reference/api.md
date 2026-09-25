@@ -3,13 +3,15 @@ title: API Reference
 description: A complete endpoint list, the uniform response format, and authentication notes.
 ---
 
-All endpoints are prefixed with `/api` and return uniformly:
+Except for file downloads, all endpoints are prefixed with `/api` and return uniformly:
 
 ```json
 { "code": 0, "message": "success", "data": {} }
 ```
 
 On error, `code` is `-1` and `message` is a Chinese message. For paginated endpoints, `data` is `{ list, total, page, pageSize }`.
+
+`POST /api/data/export` returns an `application/zip` file on success. The one-time random password is returned in the `X-Export-Password` response header.
 
 ## Authentication Notes
 
@@ -18,6 +20,7 @@ Meaning of the "Auth" column in the tables below:
 - `No`: no login required.
 - `Yes`: login required.
 - `Yes(permission)`: login required and the corresponding permission point must be held.
+- `One-time job token`: login is not used; the request must include the `X-Import-Job-Token` returned when the import job was created.
 
 The Python version returns 401 when not logged in; the two stacks behave the same except for `logout`: the Java version also returns success when called without logging in.
 
@@ -56,6 +59,22 @@ The Python version returns 401 when not logged in; the two stacks behave the sam
 | POST | `/api/permissions/sync` | Sync with the permission catalog | Yes(`permissions.create`) |
 | PUT | `/api/permissions/:code` | Update permission | Yes(`permissions.edit`) |
 | DELETE | `/api/permissions/:code` | Delete permission | Yes(`permissions.delete`) |
+
+> Menu permissions cannot be created or deleted through this API. Use the menu-management endpoints instead.
+
+## Menu Management
+
+| Method | Path | Description | Auth |
+| --- | --- | --- | --- |
+| GET | `/api/menus/navigation` | Dynamic sidebar visible to the current user | Login |
+| GET | `/api/menus` | Complete menu configuration and layout version | Yes(`menus`) |
+| POST | `/api/menus/groups` | Create a custom group | Yes(`menus.create`) |
+| PUT | `/api/menus/groups/:id` | Rename a group | Yes(`menus.edit`) |
+| DELETE | `/api/menus/groups/:id` | Delete an empty custom group | Yes(`menus.delete`) |
+| POST | `/api/menus/items` | Create a custom item and permission | Yes(`menus.create`) |
+| PUT | `/api/menus/items/:code` | Update item metadata | Yes(`menus.edit`) |
+| DELETE | `/api/menus/items/:code` | Delete a custom item and grants | Yes(`menus.delete`) |
+| PUT | `/api/menus/layout` | Atomically save group and item order | Yes(`menus.reorder`) |
 
 ## Dashboard
 
@@ -98,6 +117,16 @@ The Python version returns 401 when not logged in; the two stacks behave the sam
 | Method | Path | Description | Auth |
 | --- | --- | --- | --- |
 | GET | `/api/audit-logs` | Log list (filter by user/status/action/time + pagination) | Yes(`audit_logs`) |
+
+## Data Management
+
+| Method | Path | Description | Auth |
+| --- | --- | --- | --- |
+| POST | `/api/data/export` | Download an AES-256 encrypted full export | Yes(`data_management.export`) |
+| POST | `/api/data/import` | Upload and create a full import job | Yes(`data_management.import`) |
+| GET | `/api/data/import/:id` | Query import status | `X-Import-Job-Token` |
+
+During import, ordinary requests return 503 except the status endpoint. A successful import rotates the global session epoch, requiring every user to log in again. See [Data Management](/en/features/data-management/).
 
 ---
 

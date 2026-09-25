@@ -3,13 +3,15 @@ title: API 接口
 description: 全部接口一览、统一响应格式与认证说明。
 ---
 
-所有接口前缀为 `/api`，统一返回：
+除文件下载接口外，所有接口前缀为 `/api`，统一返回：
 
 ```json
 { "code": 0, "message": "success", "data": {} }
 ```
 
 出错时 `code` 为 `-1`，`message` 为中文提示。分页接口的 `data` 为 `{ list, total, page, pageSize }`。
+
+`POST /api/data/export` 成功时返回 `application/zip` 文件；一次性随机密码通过 `X-Export-Password` 响应头返回。
 
 ## 认证说明
 
@@ -18,6 +20,7 @@ description: 全部接口一览、统一响应格式与认证说明。
 - `否`：无需登录。
 - `是`：登录即可。
 - `是(权限码)`：需登录且拥有对应权限点。
+- `一次性任务令牌`：不使用登录令牌，需携带创建任务时返回的 `X-Import-Job-Token`。
 
 Python 版未登录返回 401；两栈行为一致，除 `logout` 外：Java 版未登录调用也返回成功。
 
@@ -56,6 +59,22 @@ Python 版未登录返回 401；两栈行为一致，除 `logout` 外：Java 版
 | POST | `/api/permissions/sync` | 与权限目录同步 | 是(`permissions.create`) |
 | PUT | `/api/permissions/:code` | 更新权限 | 是(`permissions.edit`) |
 | DELETE | `/api/permissions/:code` | 删除权限 | 是(`permissions.delete`) |
+
+> 菜单权限不能通过本接口创建或删除；请使用菜单管理接口维护菜单和对应权限。
+
+## 菜单管理
+
+| 方法 | 路径 | 说明 | 认证 |
+| --- | --- | --- | --- |
+| GET | `/api/menus/navigation` | 当前用户可见的动态侧边栏 | 是 |
+| GET | `/api/menus` | 完整菜单配置与布局版本 | 是(`menus`) |
+| POST | `/api/menus/groups` | 创建自定义分组 | 是(`menus.create`) |
+| PUT | `/api/menus/groups/:id` | 重命名分组 | 是(`menus.edit`) |
+| DELETE | `/api/menus/groups/:id` | 删除空的自定义分组 | 是(`menus.delete`) |
+| POST | `/api/menus/items` | 创建自定义菜单及权限 | 是(`menus.create`) |
+| PUT | `/api/menus/items/:code` | 更新菜单名称、分组、路由或图标 | 是(`menus.edit`) |
+| DELETE | `/api/menus/items/:code` | 删除自定义菜单及授权 | 是(`menus.delete`) |
+| PUT | `/api/menus/layout` | 原子保存分组和菜单顺序 | 是(`menus.reorder`) |
 
 ## 仪表盘
 
@@ -98,6 +117,16 @@ Python 版未登录返回 401；两栈行为一致，除 `logout` 外：Java 版
 | 方法 | 路径 | 说明 | 认证 |
 | --- | --- | --- | --- |
 | GET | `/api/audit-logs` | 日志列表（按用户/状态/动作/时间筛选 + 分页） | 是(`audit_logs`) |
+
+## 数据管理
+
+| 方法 | 路径 | 说明 | 认证 |
+| --- | --- | --- | --- |
+| POST | `/api/data/export` | 下载 AES-256 加密的完整导出包 | 是(`data_management.export`) |
+| POST | `/api/data/import` | 上传并创建完整导入任务 | 是(`data_management.import`) |
+| GET | `/api/data/import/:id` | 查询导入状态 | `X-Import-Job-Token` |
+
+导入期间除状态接口外的普通请求返回 503。导入成功后全局会话世代更新，所有用户必须重新登录。详见[数据管理](/features/data-management/)。
 
 ---
 

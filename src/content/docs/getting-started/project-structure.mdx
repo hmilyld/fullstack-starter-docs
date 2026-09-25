@@ -48,10 +48,10 @@ my-project/
 - src
   - api
     - client.ts   fetch 封装，401 自动登出
-    - auth.ts  user.ts  role.ts  permission.ts  system.ts
-    - dashboard.ts  ai-model.ts  audit-log.ts
+    - auth.ts  user.ts  role.ts  permission.ts  menu.ts
+    - system.ts  dashboard.ts  ai-model.ts  audit-log.ts  data-management.ts
   - types
-    - common.ts  auth.ts  user.ts  role.ts  permission.ts
+    - common.ts  auth.ts  user.ts  role.ts  permission.ts  menu.ts
     - system.ts  dashboard.ts  ai-model.ts  audit-log.ts
   - components
     - admin-layout.tsx  app-sidebar.tsx  header.tsx  login-form.tsx
@@ -64,7 +64,7 @@ my-project/
     - auth  login.tsx  register.tsx
     - dashboard  index.tsx
     - settings
-      - user  role  permission  system  ai-model  audit-log  profile
+      - user  role  permission  menu  system  ai-model  audit-log  data-management  profile
     - not-found.tsx
   - router.tsx
   - App.tsx
@@ -79,7 +79,7 @@ my-project/
 
 <FileTree>
 - src
-  - api  同 React，按业务域拆分（client.ts + 8 个域文件）
+  - api  同 React，按业务域拆分（client.ts + 业务域文件）
   - types  按业务域拆分
   - components
     - AppHeader.vue  AppSidebar.vue  ThemeToggle.vue
@@ -89,7 +89,7 @@ my-project/
   - pages
     - auth  Login.vue  Register.vue
     - dashboard  Index.vue
-    - settings  AiModel / AuditLog / PermissionManage / Profile / RoleManage / System / UserManage
+    - settings  AiModel / AuditLog / DataManagement / MenuManage / PermissionManage / Profile / RoleManage / System / UserManage
     - NotFound.vue
   - router  index.ts
   - stores  auth.ts  site-config.ts  theme.ts
@@ -113,9 +113,10 @@ my-project/
   - main.py   FastAPI 应用、CORS、审计中间件、路由注册
   - core
     - config.py  database.py  security.py  deps.py
-    - audit.py  permissions_catalog.py  seed.py  schemas.py
-  - auth  user  role  permission
-  - system  ai_model  audit  dashboard  public
+    - audit.py  permissions_catalog.py  menu_catalog.py
+    - app_state.py  seed.py  schemas.py
+  - auth  user  role  permission  menu
+  - system  ai_model  audit  data_management  dashboard  public
   - 每个领域含 models / schemas / crud / router
 - pyproject.toml
 - .env.example
@@ -139,7 +140,8 @@ my-project/
   - service
 - src/main/resources
   - application.yml
-  - db/migration/V1__init.sql   Flyway 初始化与种子数据
+  - db/migration/V1__init.sql   基础表与种子数据
+  - db/migration/V2__menu_and_app_state.sql   菜单表与运行状态
 - pom.xml
 </FileTree>
 

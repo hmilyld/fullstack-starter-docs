@@ -48,14 +48,16 @@ Python 使用 JWT，Java 使用 Sa-Token 的 UUID 令牌，两者格式不同、
 
 - **`logout`**：Python 要求已登录；Java 兼容未登录调用并同样返回成功。
 - **权限拦截返回**：两栈在无权限时都返回 403，并记录一条审计日志。
-- **启动初始化**：Python 在启动时 `create_all` + 种子数据 + 权限同步；Java 由 Flyway 迁移并执行权限同步任务。
+- **启动初始化**：Python 在启动时执行 `create_all` + 种子数据 + 权限/菜单同步；Java 由 Flyway 迁移并依次执行权限和菜单同步任务。
 
 ## 响应格式
 
-所有接口统一返回：
+除数据导出文件外，所有接口统一返回：
 
 ```json
 { "code": 0, "message": "success", "data": {} }
 ```
 
 出错时 `code` 为 `-1`，`message` 为中文提示。分页数据统一为 `{ list, total, page, pageSize }`。详见 [API 接口](/reference/api/)。
+
+`POST /api/data/export` 成功时返回 ZIP 文件；一次性密码在 `X-Export-Password` 响应头中返回。

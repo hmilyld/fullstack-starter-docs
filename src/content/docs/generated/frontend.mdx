@@ -15,8 +15,9 @@ React 与 Vue 模板采用同一套功能划分：按业务域拆分 API 与类�
 - 自动附加 `Authorization: Bearer <token>`。
 - 收到 **401** 时清除登录状态并跳转登录页。
 - 统一解析 `{ code, message, data }`，`code !== 0` 时抛出错误消息。
+- 支持二进制下载、`FormData` 上传和自定义状态头，用于数据导出、导入与任务轮询。
 
-各业务域的调用拆分在 `src/api/` 下：`auth.ts`、`user.ts`、`role.ts`、`permission.ts`、`system.ts`、`dashboard.ts`、`ai-model.ts`、`audit-log.ts`。
+各业务域的调用拆分在 `src/api/` 下：`auth.ts`、`user.ts`、`role.ts`、`permission.ts`、`menu.ts`、`system.ts`、`dashboard.ts`、`ai-model.ts`、`audit-log.ts`、`data-management.ts`。
 
 <Tabs>
 <TabItem label="React">
@@ -57,7 +58,8 @@ export async function request<T>(path: string, options?: RequestInit): Promise<T
 
 - 路由使用 `react-router`（React）或 `vue-router`（Vue）。
 - `ProtectedRoute`（Vue 为路由守卫）只校验**是否已登录**；未登录跳转登录页。
-- 菜单根据当前用户拥有的权限点过滤，没有 `users` 权限就看不到用户管理入口。
+- 侧边栏调用 `GET /api/menus/navigation` 动态加载；后端按当前用户权限过滤，分组内没有可见菜单时整组隐藏。
+- 菜单顺序、分组、路由和图标来自 `menu_groups` / `menu_items`，不再硬编码在 `AppSidebar` 中。
 - **真正的访问控制在后端**：前端隐藏菜单只是体验优化，后端仍按权限点拒绝越权请求。
 
 安全提示：不要只依赖前端路由做权限判断，服务端才是权威。详见[权限系统](/features/rbac/)。
@@ -93,7 +95,7 @@ Vue 版本使用 `lucide-vue-next` 图标与 `use-toast` 组合式函数管理�
 
 1. 在 `src/pages/` 下新建页面组件。
 2. 在 `router.tsx` 注册路由。
-3. 在 `components/app-sidebar.tsx` 添加菜单项，并用权限点控制可见性。
+3. 为页面定义权限码，并在菜单管理中创建或同步菜单项、设置路由和图标。
 4. 在 `src/api/` 与 `src/types/` 下补充该业务域的调用与类型。
 
-Vue 对应修改 `pages/`、`router/index.ts`、`components/AppSidebar.vue`、`api/`、`types/`。
+Vue 对应修改 `pages/`、`router/index.ts`、`api/`、`types/`，菜单配置仍在后台完成。

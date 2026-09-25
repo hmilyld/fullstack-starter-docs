@@ -11,7 +11,7 @@ The directory organization of different stacks is **deliberately not unified**, 
 
 | Template | Organization |
 | --- | --- |
-| `backend-python/` | Domain-modular: `app/core/` (infrastructure) + one package per business domain (`auth/`, `user/`, `role/`, …), each containing `models.py` / `schemas.py` / `crud.py` / `router.py` |
+| `backend-python/` | Domain-modular: `app/core/` (infrastructure) + one package per business domain (`auth/`, `user/`, `role/`, `permission/`, `menu/`, …), each containing `models.py` / `schemas.py` / `crud.py` / `router.py` |
 | `backend-java/` | Layered: `controller/`, `service/`, `repository/`, `entity/`, `dto/`, plus `common/`, `config/`, `security/` |
 | `frontend-react/` and `frontend-vue/` | Feature-based: pages under `pages/settings/<Domain>/`, APIs split by domain under `api/`, types split by domain under `types/` |
 
@@ -26,7 +26,11 @@ The directory organization of different stacks is **deliberately not unified**, 
 
 - Python's `ApiResponse` / `PaginatedData` live in `app/core/schemas.py`.
 - The permission code catalog is the single source of truth: Python `app/core/permissions_catalog.py`, Java `config/PermissionCatalog.java`.
+- Menu presentation is separate from authorization: `permissions` handles authorization, while `menu_groups` / `menu_items` own groups, routes, icons, and order.
+- Menu permissions must be created through menu management; built-in items cannot be deleted, and deleting a custom item must also remove role grants.
+- Export archives use `manifest.json + schema.sql + checksums.sha256 + data/*.jsonl`, support only same-backend/same-version restore, and exclude `app_state`.
 - The frontend HTTP layer is a lightweight fetch wrapper (`api/client.ts`); **do not introduce axios**.
+- The fetch wrapper must support binary downloads, `FormData` uploads, and custom status headers instead of assuming every response is JSON.
 
 ## Related Pages
 

@@ -16,6 +16,8 @@ The backend reads environment variables via `pydantic-settings` and loads `backe
 | `JWT_ALGORITHM` | Signing algorithm | `HS256` |
 | `JWT_ACCESS_TOKEN_EXPIRE_MINUTES` | Token validity (minutes) | `1440` |
 | `CORS_ORIGINS` | Allowed origins, JSON array | `["http://localhost:5173"]` |
+| `DATA_TMP_DIR` | Temporary import/export directory | `./data/tmp` |
+| `MAX_IMPORT_SIZE_BYTES` | Import archive size limit | `1073741824` |
 
 ```bash
 # backend/.env
@@ -24,6 +26,8 @@ JWT_SECRET_KEY=<output of openssl rand -base64 48>
 JWT_ALGORITHM=HS256
 JWT_ACCESS_TOKEN_EXPIRE_MINUTES=1440
 CORS_ORIGINS=["http://localhost:5173"]
+DATA_TMP_DIR=./data/tmp
+MAX_IMPORT_SIZE_BYTES=1073741824
 ```
 
 :::danger[Weak keys refuse to start]
@@ -44,6 +48,10 @@ The Java backend configuration is at `src/main/resources/application.yml`:
 | `sa-token.timeout` | `86400` | Token validity (seconds) |
 | `app.cors-origins` | `http://localhost:5173` | Allowed origins |
 | `app.audit.exclude-paths` | `/api/auth` | Audit excluded paths |
+| `app.data.tmp-dir` | `./data/tmp` | Temporary import/export directory |
+| `app.data.max-import-size-bytes` | `1073741824` | Import archive size limit |
+| `spring.servlet.multipart.max-file-size` | `1GB` | Multipart file limit |
+| `spring.servlet.multipart.max-request-size` | `1GB` | Multipart request limit |
 
 The Java version uses Sa-Token and **does not need `JWT_SECRET_KEY`**.
 

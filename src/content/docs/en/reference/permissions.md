@@ -1,9 +1,9 @@
 ---
 title: Permission Codes
-description: All 24 permission codes and their meanings.
+description: All 32 permission codes and their meanings.
 ---
 
-Permission codes are the sole basis for API authorization. There are 24 in total: 7 menu permissions + 17 operation permissions.
+Permission codes are the sole basis for API authorization. There are 32 in total: 9 menu permissions and 23 operation permissions.
 
 ## Menu Permissions
 
@@ -13,9 +13,11 @@ Permission codes are the sole basis for API authorization. There are 24 in total
 | `users` | User Management |
 | `roles` | Role Management |
 | `permissions` | Permission Management |
+| `menus` | Menu Management |
 | `settings` | System Settings |
 | `ai_models` | AI Model Configuration |
 | `audit_logs` | Audit Logs |
+| `data_management` | Data Management |
 
 ## Operation Permissions
 
@@ -31,6 +33,10 @@ Permission codes are the sole basis for API authorization. There are 24 in total
 | `permissions.create` | Create permission / sync |
 | `permissions.edit` | Edit permission |
 | `permissions.delete` | Delete permission |
+| `menus.create` | Create menu / group |
+| `menus.edit` | Edit menu / group |
+| `menus.delete` | Delete custom menu / empty group |
+| `menus.reorder` | Save menu order |
 | `settings.edit` | Modify system settings / test email |
 | `ai_models.create` | Create model |
 | `ai_models.edit` | Edit model |
@@ -38,12 +44,14 @@ Permission codes are the sole basis for API authorization. There are 24 in total
 | `ai_models.presets.create` | Create preset |
 | `ai_models.presets.edit` | Edit preset |
 | `ai_models.presets.delete` | Delete preset |
+| `data_management.export` | Export full data |
+| `data_management.import` | Import full data |
 
 ## Default Role Mapping
 
 | Role | Permissions held |
 | --- | --- |
-| `admin` | All 24 |
+| `admin` | All 32 |
 | `user` | `dashboard`, `users`, `settings` |
 | `pending_review` | None |
 
@@ -51,7 +59,11 @@ Permission codes are the sole basis for API authorization. There are 24 in total
 
 At startup, the permission catalog is automatically synchronized with the database (and missing `admin` permissions are filled in); you can also trigger a manual sync with `POST /api/permissions/sync`.
 
+Menu permissions are managed through the menu-management and data-management pages rather than being created or deleted through general permission CRUD.
+
 ## Related Pages
 
 - [Permission System](/en/features/rbac/)
+- [Menu Management](/en/features/menu-management/)
+- [Data Management](/en/features/data-management/)
 - [API Reference](/en/reference/api/)

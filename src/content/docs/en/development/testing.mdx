@@ -53,6 +53,15 @@ The scaffold itself has no automated test framework, so verification uses a manu
 
 </Steps>
 
+## Menu and Data Management Checks
+
+1. Log in as an administrator, reorder groups and move an item across groups in menu management, save, refresh, and confirm the order persists.
+2. Create a custom menu, grant it to a role, and confirm it appears in the dynamic sidebar; delete it and confirm its permission and grants disappear.
+3. Export full data, confirm the download and one-time password dialog, and verify the password cannot be displayed again after closing.
+4. Import the archive with the correct password and confirm ordinary APIs return `503` during import and the job ends with `success`.
+5. After a successful import, confirm old tokens return `401` and an administrator from the archive can log in.
+6. Try a wrong password, damaged archive, and incompatible version; confirm rollback and that ordinary APIs recover.
+
 ## Combinations to Cover
 
 At minimum, verify the combinations affected by your changes. Because frontend and backend pair freely, when changing a frontend template you should also verify it against both the Python and Java backends; the same applies when changing a backend template.
@@ -64,4 +73,8 @@ At minimum, verify the combinations affected by your changes. Because frontend a
 - [ ] The backend starts and completes initialization
 - [ ] `admin / 123456` can log in
 - [ ] Permission menus display correctly by role
+- [ ] Menu ordering, cross-group moves, and custom-menu permissions work
+- [ ] The export archive decrypts and contains the full table manifest
+- [ ] A successful import freezes ordinary requests and invalidates every session
+- [ ] A failed import rolls back and releases the freeze
 - [ ] The Docker image builds and runs

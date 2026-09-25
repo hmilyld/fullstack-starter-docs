@@ -19,6 +19,7 @@ Browser ──▶ :5173 (Nginx)
 - The frontend is built into static files by the Node stage, served by Nginx, with the SPA fallback `try_files ... /index.html`.
 - The backend listens on `127.0.0.1:8088` inside the container and is exposed externally only through Nginx.
 - The image has `EXPOSE 5173`, and `docker-compose.yml` maps `5173:5173`.
+- Nginx allows 1 GB uploads, disables proxy request/response buffering, and raises read/write timeouts to one hour for full-data import/export.
 
 ## Multi-Stage Build
 
@@ -62,12 +63,17 @@ Visit http://localhost:5173.
 ## Data Persistence
 
 - The database file lives at `/app/data` in the container, mounted from the named volume `app-data`.
+- Temporary import/export files live under `/app/data/tmp`, also on the persistent data volume.
 - `docker compose down` preserves the data; running `up -d` again does not lose it.
 - To clear the data, run:
 
 ```bash
 docker compose down -v   # deletes the data volume; data is unrecoverable
 ```
+
+Data management may keep a database snapshot, upload, and export archive at the same time. Reserve at least roughly three times the database size in the data volume.
+
+The full export archive contains password hashes, AI API keys, SMTP passwords, and other sensitive data. Move it to controlled storage immediately and do not distribute it through chat tools.
 
 ## Health Check
 
@@ -84,6 +90,7 @@ The image has a built-in health check (interval 30s, timeout 5s, startup grace 1
 
 ## Related Pages
 
+- [Data Management](/en/features/data-management/)
 - [Development and Build Scripts](/en/deployment/scripts/)
 - [Configuration and Environment Variables](/en/deployment/configuration/)
 - [Notes](/en/notes/)

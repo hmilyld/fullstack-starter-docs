@@ -19,6 +19,7 @@ import { Tabs, TabItem } from '@astrojs/starlight/components';
 - 前端由 Node 阶段构建为静态文件，交给 Nginx 提供，并带 SPA 回退 `try_files ... /index.html`。
 - 后端在容器内监听 `127.0.0.1:8088`，只经 Nginx 对外暴露。
 - 镜像内 `EXPOSE 5173`，`docker-compose.yml` 映射 `5173:5173`。
+- Nginx 上传上限为 1 GB，代理关闭请求/响应缓冲，并将读写超时放宽到 1 小时，以支持完整数据导入导出。
 
 ## 多阶段构建
 
@@ -62,12 +63,17 @@ JWT_SECRET_KEY="$(openssl rand -base64 48)" docker compose up -d
 ## 数据持久化
 
 - 数据库文件位于容器的 `/app/data`，由命名卷 `app-data` 挂载。
+- 导入导出临时文件位于 `/app/data/tmp`，同样落在持久化数据卷中。
 - `docker compose down` 会保留数据，重新 `up -d` 后不丢失。
 - 需要清空数据时执行：
 
 ```bash
 docker compose down -v   # 删除数据卷，数据不可恢复
 ```
+
+数据管理会同时产生数据库快照、上传文件和导出包，建议为数据卷预留至少约为数据库体积 3 倍的可用空间。
+
+完整导出的 ZIP 包含密码哈希、AI API Key 和 SMTP 密码等敏感数据。导出后应立即转移到受控存储，不要留在容器临时目录或直接通过消息工具传播。
 
 ## 健康检查
 
@@ -84,6 +90,7 @@ docker compose down -v   # 删除数据卷，数据不可恢复
 
 ## 相关页面
 
+- [数据管理](/features/data-management/)
 - [开发与构建脚本](/deployment/scripts/)
 - [配置与环境变量](/deployment/configuration/)
 - [注意事项](/notes/)

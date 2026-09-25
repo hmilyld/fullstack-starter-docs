@@ -15,8 +15,9 @@ The frontend HTTP layer is a lightweight native `fetch` wrapper, `src/api/client
 - Automatically attaches `Authorization: Bearer <token>`.
 - On a **401** response, clears the login state and redirects to the login page.
 - Uniformly parses `{ code, message, data }` and throws an error message when `code !== 0`.
+- Supports binary downloads, `FormData` uploads, and custom status headers for export, import, and job polling.
 
-The calls for each business domain are split under `src/api/`: `auth.ts`, `user.ts`, `role.ts`, `permission.ts`, `system.ts`, `dashboard.ts`, `ai-model.ts`, `audit-log.ts`.
+The calls for each business domain are split under `src/api/`: `auth.ts`, `user.ts`, `role.ts`, `permission.ts`, `menu.ts`, `system.ts`, `dashboard.ts`, `ai-model.ts`, `audit-log.ts`, `data-management.ts`.
 
 <Tabs>
 <TabItem label="React">
@@ -57,7 +58,8 @@ export async function request<T>(path: string, options?: RequestInit): Promise<T
 
 - Routing uses `react-router` (React) or `vue-router` (Vue).
 - `ProtectedRoute` (a route guard in Vue) checks only whether the user **is logged in**; if not, it redirects to the login page.
-- Menus are filtered by the permission points the current user holds; without the `users` permission, the user management entry is not visible.
+- The sidebar is loaded dynamically from `GET /api/menus/navigation`; the backend filters by current-user permissions and omits groups with no visible items.
+- Menu order, groups, routes, and icons come from `menu_groups` / `menu_items` instead of hard-coded data in `AppSidebar`.
 - **The real access control is in the backend**: hiding menus on the frontend is only a UX improvement, and the backend still rejects unauthorized requests by permission point.
 
 Security tip: do not rely solely on frontend routing for permission decisions; the server is authoritative. See [Permission System](/en/features/rbac/).
@@ -93,7 +95,7 @@ Taking React as an example:
 
 1. Create a new page component under `src/pages/`.
 2. Register the route in `router.tsx`.
-3. Add a menu item in `components/app-sidebar.tsx` and control its visibility with a permission point.
+3. Define a permission code, then create or synchronize the menu item with its route and icon in menu management.
 4. Add the domain's calls and types under `src/api/` and `src/types/`.
 
-For Vue, modify the corresponding `pages/`, `router/index.ts`, `components/AppSidebar.vue`, `api/`, and `types/`.
+For Vue, modify the corresponding `pages/`, `router/index.ts`, `api/`, and `types/`; menu configuration is still performed in the admin panel.

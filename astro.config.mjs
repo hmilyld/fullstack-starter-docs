@@ -198,6 +198,16 @@ export default defineConfig({
             },
           ],
         },
+        {
+          label: '论坛',
+          translations: { en: 'Forum' },
+          link: 'https://forum.hmilyld.com/c/fullstack',
+          attrs: {
+            'data-forum-link': '',
+            target: '_blank',
+            rel: 'noopener noreferrer',
+          },
+        },
       ],
     }),
   ],

@@ -1,165 +1,228 @@
 /* ==========================================================================
-   create-fullstack-app docs — visual identity
-   "The Board": a cool indigo PCB / blueprint-paper world with copper traces.
-   Light = blueprint paper. Dark = printed circuit board.
+   fullstack-starter docs — visual identity
+   Mirrors the generated admin template: neutral oklch greys, Inter, 0.625rem
+   radius, the same surface / border / muted tokens, and the same three-tier
+   responsive rules (compact < 768px, medium 768–1023px, expanded >= 1024px).
    ========================================================================== */
 
-@import '@fontsource/space-grotesk/500.css';
-@import '@fontsource/space-grotesk/600.css';
-@import '@fontsource/space-grotesk/700.css';
-@import '@fontsource/ibm-plex-sans/400.css';
-@import '@fontsource/ibm-plex-sans/500.css';
-@import '@fontsource/ibm-plex-sans/600.css';
-@import '@fontsource/ibm-plex-mono/400.css';
-@import '@fontsource/ibm-plex-mono/500.css';
+@import '@fontsource-variable/inter';
 
 /* --------------------------------------------------------------------------
-   Tokens — DARK (default): the PCB
+   Tokens — light (default). Values copied from templates/frontend-react/src/index.css
    -------------------------------------------------------------------------- */
 :root {
-  --ff-board: #0c0e20;
-  --ff-panel: #12152b;
-  --ff-copper: #c87a4a;
-  --ff-copper-soft: rgba(200, 122, 74, 0.16);
-  --ff-grid: rgba(140, 158, 255, 0.06);
-  --ff-display: 'Space Grotesk', 'HarmonyOS Sans SC', 'PingFang SC', 'Hiragino Sans GB',
-    'Microsoft YaHei', 'Noto Sans SC', sans-serif;
-  --ff-cjk: 'HarmonyOS Sans SC', 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei',
-    'Noto Sans SC', sans-serif;
+  --radius: 0.625rem;
+  --ff-radius-sm: calc(var(--radius) * 0.6);
+  --ff-radius-md: calc(var(--radius) * 0.8);
+  --ff-radius-lg: var(--radius);
+  --ff-radius-xl: calc(var(--radius) * 1.4);
+  --ff-radius-2xl: calc(var(--radius) * 1.8);
 
-  /* Starlight color system */
-  --sl-color-black: #0c0e20;
-  --sl-color-white: #f5f7ff;
-  --sl-color-gray-1: #d7dcf5;
-  --sl-color-gray-2: #a9b0d8;
-  --sl-color-gray-3: #717ab0;
-  --sl-color-gray-4: #39406e;
-  --sl-color-gray-5: #232848;
-  --sl-color-gray-6: #12152b;
-  --sl-color-gray-7: #0e1124;
+  --background: oklch(1 0 0);
+  --foreground: oklch(0.145 0 0);
+  --card: oklch(1 0 0);
+  --muted: oklch(0.97 0 0);
+  --muted-foreground: oklch(0.556 0 0);
+  --secondary: oklch(0.97 0 0);
+  --primary: oklch(0.205 0 0);
+  --primary-foreground: oklch(0.985 0 0);
+  --border: oklch(0.922 0 0);
+  --input: oklch(0.922 0 0);
+  --ring: oklch(0.708 0 0);
+  --success: oklch(0.52 0.13 152);
+  --warning: oklch(0.58 0.14 75);
+  --destructive: oklch(0.577 0.245 27.325);
+  --sidebar: oklch(0.985 0 0);
+  --sidebar-accent: oklch(0.97 0 0);
 
-  --sl-color-accent-low: #1b2050;
-  --sl-color-accent: #6366f1;
-  --sl-color-accent-high: #a5b0ff;
+  --ff-gutter: 1rem;
+  --ff-max: 100%;
+  --ff-gap: 1rem;
 
-  --sl-color-bg: #0c0e20;
-  --sl-color-bg-nav: #12152b;
-  --sl-color-bg-sidebar: #0e1124;
-  --sl-color-bg-inline-code: #1b2044;
-  --sl-color-hairline: #1d2244;
-  --sl-color-hairline-light: #2a3060;
-
-  /* Typography */
+  /* Starlight mapping */
   --sl-font:
-    'IBM Plex Sans', 'HarmonyOS Sans SC', 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei',
-    'Noto Sans SC', system-ui, sans-serif;
-  --sl-font-mono: 'IBM Plex Mono', ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+    'Inter Variable', 'HarmonyOS Sans SC', 'PingFang SC', 'Hiragino Sans GB',
+    'Microsoft YaHei', 'Noto Sans SC', system-ui, sans-serif;
+  --sl-font-mono:
+    ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas, 'Liberation Mono',
+    monospace;
+
+  --sl-color-black: oklch(1 0 0);
+  --sl-color-white: oklch(0.145 0 0);
+  --sl-color-gray-1: oklch(0.205 0 0);
+  --sl-color-gray-2: oklch(0.32 0 0);
+  --sl-color-gray-3: oklch(0.556 0 0);
+  --sl-color-gray-4: oklch(0.708 0 0);
+  --sl-color-gray-5: oklch(0.922 0 0);
+  --sl-color-gray-6: oklch(0.97 0 0);
+  --sl-color-gray-7: oklch(0.985 0 0);
+
+  --sl-color-accent-low: oklch(0.97 0 0);
+  --sl-color-accent: oklch(0.205 0 0);
+  --sl-color-accent-high: oklch(0.145 0 0);
+
+  --sl-color-bg: oklch(1 0 0);
+  --sl-color-bg-nav: oklch(1 0 0);
+  --sl-color-bg-sidebar: oklch(0.985 0 0);
+  --sl-color-bg-inline-code: oklch(0.97 0 0);
+  --sl-color-hairline: oklch(0.922 0 0);
+  --sl-color-hairline-light: oklch(0.94 0 0);
+  --sl-color-text-accent: oklch(0.205 0 0);
+  --sl-color-text-invert: oklch(0.985 0 0);
 }
 
 /* --------------------------------------------------------------------------
-   Tokens — LIGHT: the blueprint paper
+   Tokens — dark. Mirrors the template's .dark block
    -------------------------------------------------------------------------- */
-:root[data-theme='light'] {
-  --ff-board: #f2f4fc;
-  --ff-panel: #ffffff;
-  --ff-copper: #b5643a;
-  --ff-copper-soft: rgba(181, 100, 58, 0.13);
-  --ff-grid: rgba(79, 70, 229, 0.07);
+:root[data-theme='dark'] {
+  --background: oklch(0.145 0 0);
+  --foreground: oklch(0.985 0 0);
+  --card: oklch(0.205 0 0);
+  --muted: oklch(0.269 0 0);
+  --muted-foreground: oklch(0.708 0 0);
+  --secondary: oklch(0.269 0 0);
+  --primary: oklch(0.922 0 0);
+  --primary-foreground: oklch(0.205 0 0);
+  --border: oklch(1 0 0 / 10%);
+  --input: oklch(1 0 0 / 15%);
+  --ring: oklch(0.556 0 0);
+  --success: oklch(0.72 0.14 152);
+  --warning: oklch(0.78 0.13 78);
+  --destructive: oklch(0.704 0.191 22.216);
+  --sidebar: oklch(0.205 0 0);
+  --sidebar-accent: oklch(0.269 0 0);
 
-  --sl-color-black: #f2f4fc;
-  --sl-color-white: #0f1330;
-  --sl-color-gray-1: #1b2036;
-  --sl-color-gray-2: #3a4166;
-  --sl-color-gray-3: #5c658c;
-  --sl-color-gray-4: #8a93b8;
-  --sl-color-gray-5: #c4cbe4;
-  --sl-color-gray-6: #dde3f2;
-  --sl-color-gray-7: #eaedf9;
+  --sl-color-black: oklch(0.145 0 0);
+  --sl-color-white: oklch(0.985 0 0);
+  --sl-color-gray-1: oklch(0.985 0 0);
+  --sl-color-gray-2: oklch(0.87 0 0);
+  --sl-color-gray-3: oklch(0.708 0 0);
+  --sl-color-gray-4: oklch(0.556 0 0);
+  --sl-color-gray-5: oklch(0.371 0 0);
+  --sl-color-gray-6: oklch(0.269 0 0);
+  --sl-color-gray-7: oklch(0.205 0 0);
 
-  --sl-color-accent-low: #dfe2ff;
-  --sl-color-accent: #4f46e5;
-  --sl-color-accent-high: #3730a3;
+  --sl-color-accent-low: oklch(0.269 0 0);
+  --sl-color-accent: oklch(0.922 0 0);
+  --sl-color-accent-high: oklch(0.985 0 0);
 
-  --sl-color-bg: #f2f4fc;
-  --sl-color-bg-nav: #e9edf9;
-  --sl-color-bg-sidebar: #f2f4fc;
-  --sl-color-bg-inline-code: #e2e7f6;
-  --sl-color-hairline: #d5dbee;
-  --sl-color-hairline-light: #c4cbe4;
+  --sl-color-bg: oklch(0.145 0 0);
+  --sl-color-bg-nav: oklch(0.145 0 0);
+  --sl-color-bg-sidebar: oklch(0.205 0 0);
+  --sl-color-bg-inline-code: oklch(0.269 0 0);
+  --sl-color-hairline: oklch(1 0 0 / 10%);
+  --sl-color-hairline-light: oklch(1 0 0 / 15%);
+  --sl-color-text-accent: oklch(0.985 0 0);
+  --sl-color-text-invert: oklch(0.205 0 0);
 }
 
 /* --------------------------------------------------------------------------
-   Typography character
+   Layout tokens — same three-tier scale as the templates
+   -------------------------------------------------------------------------- */
+@media (min-width: 768px) {
+  :root {
+    --ff-gutter: 1.5rem;
+    --ff-gap: 1.5rem;
+  }
+}
+
+@media (min-width: 1024px) {
+  :root {
+    --ff-max: 90rem;
+  }
+}
+
+/* --------------------------------------------------------------------------
+   Typography — Inter everywhere, tabular numerals for data, balanced headings
    -------------------------------------------------------------------------- */
 h1,
-h2 {
-  font-family: var(--ff-display);
+h2,
+h3 {
   letter-spacing: -0.02em;
+  text-wrap: balance;
+}
+
+h1 {
   font-weight: 600;
 }
 
-.site-title {
-  font-family: var(--ff-display);
-  letter-spacing: -0.01em;
+h2 {
+  font-weight: 600;
 }
 
-/* Utility: mono eyebrow label */
-.ff-eyebrow {
-  font-family: var(--sl-font-mono);
+code,
+pre,
+kbd {
+  font-variant-ligatures: none;
+}
+
+table {
+  font-variant-numeric: tabular-nums;
+}
+
+/* A quiet inline label used on the landing page and cards */
+.ff-label {
   font-size: var(--sl-text-2xs);
-  text-transform: uppercase;
-  letter-spacing: 0.14em;
   font-weight: 500;
-  color: var(--sl-color-text-accent);
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--sl-color-gray-3);
 }
 
 /* --------------------------------------------------------------------------
-   Signature motif: copper trace on the active sidebar item(s)
-   Starlight fills active items with --sl-color-accent and sets the text to
-   --sl-color-text-invert. Both are light blue here, so the label disappears.
-   Drive the active state from copper instead, and keep the text dark.
+   Surfaces — one radius scale, one border token, no decorative gradients
    -------------------------------------------------------------------------- */
-.sidebar-content a[aria-current='page'] {
-  position: relative;
-  color: var(--ff-copper);
-  background-color: transparent;
-  border-radius: 0.375rem;
-  font-weight: 600;
+.ff-card {
+  border: 1px solid var(--sl-color-hairline);
+  border-radius: var(--ff-radius-xl);
+  background: var(--card);
+  padding: 1.25rem;
 }
 
-.sidebar-content a[aria-current='page']:hover,
-.sidebar-content a[aria-current='page']:focus {
-  color: var(--ff-copper);
-  background-color: var(--ff-copper-soft);
-}
-
-.sidebar-content a[aria-current='page']::before {
-  content: '';
-  position: absolute;
-  left: -0.7rem;
-  top: 50%;
-  width: 0.5rem;
-  height: 0.5rem;
-  transform: translateY(-50%);
-  border-radius: 999px;
-  background: var(--ff-copper);
-  box-shadow:
-    0 0 0 3px var(--ff-copper-soft),
-    0 0 10px var(--ff-copper-soft);
-}
-
-/* A quiet copper trace running down the sidebar rail */
+/* --------------------------------------------------------------------------
+   Sidebar — matches SidebarMenuButton: 2px gaps, 12px padding, xl radius,
+   muted accent on the active page instead of a filled accent block
+   -------------------------------------------------------------------------- */
 .sidebar-content {
   border-inline-end: 1px solid var(--sl-color-hairline);
 }
 
-/* --------------------------------------------------------------------------
-   Forum link — an external destination in the sidebar.
-   The label stays short so it never overflows the rail; the arrow is a
-   decorative mask (not announced by screen readers) and turns copper to
-   echo the active-page trace. On phones the sidebar is a full-width drawer
-   and on tablets it is a touch surface, so give it a 44px tap target there.
-   -------------------------------------------------------------------------- */
+.sidebar-content ul {
+  gap: 0.125rem;
+}
+
+.sidebar-content a {
+  border-radius: var(--ff-radius-xl);
+  padding-inline: 0.75rem;
+  padding-block: 0.4rem;
+  color: var(--sl-color-gray-2);
+}
+
+.sidebar-content a:hover {
+  background: var(--sidebar-accent);
+  color: var(--sl-color-gray-1);
+}
+
+.sidebar-content a[aria-current='page'] {
+  background: var(--sidebar-accent);
+  color: var(--sl-color-gray-1);
+  font-weight: 500;
+}
+
+.sidebar-content a[aria-current='page']:hover {
+  background: var(--sidebar-accent);
+}
+
+/* Group labels mirror SidebarGroupLabel: 12px padding, 11px type, muted */
+.sidebar-content .group-label,
+.sidebar-content summary {
+  padding-inline: 0.75rem;
+  font-size: var(--sl-text-xs);
+  font-weight: 500;
+  color: var(--sl-color-gray-3);
+}
+
+/* External link marker — decorative, announced by the link text itself */
 .sidebar-content a[data-forum-link] {
   display: flex;
   align-items: center;
@@ -172,51 +235,70 @@ h2 {
   flex: none;
   inline-size: 0.7em;
   block-size: 0.7em;
-  background-color: var(--ff-copper);
+  background-color: currentColor;
+  opacity: 0.55;
   -webkit-mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M19.33 10.18a1 1 0 0 1-.77 0 1 1 0 0 1-.62-.93l.01-1.83-8.2 8.2a1 1 0 0 1-1.41-1.42l8.2-8.2H14.7a1 1 0 0 1 0-2h4.25a1 1 0 0 1 1 1v4.25a1 1 0 0 1-.62.93Z'/%3E%3Cpath d='M11 4a1 1 0 1 1 0 2H7a1 1 0 0 0-1 1v10a1 1 0 0 0 1 1h10a1 1 0 0 0 1-1v-4a1 1 0 1 1 2 0v4a3 3 0 0 1-3 3H7a3 3 0 0 1-3-3V7a3 3 0 0 1 3-3h4Z'/%3E%3C/svg%3E")
     center / contain no-repeat;
   mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M19.33 10.18a1 1 0 0 1-.77 0 1 1 0 0 1-.62-.93l.01-1.83-8.2 8.2a1 1 0 0 1-1.41-1.42l8.2-8.2H14.7a1 1 0 0 1 0-2h4.25a1 1 0 0 1 1 1v4.25a1 1 0 0 1-.62.93Z'/%3E%3Cpath d='M11 4a1 1 0 1 1 0 2H7a1 1 0 0 0-1 1v10a1 1 0 0 0 1 1h10a1 1 0 0 0 1-1v-4a1 1 0 1 1 2 0v4a3 3 0 0 1-3 3H7a3 3 0 0 1-3-3V7a3 3 0 0 1 3-3h4Z'/%3E%3C/svg%3E")
     center / contain no-repeat;
 }
 
-/* Phones (drawer) and any coarse-pointer tablet get a comfortable tap target. */
+/* Compact / coarse pointer: 44px targets, same rule as the templates */
 @media (max-width: 49.99rem), (pointer: coarse) {
-  .sidebar-content a[data-forum-link] {
+  .sidebar-content a {
     min-height: 2.75rem;
-    padding-block: 0.45rem;
+    padding-block: 0.55rem;
   }
 }
 
 /* --------------------------------------------------------------------------
-   Focus + selection — copper is the "live signal"
+   Focus + selection — one ring token, never removed
    -------------------------------------------------------------------------- */
 :focus-visible {
-  outline: 2px solid var(--ff-copper);
+  outline: 2px solid var(--ring);
   outline-offset: 2px;
-  border-radius: 0.25rem;
+  border-radius: var(--ff-radius-sm);
 }
 
 ::selection {
-  background: color-mix(in srgb, var(--ff-copper) 32%, transparent);
+  background: color-mix(in oklch, var(--foreground) 16%, transparent);
 }
 
 /* --------------------------------------------------------------------------
-   Links: subtle copper underline on hover
+   Markdown content
    -------------------------------------------------------------------------- */
-.sl-markdown-content a:not([class]):hover {
-  text-decoration-color: var(--ff-copper);
+.sl-markdown-content {
+  --sl-text-body: 1rem;
+  line-height: 1.7;
+}
+
+.sl-markdown-content a:not([class]) {
   text-underline-offset: 0.22em;
+  text-decoration-color: color-mix(in oklch, currentColor 35%, transparent);
+}
+
+.sl-markdown-content a:not([class]):hover {
+  text-decoration-color: currentColor;
+}
+
+/* Inline code: muted chip, not a coloured highlight */
+.sl-markdown-content :not(pre) > code {
+  border: 1px solid var(--sl-color-hairline);
+  border-radius: var(--ff-radius-sm);
+  background: var(--sl-color-bg-inline-code);
+  padding: 0.1em 0.35em;
+  font-size: 0.875em;
 }
 
 /* --------------------------------------------------------------------------
-   Tables: full width, framed, zebra rows, wrapping cells
+   Tables — framed, hairline dividers, muted header, wrapping cells
    -------------------------------------------------------------------------- */
 .sl-markdown-content table:not(:where(.not-content *)) {
   display: table;
   width: 100%;
   table-layout: auto;
-  border: 1px solid var(--sl-color-hairline-light);
-  border-radius: 0.5rem;
+  border: 1px solid var(--sl-color-hairline);
+  border-radius: var(--ff-radius-lg);
   border-collapse: separate;
   border-spacing: 0;
   overflow: hidden;
@@ -237,15 +319,17 @@ h2 {
 }
 
 .sl-markdown-content thead th:not(:where(.not-content *)),
-.sl-markdown-content table:not(:where(.not-content *)) tr:first-child th:not(:where(.not-content *)) {
-  background: var(--ff-panel);
+.sl-markdown-content
+  table:not(:where(.not-content *))
+  tr:first-child
+  th:not(:where(.not-content *)) {
+  background: var(--muted);
   color: var(--sl-color-gray-1) !important;
-  font-family: var(--sl-font-mono);
   font-size: var(--sl-text-xs);
-  font-weight: 500;
-  letter-spacing: 0.04em;
+  font-weight: 600;
+  letter-spacing: 0.02em;
   white-space: nowrap;
-  border-bottom: 1px solid var(--ff-copper) !important;
+  border-bottom: 1px solid var(--sl-color-hairline);
 }
 
 .sl-markdown-content tbody th:not(:where(.not-content *)) {
@@ -256,12 +340,18 @@ h2 {
   border-bottom: 0;
 }
 
-.sl-markdown-content tbody tr:nth-child(even) :is(td):not(:where(.not-content *)) {
-  background: color-mix(in srgb, var(--sl-color-hairline) 32%, transparent);
+.sl-markdown-content tbody tr:hover :is(td):not(:where(.not-content *)) {
+  background: var(--sidebar-accent);
 }
 
-.sl-markdown-content tbody tr:hover :is(td):not(:where(.not-content *)) {
-  background: var(--ff-copper-soft);
+/* --------------------------------------------------------------------------
+   Asides — keep Starlight's semantics, drop the coloured wash
+   -------------------------------------------------------------------------- */
+.sl-markdown-content .starlight-aside {
+  border-radius: var(--ff-radius-lg);
+  border: 1px solid var(--sl-color-hairline);
+  border-inline-start-width: 3px;
+  background: var(--card);
 }
 
 /* --------------------------------------------------------------------------

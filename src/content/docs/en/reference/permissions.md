@@ -12,8 +12,8 @@ Permission codes are the sole basis for API authorization. There are 32 in total
 | `dashboard` | Dashboard |
 | `users` | User Management |
 | `roles` | Role Management |
-| `permissions` | Permission Management |
-| `menus` | Menu Management |
+| `permissions` | Permission Overview |
+| `menus` | Menu & Permissions |
 | `settings` | System Settings |
 | `ai_models` | AI Model Configuration |
 | `audit_logs` | Audit Logs |
@@ -64,6 +64,6 @@ Menu permissions are managed through the menu-management and data-management pag
 ## Related Pages
 
 - [Permission System](/en/features/rbac/)
-- [Menu Management](/en/features/menu-management/)
+- [Menu & Permissions](/en/features/menu-management/)
 - [Data Management](/en/features/data-management/)
 - [API Reference](/en/reference/api/)

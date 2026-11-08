@@ -26,8 +26,8 @@ description: 维护 templates/ 目录时需要遵守的组织与命名约定。
 
 - Python 的 `ApiResponse` / `PaginatedData` 位于 `app/core/schemas.py`。
 - 权限码目录是唯一来源：Python `app/core/permissions_catalog.py`，Java `config/PermissionCatalog.java`。
-- 菜单展示与鉴权分离：`permissions` 只负责授权，`menu_groups` / `menu_items` 负责分组、路由、图标与顺序。
-- 菜单权限必须通过菜单管理创建；内置菜单不可删除，自定义菜单删除时要同步清理角色授权。
+- 菜单展示与鉴权分离：`permissions` 只负责授权，`menu_groups` / `menu_items` 负责分组、路由、图标、顺序与显示状态（`hidden`）。
+- 菜单权限必须通过「菜单与权限」页创建；内置菜单不可删除，自定义菜单删除时会级联清理其操作权限与角色授权。
 - 数据导出包使用 `manifest.json + schema.sql + checksums.sha256 + data/*.jsonl`，只支持同后端、同版本恢复；`app_state` 不入包。
 - 前端 HTTP 层是轻量的 fetch 封装（`api/client.ts`），**不要引入 axios**。
 - fetch 封装需要显式支持二进制下载、`FormData` 上传和自定义状态头，不能把所有响应都按 JSON 固定解析。

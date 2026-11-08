@@ -76,16 +76,16 @@ export async function request<T>(path: string, options?: RequestInit): Promise<T
 
 ## 界面约定与主题
 
-- 后台界面面向**电脑与平板**设计；手机访问会显示「请更换设备」的提示组件（`UnsupportedViewport`）。
+- 三端自适应：`< 768px` 使用卡片列表与抽屉导航，`768–1023px` 使用图标栏，`>= 1024px` 使用完整侧边栏。
 - 提供明暗主题切换（`ThemeToggle`），偏好会被持久化。
-- React 版集成 shadcn/ui，Vue 版使用 DaisyUI；表单、表格、分页、确认删除等共享组件位于 `components/shared/`。
+- 两端都基于 Tailwind CSS v4 + shadcn：React 用 shadcn/ui（Radix UI），Vue 用 shadcn-vue（Reka UI）；表单、表格、分页、确认删除等共享组件位于 `components/shared/`。
 
 <Tabs>
 <TabItem label="React">
-React 版本包含 PWA 支持，构建产物可安装为桌面/移动应用。图标使用 `lucide-react`。
+React 版本通过 `vite-plugin-pwa` 提供 PWA 支持，构建产物可安装为桌面/移动应用。图标使用 `lucide-react`。
 </TabItem>
 <TabItem label="Vue">
-Vue 版本使用 `lucide-vue-next` 图标与 `use-toast` 组合式函数管理提示。注意：模板 `package.json` 仍列出了 `axios` 依赖，但全部请求都走 `api/client.ts` 的 fetch 封装，可以安全移除。
+Vue 版本通过 `vite-plugin-pwa` 提供 PWA 支持，图标使用 `@lucide/vue`，提示由 `use-toast` 组合式函数管理。请求统一走 `api/client.ts` 的 fetch 封装，模板未引入 axios。
 </TabItem>
 </Tabs>
 
@@ -95,7 +95,7 @@ Vue 版本使用 `lucide-vue-next` 图标与 `use-toast` 组合式函数管理�
 
 1. 在 `src/pages/` 下新建页面组件。
 2. 在 `router.tsx` 注册路由。
-3. 为页面定义权限码，并在菜单管理中创建或同步菜单项、设置路由和图标。
+3. 为页面定义权限码，并在「菜单与权限」页创建或同步菜单项、设置路由和图标，再给角色授权。
 4. 在 `src/api/` 与 `src/types/` 下补充该业务域的调用与类型。
 
 Vue 对应修改 `pages/`、`router/index.ts`、`api/`、`types/`，菜单配置仍在后台完成。

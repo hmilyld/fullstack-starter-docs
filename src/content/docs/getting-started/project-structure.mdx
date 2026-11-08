@@ -54,10 +54,11 @@ my-project/
     - common.ts  auth.ts  user.ts  role.ts  permission.ts  menu.ts
     - system.ts  dashboard.ts  ai-model.ts  audit-log.ts
   - components
-    - admin-layout.tsx  app-sidebar.tsx  header.tsx  login-form.tsx
-    - protected-route.tsx  theme-provider.tsx  theme-toggle.tsx
+    - admin-layout.tsx  app-sidebar.tsx  nav-main.tsx  header.tsx
+    - brand-mark.tsx  login-form.tsx  user-menu.tsx  error-boundary.tsx
+    - protected-route.tsx  theme-provider.tsx  theme-toggle.tsx  pwa-manifest.tsx
     - shared  分页 / 确认删除 / 表格状态 / 加载按钮
-    - ui  24 个 shadcn/ui 组件
+    - ui  30 个 shadcn/ui 组件
   - lib
     - auth-context.tsx  site-config.tsx  toast.ts  utils.ts
   - pages
@@ -82,8 +83,8 @@ my-project/
   - api  同 React，按业务域拆分（client.ts + 业务域文件）
   - types  按业务域拆分
   - components
-    - AppHeader.vue  AppSidebar.vue  ThemeToggle.vue
-    - ToastContainer.vue  UnsupportedViewport.vue
+    - AppHeader.vue  AppSidebar.vue  NavMain.vue  BrandMark.vue
+    - ThemeToggle.vue  UserMenu.vue
     - shared  分页 / 确认删除 / 表格状态 / 加载按钮 / 骨架屏
   - layouts  AdminLayout.vue
   - pages
@@ -93,7 +94,7 @@ my-project/
     - NotFound.vue
   - router  index.ts
   - stores  auth.ts  site-config.ts  theme.ts
-  - composables  use-toast.ts
+  - composables  use-toast.ts  use-media-query.ts  use-paged-list.ts  use-url-list-state.ts
   - App.vue
   - main.ts
 - vite.config.ts    开发代理 /api → localhost:8088

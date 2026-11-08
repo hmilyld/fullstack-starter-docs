@@ -26,8 +26,8 @@ The directory organization of different stacks is **deliberately not unified**, 
 
 - Python's `ApiResponse` / `PaginatedData` live in `app/core/schemas.py`.
 - The permission code catalog is the single source of truth: Python `app/core/permissions_catalog.py`, Java `config/PermissionCatalog.java`.
-- Menu presentation is separate from authorization: `permissions` handles authorization, while `menu_groups` / `menu_items` own groups, routes, icons, and order.
-- Menu permissions must be created through menu management; built-in items cannot be deleted, and deleting a custom item must also remove role grants.
+- Menu presentation is separate from authorization: `permissions` handles authorization, while `menu_groups` / `menu_items` own groups, routes, icons, order, and visibility (`hidden`).
+- Menu permissions must be created through Menu & Permissions; built-in items cannot be deleted, and deleting a custom item cascades to its operation permissions and role grants.
 - Export archives use `manifest.json + schema.sql + checksums.sha256 + data/*.jsonl`, support only same-backend/same-version restore, and exclude `app_state`.
 - The frontend HTTP layer is a lightweight fetch wrapper (`api/client.ts`); **do not introduce axios**.
 - The fetch wrapper must support binary downloads, `FormData` uploads, and custom status headers instead of assuming every response is JSON.

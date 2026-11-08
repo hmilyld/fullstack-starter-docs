@@ -12,7 +12,7 @@ All four combinations share the same feature set, API conventions, and response 
 | | Python (FastAPI) | Java (Spring Boot) |
 | --- | --- | --- |
 | **React** | React 19 + Vite + shadcn/ui · FastAPI async | React 19 + Vite + shadcn/ui · Spring Boot 3.2 |
-| **Vue** | Vue 3 + Vite + DaisyUI · FastAPI async | Vue 3 + Vite + DaisyUI · Spring Boot 3.2 |
+| **Vue** | Vue 3 + Vite + shadcn-vue · FastAPI async | Vue 3 + Vite + shadcn-vue · Spring Boot 3.2 |
 
 ## Frontend Stack
 
@@ -21,11 +21,12 @@ All four combinations share the same feature set, API conventions, and response 
 | Framework | React 19 | Vue 3.5+ (Composition API) |
 | Build | Vite | Vite |
 | Language | TypeScript | TypeScript |
-| Styling | Tailwind CSS v4 + shadcn/ui (with PWA) | Tailwind CSS v4 + DaisyUI |
+| Styling | Tailwind CSS v4 + shadcn/ui (Radix UI) | Tailwind CSS v4 + shadcn-vue (Reka UI) |
 | HTTP | Native fetch wrapper (auto logout on 401) | Native fetch wrapper (auto logout on 401) |
-| Routing | react-router v7 | vue-router v4 |
+| Routing | react-router v7 | vue-router v5 |
 | State | React Context (`lib/`) | Pinia (`stores/`) |
-| Icons | lucide-react | lucide-vue-next |
+| PWA | `vite-plugin-pwa` | `vite-plugin-pwa` |
+| Icons | lucide-react | `@lucide/vue` |
 
 ## Backend Stack
 

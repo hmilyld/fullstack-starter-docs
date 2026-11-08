@@ -12,8 +12,8 @@ description: 全部 32 个权限码及其含义。
 | `dashboard` | 仪表盘 |
 | `users` | 用户管理 |
 | `roles` | 角色管理 |
-| `permissions` | 权限管理 |
-| `menus` | 菜单管理 |
+| `permissions` | 权限总览 |
+| `menus` | 菜单与权限 |
 | `settings` | 系统设置 |
 | `ai_models` | AI 模型配置 |
 | `audit_logs` | 审计日志 |
@@ -59,11 +59,11 @@ description: 全部 32 个权限码及其含义。
 
 启动时权限目录会与数据库自动同步（并补齐 `admin` 权限）；也可调用 `POST /api/permissions/sync` 手动同步。
 
-菜单权限使用 `menus` 与 `data_management` 页面管理，不应通过普通权限 CRUD 单独创建或删除。
+菜单权限通过「菜单与权限」页维护，不应通过普通权限 CRUD 单独创建或删除。操作权限也在该页随菜单一起维护。
 
 ## 相关页面
 
 - [权限系统](/features/rbac/)
-- [菜单管理](/features/menu-management/)
+- [菜单与权限](/features/menu-management/)
 - [数据管理](/features/data-management/)
 - [API 接口](/reference/api/)

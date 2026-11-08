@@ -94,8 +94,8 @@ export default defineConfig({
             },
             {
               slug: 'features/menu-management',
-              label: '菜单管理',
-              translations: { en: 'Menu Management' },
+              label: '菜单与权限',
+              translations: { en: 'Menu & Permissions' },
             },
             {
               slug: 'features/data-management',

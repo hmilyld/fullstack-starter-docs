@@ -9,7 +9,7 @@ The generated project is not a hollow shell: login and registration, user manage
 
 ## What It Can Generate
 
-- **Choice of frontend**: React 19 (Vite + TypeScript + Tailwind CSS v4 + shadcn/ui, with PWA) or Vue 3 (Vite + TypeScript + Tailwind CSS v4 + DaisyUI).
+- **Choice of frontend**: React 19 (Vite + TypeScript + Tailwind CSS v4 + shadcn/ui) or Vue 3 (Vite + TypeScript + Tailwind CSS v4 + shadcn-vue). Both ship PWA support.
 - **Choice of backend**: Python (FastAPI + SQLAlchemy async + SQLite) or Java (Spring Boot 3.2 + JPA + SQLite/Flyway).
 - **Authentication built in**: login, registration, logout; Python uses JWT, Java uses Sa-Token; includes login/registration rate limiting and automatic logout on 401.
 - **Complete admin panel**: users, roles, permissions, menus, system settings, AI models and presets, audit logs, data management, dashboard, and profile.
@@ -21,8 +21,8 @@ The generated project is not a hollow shell: login and registration, user manage
 | --- | --- | --- |
 | React | Python | Vite + shadcn/ui, FastAPI async |
 | React | Java | Vite + shadcn/ui, Spring Boot + JPA |
-| Vue | Python | Vite + DaisyUI + Pinia, FastAPI async |
-| Vue | Java | Vite + DaisyUI + Pinia, Spring Boot + JPA |
+| Vue | Python | Vite + shadcn-vue + Pinia, FastAPI async |
+| Vue | Java | Vite + shadcn-vue + Pinia, Spring Boot + JPA |
 
 All four combinations implement the same feature set and API conventions, so frontend and backend behave identically and you can choose freely based on your team's stack. See [Stacks and Combinations](/en/generated/overview/).
 
@@ -44,7 +44,7 @@ Newly registered accounts enter either `user` or `pending_review` according to t
 
 ## Dynamic Menus and Data Management
 
-- The sidebar is generated from database-backed groups and items, with global ordering, cross-group dragging, and permission filtering. See [Menu Management](/en/features/menu-management/).
+- The sidebar is generated from database-backed groups and items, with global ordering, cross-group dragging, show/hide, and permission filtering. See [Menu & Permissions](/en/features/menu-management/).
 - Data management provides same-version full export and import. Export uses a one-time random password, import freezes ordinary requests, and a successful restore invalidates every session. See [Data Management](/en/features/data-management/).
 
 ## Next Steps

@@ -16,7 +16,11 @@ description: 基于权限点的 RBAC 模型、默认角色、权限同步与越�
 
 **操作权限（23 个）**：`users.create`、`users.edit`、`users.delete`、`users.assign_role`、`roles.create`、`roles.edit`、`roles.delete`、`permissions.create`、`permissions.edit`、`permissions.delete`、`menus.create`、`menus.edit`、`menus.delete`、`menus.reorder`、`settings.edit`、`ai_models.create`、`ai_models.edit`、`ai_models.delete`、`ai_models.presets.create`、`ai_models.presets.edit`、`ai_models.presets.delete`、`data_management.export`、`data_management.import`。
 
-菜单权限必须通过菜单管理创建或由内置菜单目录同步。普通权限接口不会创建或删除菜单权限，以避免只有鉴权记录、没有侧边栏展示元数据的状态。
+菜单权限必须通过「菜单与权限」页创建或由内置菜单目录同步。普通权限接口不会创建或删除菜单权限，以避免只有鉴权记录、没有侧边栏展示元数据的状态。
+
+## 权限总览
+
+「权限总览」页只读展示全部菜单权限与操作权限，可从右上角账户菜单进入（需要 `permissions` 权限）。日常维护在「菜单与权限」页完成。
 
 ## 默认角色
 
@@ -34,7 +38,7 @@ description: 基于权限点的 RBAC 模型、默认角色、权限同步与越�
 
 启动时会将代码中的权限目录（Python 的 `permissions_catalog.py`、Java 的 `PermissionCatalog`）与数据库同步，自动补齐 `admin` 缺失的权限。因此新增权限码后重启后端即可生效。
 
-也可以在权限管理页手动触发同步（`POST /api/permissions/sync`）。
+也可以在「权限总览」页手动触发同步（`POST /api/permissions/sync`）。
 
 ## 越权保护
 
@@ -54,7 +58,7 @@ description: 基于权限点的 RBAC 模型、默认角色、权限同步与越�
 ## 相关页面
 
 - [权限码](/reference/permissions/)
-- [菜单管理](/features/menu-management/)
+- [菜单与权限](/features/menu-management/)
 - [数据管理](/features/data-management/)
 - [审计日志](/features/audit-logs/)
 - [API 接口](/reference/api/)

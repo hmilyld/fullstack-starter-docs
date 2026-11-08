@@ -76,16 +76,16 @@ Site config comes from the public endpoint `GET /api/public/config` and is used 
 
 ## UI Conventions and Theming
 
-- The admin UI is designed for **computers and tablets**; accessing it from a phone shows a "Please switch devices" (请更换设备) prompt component (`UnsupportedViewport`).
+- Three responsive modes: cards and a drawer below `768px`, an icon rail from `768px` to `1023px`, and the full sidebar at `1024px` and above.
 - Light/dark theme switching is provided (`ThemeToggle`), and the preference is persisted.
-- The React version integrates shadcn/ui, and the Vue version uses DaisyUI; shared components such as forms, tables, pagination, and delete confirmation live under `components/shared/`.
+- Both templates use Tailwind CSS v4 + shadcn: shadcn/ui (Radix UI) for React and shadcn-vue (Reka UI) for Vue. Shared components such as forms, tables, pagination, and delete confirmation live under `components/shared/`.
 
 <Tabs>
 <TabItem label="React">
-The React version includes PWA support, so the build output can be installed as a desktop/mobile app. Icons use `lucide-react`.
+The React version ships PWA support through `vite-plugin-pwa`, so the build output can be installed as a desktop/mobile app. Icons use `lucide-react`.
 </TabItem>
 <TabItem label="Vue">
-The Vue version uses `lucide-vue-next` icons and the `use-toast` composable to manage notifications. Note: the template's `package.json` still lists the `axios` dependency, but all requests go through the `api/client.ts` fetch wrapper, so it can be safely removed.
+The Vue version ships PWA support through `vite-plugin-pwa`, uses `@lucide/vue` icons, and manages notifications with the `use-toast` composable. All requests go through the `api/client.ts` fetch wrapper; the template does not depend on axios.
 </TabItem>
 </Tabs>
 
@@ -95,7 +95,7 @@ Taking React as an example:
 
 1. Create a new page component under `src/pages/`.
 2. Register the route in `router.tsx`.
-3. Define a permission code, then create or synchronize the menu item with its route and icon in menu management.
+3. Define a permission code, then create or synchronize the menu item with its route and icon in Menu & Permissions, and grant it to roles.
 4. Add the domain's calls and types under `src/api/` and `src/types/`.
 
 For Vue, modify the corresponding `pages/`, `router/index.ts`, `api/`, and `types/`; menu configuration is still performed in the admin panel.

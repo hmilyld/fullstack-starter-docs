@@ -16,7 +16,11 @@ There are 32 permission codes in total: 9 menu permissions and 23 operation perm
 
 **Operation permissions (23)**: `users.create`, `users.edit`, `users.delete`, `users.assign_role`, `roles.create`, `roles.edit`, `roles.delete`, `permissions.create`, `permissions.edit`, `permissions.delete`, `menus.create`, `menus.edit`, `menus.delete`, `menus.reorder`, `settings.edit`, `ai_models.create`, `ai_models.edit`, `ai_models.delete`, `ai_models.presets.create`, `ai_models.presets.edit`, `ai_models.presets.delete`, `data_management.export`, `data_management.import`.
 
-Menu permissions must be created through menu management or synchronized from the built-in menu catalog. The general permission API does not create or delete them, preventing an authorization record with no sidebar presentation metadata.
+Menu permissions must be created through Menu & Permissions or synchronized from the built-in menu catalog. The general permission API does not create or delete them, preventing an authorization record with no sidebar presentation metadata.
+
+## Permission Overview
+
+The Permission Overview page is a read-only view of every menu and operation permission, reachable from the account menu (requires the `permissions` permission). Day-to-day maintenance happens on the Menu & Permissions page.
 
 ## Default Roles
 
@@ -34,7 +38,7 @@ All three roles are preset roles (`is_preset`), and **preset roles cannot be del
 
 At startup, the permission catalog in code (Python's `permissions_catalog.py`, Java's `PermissionCatalog`) is synchronized with the database, automatically filling in any permissions missing from `admin`. So after adding a permission code, restarting the backend is enough for it to take effect.
 
-You can also trigger a sync manually from the permission management page (`POST /api/permissions/sync`).
+You can also trigger a sync manually from the Permission Overview page (`POST /api/permissions/sync`).
 
 ## Privilege-Escalation Protection
 
@@ -54,7 +58,7 @@ The user and role endpoints have the following constraints built in:
 ## Related Pages
 
 - [Permission Codes](/en/reference/permissions/)
-- [Menu Management](/en/features/menu-management/)
+- [Menu & Permissions](/en/features/menu-management/)
 - [Data Management](/en/features/data-management/)
 - [Audit Logs](/en/features/audit-logs/)
 - [API Reference](/en/reference/api/)

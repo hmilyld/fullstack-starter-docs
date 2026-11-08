@@ -55,25 +55,27 @@ The Python version returns 401 when not logged in; the two stacks behave the sam
 | PUT | `/api/roles/:id` | Update role | Yes(`roles.edit`) |
 | DELETE | `/api/roles/:id` | Delete role (preset roles cannot be deleted) | Yes(`roles.delete`) |
 | GET | `/api/permissions` | Permission list | Yes(`permissions`) |
+| GET | `/api/permissions?type=menu` | Menu permission list | Yes(`permissions`) |
+| GET | `/api/permissions?type=operation` | Operation permission list | Yes(`permissions`) |
 | POST | `/api/permissions` | Create permission | Yes(`permissions.create`) |
 | POST | `/api/permissions/sync` | Sync with the permission catalog | Yes(`permissions.create`) |
 | PUT | `/api/permissions/:code` | Update permission | Yes(`permissions.edit`) |
 | DELETE | `/api/permissions/:code` | Delete permission | Yes(`permissions.delete`) |
 
-> Menu permissions cannot be created or deleted through this API. Use the menu-management endpoints instead.
+> Menu permissions cannot be created or deleted through this API. Use the Menu & Permissions endpoints below. An operation permission's `parent` must reference an existing menu permission.
 
-## Menu Management
+## Menu & Permissions
 
 | Method | Path | Description | Auth |
 | --- | --- | --- | --- |
 | GET | `/api/menus/navigation` | Dynamic sidebar visible to the current user | Login |
-| GET | `/api/menus` | Complete menu configuration and layout version | Yes(`menus`) |
+| GET | `/api/menus` | Complete menu configuration, operation permissions, and layout version | Yes(`menus` or `permissions`) |
 | POST | `/api/menus/groups` | Create a custom group | Yes(`menus.create`) |
 | PUT | `/api/menus/groups/:id` | Rename a group | Yes(`menus.edit`) |
 | DELETE | `/api/menus/groups/:id` | Delete an empty custom group | Yes(`menus.delete`) |
 | POST | `/api/menus/items` | Create a custom item and permission | Yes(`menus.create`) |
-| PUT | `/api/menus/items/:code` | Update item metadata | Yes(`menus.edit`) |
-| DELETE | `/api/menus/items/:code` | Delete a custom item and grants | Yes(`menus.delete`) |
+| PUT | `/api/menus/items/:code` | Update item metadata or visibility | Yes(`menus.edit`) |
+| DELETE | `/api/menus/items/:code` | Delete a custom item, its operation permissions, and grants | Yes(`menus.delete`) |
 | PUT | `/api/menus/layout` | Atomically save group and item order | Yes(`menus.reorder`) |
 
 ## Dashboard

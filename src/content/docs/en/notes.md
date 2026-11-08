@@ -68,7 +68,8 @@ During import, ordinary requests return `503` except the one-time job-status end
 | Permission code changes do not take effect | Restart the backend to trigger a sync, or call `POST /api/permissions/sync` |
 | A custom menu leads to a 404 | Routes may be entered freely, but the corresponding page still has to be registered in code |
 | A built-in menu or group cannot be deleted | Built-in entries have `is_system=true` and can only be moved or reordered |
-| Menu save reports a version conflict | Another administrator changed the layout; refresh menu management and reapply the change |
+| Menu save reports a version conflict | Another administrator changed the layout; refresh Menu & Permissions and reapply the change |
+| A hidden menu has no sidebar entry | Hiding only affects the sidebar; open the route directly or show it again on Menu & Permissions |
 | The export password is gone after closing the dialog | It is displayed only once; generate a new export |
 | The import archive cannot be restored | Restore supports only the same backend, application version, and schema version |
 | APIs return 503 during import | A full-database import is running; only the status endpoint accepts the `jobToken` |
@@ -83,10 +84,10 @@ The current registration logic decides between `user` or `pending_review` based 
 The Java template does not integrate OpenAPI documentation; the annotations under `controller/` are the source of truth for the API. The Python version is available at `http://localhost:8088/docs`.
 
 **Why doesn't the frontend use axios?**
-The convention is to use a native `fetch` wrapper (`api/client.ts`) for consistent handling of 401s and the response structure. The Vue template's `package.json` still lists `axios`, but the code does not use it and it can be safely removed.
+The convention is to use a native `fetch` wrapper (`api/client.ts`) for consistent handling of 401s and the response structure. Neither frontend template depends on axios.
 
 **Can a phone access the admin panel?**
-The admin UI is designed for computers and tablets; accessing it from a phone shows a "Please switch devices" (请更换设备) prompt, which is the template's expected behavior.
+Yes. The UI adapts across three modes: cards and a drawer below `768px`, an icon rail from `768px` to `1023px`, and the full sidebar at `1024px` and above.
 
 **Where is the data stored?**
 During development it is a SQLite file in the backend directory; in Docker it lives at `/app/data` in the container, persisted by the named volume `app-data`.

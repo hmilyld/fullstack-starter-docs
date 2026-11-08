@@ -55,25 +55,27 @@ Python 版未登录返回 401；两栈行为一致，除 `logout` 外：Java 版
 | PUT | `/api/roles/:id` | 更新角色 | 是(`roles.edit`) |
 | DELETE | `/api/roles/:id` | 删除角色（预设角色不可删） | 是(`roles.delete`) |
 | GET | `/api/permissions` | 权限列表 | 是(`permissions`) |
+| GET | `/api/permissions?type=menu` | 菜单权限列表 | 是(`permissions`) |
+| GET | `/api/permissions?type=operation` | 操作权限列表 | 是(`permissions`) |
 | POST | `/api/permissions` | 创建权限 | 是(`permissions.create`) |
 | POST | `/api/permissions/sync` | 与权限目录同步 | 是(`permissions.create`) |
 | PUT | `/api/permissions/:code` | 更新权限 | 是(`permissions.edit`) |
 | DELETE | `/api/permissions/:code` | 删除权限 | 是(`permissions.delete`) |
 
-> 菜单权限不能通过本接口创建或删除；请使用菜单管理接口维护菜单和对应权限。
+> 菜单权限不能通过本接口创建或删除；请使用下方的菜单与权限接口维护菜单和对应权限。操作权限的 `parent` 必须指向已存在的菜单权限。
 
-## 菜单管理
+## 菜单与权限
 
 | 方法 | 路径 | 说明 | 认证 |
 | --- | --- | --- | --- |
 | GET | `/api/menus/navigation` | 当前用户可见的动态侧边栏 | 是 |
-| GET | `/api/menus` | 完整菜单配置与布局版本 | 是(`menus`) |
+| GET | `/api/menus` | 完整菜单配置、操作权限与布局版本 | 是(`menus` 或 `permissions`) |
 | POST | `/api/menus/groups` | 创建自定义分组 | 是(`menus.create`) |
 | PUT | `/api/menus/groups/:id` | 重命名分组 | 是(`menus.edit`) |
 | DELETE | `/api/menus/groups/:id` | 删除空的自定义分组 | 是(`menus.delete`) |
 | POST | `/api/menus/items` | 创建自定义菜单及权限 | 是(`menus.create`) |
-| PUT | `/api/menus/items/:code` | 更新菜单名称、分组、路由或图标 | 是(`menus.edit`) |
-| DELETE | `/api/menus/items/:code` | 删除自定义菜单及授权 | 是(`menus.delete`) |
+| PUT | `/api/menus/items/:code` | 更新菜单名称、分组、路由、图标或显示状态 | 是(`menus.edit`) |
+| DELETE | `/api/menus/items/:code` | 删除自定义菜单、其操作权限及授权 | 是(`menus.delete`) |
 | PUT | `/api/menus/layout` | 原子保存分组和菜单顺序 | 是(`menus.reorder`) |
 
 ## 仪表盘

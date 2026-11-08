@@ -11,9 +11,31 @@ description: 维护 templates/ 目录时需要遵守的组织与命名约定。
 
 | 模板 | 组织方式 |
 | --- | --- |
-| `backend-python/` | 领域模块化：`app/core/`（基础设施）+ 每个业务域一个包（`auth/`、`user/`、`role/`、`permission/`、`menu/` …），包内含 `models.py` / `schemas.py` / `crud.py` / `router.py` |
-| `backend-java/` | 按层：`controller/`、`service/`、`repository/`、`entity/`、`dto/`，另有 `common/`、`config/`、`security/` |
+| `backend-python/` | 领域模块化：`app/core/`（基础设施）+ 每个业务域一个包（`auth/`、`user/`、`role/`、`permission/`、`menu/` …），包内含 `models.py` / `schemas.py` / `service.py` / `router.py`；结构变更走 `migrations/`（Alembic） |
+| `backend-java/` | 按层：`controller/`、`service/`、`repository/`、`entity/`、`dto/`，另有 `common/`、`config/`、`security/`；结构变更走 `db/migration/`（Flyway） |
 | `frontend-react/` 与 `frontend-vue/` | 按功能：页面在 `pages/settings/<Domain>/`，接口按域拆分在 `api/`，类型按域拆分在 `types/` |
+
+## 契约优先
+
+`docs/contract/api.md` 是两个后端共同遵守的接口契约，由两套可执行测试固化：
+
+- Python：`templates/backend-python/tests/test_contract.py`
+- Java：`templates/backend-java/src/test/java/com/hmilyld/fullstack/ContractTest.java`
+
+改接口时先改契约，再同时改两栈实现与两侧测试。任何一端单独漂移都会让测试失败。
+
+## 后端实现约定
+
+两栈结构刻意不统一，但质量标尺一致：
+
+| 约定 | Python | Java |
+| --- | --- | --- |
+| 失败表达 | 抛领域异常（`AppException` 子类） | 抛领域异常（`AppException` 子类） |
+| 事务 | `get_db` 正常返回提交，异常回滚 | `@Transactional` 遇异常回滚 |
+| 响应类型 | Pydantic schema + `model_dump()` | `dto/*Response` 记录 |
+| 分页越界 | 钳制 | 钳制 |
+| 结构变更 | Alembic 迁移 | Flyway 迁移 |
+| 角色名判定 | 仅 `admin` 全权 + 管理员账号保护，各一处 | 同左 |
 
 ## 命名与文案
 
@@ -31,6 +53,7 @@ description: 维护 templates/ 目录时需要遵守的组织与命名约定。
 - 数据导出包使用 `manifest.json + schema.sql + checksums.sha256 + data/*.jsonl`，只支持同后端、同版本恢复；`app_state` 不入包。
 - 前端 HTTP 层是轻量的 fetch 封装（`api/client.ts`，基础设施在 `api/http.ts`），**不要引入 axios**。
 - fetch 封装需要显式支持二进制下载、`FormData` 上传和自定义状态头，不能把所有响应都按 JSON 固定解析。
+- 接口文档地址两栈一致：`/docs`（Swagger UI）与 `/openapi.json`（OpenAPI 描述）。Python 由 FastAPI 内置，Java 由 SpringDoc 提供。
 
 ## 相关页面
 

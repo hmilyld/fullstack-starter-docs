@@ -46,10 +46,15 @@ Java 后端配置位于 `src/main/resources/application.yml`：
 | `spring.flyway.enabled` | `true` | 启用数据库迁移 |
 | `sa-token.token-style` | `uuid` | 令牌风格 |
 | `sa-token.timeout` | `86400` | 令牌有效期（秒） |
+| `spring.jackson.default-property-inclusion` | `always` | 空值字段照常输出（契约要求） |
 | `app.cors-origins` | `http://localhost:5173` | 允许来源 |
+| `app.rate-limit.max-attempts` | `5` | 登录/注册每分钟尝试上限 |
+| `app.rate-limit.window-ms` | `60000` | 限流窗口（毫秒） |
 | `app.audit.exclude-paths` | `/api/auth` | 审计排除路径 |
 | `app.data.tmp-dir` | `./data/tmp` | 导入导出临时目录 |
 | `app.data.max-import-size-bytes` | `1073741824` | 导入包大小上限 |
+| `springdoc.api-docs.path` | `/openapi.json` | OpenAPI 描述路径 |
+| `springdoc.swagger-ui.path` | `/docs` | Swagger UI 路径 |
 | `spring.servlet.multipart.max-file-size` | `1GB` | multipart 文件上限 |
 | `spring.servlet.multipart.max-request-size` | `1GB` | multipart 请求上限 |
 
@@ -63,6 +68,17 @@ Java 版使用 Sa-Token，**不需要 `JWT_SECRET_KEY`**。
 | `TZ` | 默认 `Asia/Shanghai` |
 | `DATABASE_URL` | Python 镜像内指向 `/app/data/app.db` |
 | `PYTHONUNBUFFERED` | Python 镜像内为 `1` |
+
+Java 后端不读取 `JWT_SECRET_KEY`，生成的 `docker-compose.yml` 也只在 Python 栈下要求该变量。
+
+## 接口文档
+
+两栈地址一致，无需额外配置：
+
+| 用途 | 地址 |
+| --- | --- |
+| Swagger UI | `http://localhost:8088/docs` |
+| OpenAPI 描述 | `http://localhost:8088/openapi.json` |
 
 ## 前端配置
 

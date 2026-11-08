@@ -11,6 +11,10 @@ description: 全部接口一览、统一响应格式与认证说明。
 
 出错时 `code` 为 `-1`，`message` 为中文提示。分页接口的 `data` 为 `{ list, total, page, pageSize }`。
 
+`data` 键**始终存在**：业务失败与无返回值的成功响应中为 `null`。两栈在这一点上完全一致。
+
+`page` 与 `pageSize` 越界时会被**钳制**到合法区间（`page >= 1`，`pageSize` 为 1–100），不会返回错误。
+
 `POST /api/data/export` 成功时返回 `application/zip` 文件；一次性随机密码通过 `X-Export-Password` 响应头返回。
 
 ## 认证说明
@@ -22,7 +26,7 @@ description: 全部接口一览、统一响应格式与认证说明。
 - `是(权限码)`：需登录且拥有对应权限点。
 - `一次性任务令牌`：不使用登录令牌，需携带创建任务时返回的 `X-Import-Job-Token`。
 
-Python 版未登录返回 401；两栈行为一致，除 `logout` 外：Java 版未登录调用也返回成功。
+两栈行为一致：未登录返回 `401`，无权限返回 `403`，参数校验失败返回 `422`。唯一的实现差异是令牌格式（JWT 与 Sa-Token），对调用方透明。
 
 ## 认证
 
@@ -30,7 +34,7 @@ Python 版未登录返回 401；两栈行为一致，除 `logout` 外：Java 版
 | --- | --- | --- | --- |
 | POST | `/api/auth/login` | 登录 | 否 |
 | POST | `/api/auth/register` | 注册（受开放注册/人工审核控制） | 否 |
-| POST | `/api/auth/logout` | 登出 | 是¹ |
+| POST | `/api/auth/logout` | 登出（使当前令牌立即失效） | 是¹ |
 
 ## 用户
 
@@ -132,7 +136,7 @@ Python 版未登录返回 401；两栈行为一致，除 `logout` 外：Java 版
 
 ---
 
-> **注 1**：Python 版 `logout` 需登录；Java 版兼容未登录调用。
+> **注 1**：登出需要登录，并立即使当前令牌失效；之后使用旧令牌会返回 `401`。
 >
 > **注 2**：创建非默认角色的用户还需 `users.assign_role` 权限。
 

@@ -1,11 +1,32 @@
 ---
 title: 测试验证
-description: 脚手架没有自动化测试框架，改动的验证流程。
+description: 模板自带的契约测试，以及改动后的验证流程。
 ---
 
 import { Steps } from '@astrojs/starlight/components';
 
-脚手架本身没有自动化测试框架，验证采用手动流程。
+两个后端模板都自带**可执行的契约测试**，断言同一份 `docs/contract/api.md`。脚手架本身没有自动化测试，验证采用手动流程。
+
+## 契约测试
+
+```bash
+# Python：26 条断言
+cd templates/backend-python
+uv sync --extra dev
+uv run ruff check .
+uv run pytest -q
+
+# Java：24 条断言
+cd templates/backend-java
+mvn spotless:check
+mvn test
+```
+
+测试覆盖：端点集合、响应信封（`data` 键必须存在）、各资源字段形状、分页钳制、登出后令牌失效、失败请求不落库、SSRF 拦截、导出包格式。Java 侧还会比对 SpringDoc 生成的 OpenAPI 与契约端点集合。
+
+改接口时必须先改契约，再同时改两栈实现与两侧测试。
+
+## 手动验证
 
 <Steps>
 
@@ -40,7 +61,7 @@ import { Steps } from '@astrojs/starlight/components';
    mvn spring-boot:run
    ```
 
-   确认后端能启动、数据库初始化并写入种子数据，且能用 `admin / 123456` 登录。
+   确认后端能启动、数据库初始化并写入种子数据，且能用 `admin / 123456` 登录。两栈的接口文档都在 `http://localhost:8088/docs`。
 
 4. 验证 Docker
 
@@ -70,12 +91,15 @@ import { Steps } from '@astrojs/starlight/components';
 ## 快速验证清单
 
 - [ ] `npm run build`（脚手架）通过
+- [ ] 后端契约测试通过（`pytest` / `mvn test`）
 - [ ] 生成的项目前端构建通过
-- [ ] 后端可启动并完成初始化
+- [ ] 后端可启动并完成迁移与初始化
 - [ ] `admin / 123456` 可登录
+- [ ] 两栈的 `/docs` 都能打开
 - [ ] 权限菜单按角色正确显示
 - [ ] 菜单排序、跨组移动和自定义菜单权限正确
 - [ ] 导出包可解密并包含完整表清单
 - [ ] 导入成功后会冻结普通请求并使全部会话失效
 - [ ] 导入失败后事务回滚且系统解除冻结
+- [ ] 登出后旧令牌返回 `401`
 - [ ] Docker 镜像可构建并运行

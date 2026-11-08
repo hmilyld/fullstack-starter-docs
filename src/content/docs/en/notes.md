@@ -80,8 +80,8 @@ During import, ordinary requests return `503` except the one-time job-status end
 **How do I change the default role after registration?**
 The current registration logic decides between `user` or `pending_review` based on the manual-review switch; `defaultRoleId` is kept as configuration but does not yet participate in that logic. To change a role, use user management or adjust the backend registration logic.
 
-**Why is there no Swagger in the Java version?**
-The Java template does not integrate OpenAPI documentation; the annotations under `controller/` are the source of truth for the API. The Python version is available at `http://localhost:8088/docs`.
+**Where is the Java Swagger UI?**
+Open `http://localhost:8088/docs`; the OpenAPI description is at `/openapi.json`. Java uses SpringDoc and Python uses the built-in FastAPI docs — the URLs are the same.
 
 **Why doesn't the frontend use axios?**
 The convention is to use a native `fetch` wrapper (`api/client.ts`) for consistent handling of 401s and the response structure. Neither frontend template depends on axios.

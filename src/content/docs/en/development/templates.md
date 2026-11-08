@@ -11,9 +11,31 @@ The directory organization of different stacks is **deliberately not unified**, 
 
 | Template | Organization |
 | --- | --- |
-| `backend-python/` | Domain-modular: `app/core/` (infrastructure) + one package per business domain (`auth/`, `user/`, `role/`, `permission/`, `menu/`, …), each containing `models.py` / `schemas.py` / `crud.py` / `router.py` |
-| `backend-java/` | Layered: `controller/`, `service/`, `repository/`, `entity/`, `dto/`, plus `common/`, `config/`, `security/` |
+| `backend-python/` | Domain-modular: `app/core/` (infrastructure) + one package per business domain (`auth/`, `user/`, `role/`, `permission/`, `menu/`, …), each containing `models.py` / `schemas.py` / `service.py` / `router.py`; schema changes go through `migrations/` (Alembic) |
+| `backend-java/` | Layered: `controller/`, `service/`, `repository/`, `entity/`, `dto/`, plus `common/`, `config/`, `security/`; schema changes go through `db/migration/` (Flyway) |
 | `frontend-react/` and `frontend-vue/` | Feature-based: pages under `pages/settings/<Domain>/`, APIs split by domain under `api/`, types split by domain under `types/` |
+
+## Contract First
+
+`docs/contract/api.md` is the API contract both backends follow, pinned by two executable test suites:
+
+- Python: `templates/backend-python/tests/test_contract.py`
+- Java: `templates/backend-java/src/test/java/com/hmilyld/fullstack/ContractTest.java`
+
+Change the contract first, then both implementations and both test suites. A drift on either side fails its tests.
+
+## Backend Implementation Conventions
+
+The structures are deliberately un-unified, but the quality bar is the same:
+
+| Convention | Python | Java |
+| --- | --- | --- |
+| Failure | Raise domain exceptions (`AppException` subclasses) | Raise domain exceptions (`AppException` subclasses) |
+| Transactions | `get_db` commits on return, rolls back on error | `@Transactional` rolls back on error |
+| Response types | Pydantic schemas + `model_dump()` | `dto/*Response` records |
+| Pagination out of range | Clamped | Clamped |
+| Schema changes | Alembic migrations | Flyway migrations |
+| Role-name checks | Only `admin` (all permissions) and admin-account protection, one place each | Same |
 
 ## Naming and Copy
 
@@ -31,6 +53,7 @@ The directory organization of different stacks is **deliberately not unified**, 
 - Export archives use `manifest.json + schema.sql + checksums.sha256 + data/*.jsonl`, support only same-backend/same-version restore, and exclude `app_state`.
 - The frontend HTTP layer is a lightweight fetch wrapper (`api/client.ts` over `api/http.ts`); **do not introduce axios**.
 - The fetch wrapper must support binary downloads, `FormData` uploads, and custom status headers instead of assuming every response is JSON.
+- API docs URLs are identical in both stacks: `/docs` (Swagger UI) and `/openapi.json` (OpenAPI description). Python serves them via FastAPI, Java via SpringDoc.
 
 ## Related Pages
 

@@ -111,19 +111,22 @@ my-project/
 
 <FileTree>
 - app
-  - main.py   FastAPI 应用、CORS、审计中间件、路由注册
+  - main.py   FastAPI 应用、CORS、中间件、路由注册、启动迁移
   - core
-    - config.py  database.py  security.py  deps.py
-    - audit.py  permissions_catalog.py  menu_catalog.py
-    - app_state.py  seed.py  schemas.py
+    - config.py  database.py  security.py  deps.py  exceptions.py
+    - pagination.py  audit.py  models.py  permissions_catalog.py
+    - menu_catalog.py  app_state.py  seed.py  schemas.py
   - auth  user  role  permission  menu
   - system  ai_model  audit  data_management  dashboard  public
-  - 每个领域含 models / schemas / crud / router
+  - 每个领域含 models / schemas / service / router
+- migrations  Alembic 迁移脚本
+- tests  契约测试
+- alembic.ini
 - pyproject.toml
 - .env.example
 </FileTree>
 
-领域模块化组织：每个业务域一个包，基础设施统一放在 `core/`。
+领域模块化组织：每个业务域一个包，基础设施统一放在 `core/`，router 只做 HTTP 映射。
 
 </TabItem>
 <TabItem label="Java (Spring Boot)">
@@ -131,10 +134,10 @@ my-project/
 <FileTree>
 - src/main/java/com/hmilyld/fullstack
   - FullstackApplication.java
-  - common   ApiResponse / PageResult / 全局异常处理
-  - config   审计、CORS、Sa-Token、权限目录与同步任务
+  - common   ApiResponse / PageResult / 领域异常 / 全局异常处理
+  - config   审计、CORS、Sa-Token、OpenAPI、权限目录与同步任务
   - controller
-  - dto
+  - dto        请求对象与 *Response 响应记录
   - entity
   - repository
   - security  RateLimiter / StpInterfaceImpl
@@ -143,10 +146,13 @@ my-project/
   - application.yml
   - db/migration/V1__init.sql   基础表与种子数据
   - db/migration/V2__menu_and_app_state.sql   菜单表与运行状态
+  - db/migration/V3__menu_hidden.sql   菜单显示/隐藏
+  - db/migration/V4__align_with_python.sql   与 Python 侧对齐的索引
+- src/test/java/com/hmilyld/fullstack/ContractTest.java   契约测试
 - pom.xml
 </FileTree>
 
-按层组织：`controller / service / repository / entity / dto`，基础设施放在 `common/`、`config/`、`security/`。
+按层组织：`controller / service / repository / entity / dto`，基础设施放在 `common/`、`config/`、`security/`。响应使用 `dto/*Response` 类型化记录。
 
 </TabItem>
 </Tabs>

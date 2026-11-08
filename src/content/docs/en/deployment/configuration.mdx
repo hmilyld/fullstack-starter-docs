@@ -46,10 +46,15 @@ The Java backend configuration is at `src/main/resources/application.yml`:
 | `spring.flyway.enabled` | `true` | Enable database migrations |
 | `sa-token.token-style` | `uuid` | Token style |
 | `sa-token.timeout` | `86400` | Token validity (seconds) |
+| `spring.jackson.default-property-inclusion` | `always` | Null fields are serialised (contract requirement) |
 | `app.cors-origins` | `http://localhost:5173` | Allowed origins |
+| `app.rate-limit.max-attempts` | `5` | Login/register attempts per minute |
+| `app.rate-limit.window-ms` | `60000` | Rate-limit window (ms) |
 | `app.audit.exclude-paths` | `/api/auth` | Audit excluded paths |
 | `app.data.tmp-dir` | `./data/tmp` | Temporary import/export directory |
 | `app.data.max-import-size-bytes` | `1073741824` | Import archive size limit |
+| `springdoc.api-docs.path` | `/openapi.json` | OpenAPI description path |
+| `springdoc.swagger-ui.path` | `/docs` | Swagger UI path |
 | `spring.servlet.multipart.max-file-size` | `1GB` | Multipart file limit |
 | `spring.servlet.multipart.max-request-size` | `1GB` | Multipart request limit |
 
@@ -63,6 +68,17 @@ The Java version uses Sa-Token and **does not need `JWT_SECRET_KEY`**.
 | `TZ` | Defaults to `Asia/Shanghai` |
 | `DATABASE_URL` | Points to `/app/data/app.db` inside the Python image |
 | `PYTHONUNBUFFERED` | `1` inside the Python image |
+
+The Java backend never reads `JWT_SECRET_KEY`; the generated `docker-compose.yml` only requires it for the Python stack.
+
+## API Docs
+
+Identical URLs in both stacks, no extra configuration:
+
+| Purpose | URL |
+| --- | --- |
+| Swagger UI | `http://localhost:8088/docs` |
+| OpenAPI description | `http://localhost:8088/openapi.json` |
 
 ## Frontend Configuration
 

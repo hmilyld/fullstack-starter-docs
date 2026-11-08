@@ -111,19 +111,22 @@ my-project/
 
 <FileTree>
 - app
-  - main.py   FastAPI app, CORS, audit middleware, route registration
+  - main.py   FastAPI app, CORS, middleware, routes, startup migration
   - core
-    - config.py  database.py  security.py  deps.py
-    - audit.py  permissions_catalog.py  menu_catalog.py
-    - app_state.py  seed.py  schemas.py
+    - config.py  database.py  security.py  deps.py  exceptions.py
+    - pagination.py  audit.py  models.py  permissions_catalog.py
+    - menu_catalog.py  app_state.py  seed.py  schemas.py
   - auth  user  role  permission  menu
   - system  ai_model  audit  data_management  dashboard  public
-  - each domain contains models / schemas / crud / router
+  - each domain contains models / schemas / service / router
+- migrations  Alembic migration scripts
+- tests  contract tests
+- alembic.ini
 - pyproject.toml
 - .env.example
 </FileTree>
 
-Domain-modular organization: one package per business domain, with infrastructure kept together under `core/`.
+Domain-modular organization: one package per business domain, infrastructure kept together under `core/`, routers only map HTTP.
 
 </TabItem>
 <TabItem label="Java (Spring Boot)">
@@ -131,10 +134,10 @@ Domain-modular organization: one package per business domain, with infrastructur
 <FileTree>
 - src/main/java/com/hmilyld/fullstack
   - FullstackApplication.java
-  - common   ApiResponse / PageResult / global exception handling
-  - config   audit, CORS, Sa-Token, permission catalog and sync task
+  - common   ApiResponse / PageResult / domain exceptions / global handler
+  - config   audit, CORS, Sa-Token, OpenAPI, catalog and sync tasks
   - controller
-  - dto
+  - dto      request objects and *Response records
   - entity
   - repository
   - security  RateLimiter / StpInterfaceImpl
@@ -143,10 +146,13 @@ Domain-modular organization: one package per business domain, with infrastructur
   - application.yml
   - db/migration/V1__init.sql   Base tables and seed data
   - db/migration/V2__menu_and_app_state.sql   Menu tables and runtime state
+  - db/migration/V3__menu_hidden.sql   Sidebar visibility
+  - db/migration/V4__align_with_python.sql   Indexes aligned with Python
+- src/test/java/com/hmilyld/fullstack/ContractTest.java   Contract tests
 - pom.xml
 </FileTree>
 
-Organized by layer: `controller / service / repository / entity / dto`, with infrastructure under `common/`, `config/`, and `security/`.
+Organized by layer: `controller / service / repository / entity / dto`, with infrastructure under `common/`, `config/`, and `security/`. Responses use `dto/*Response` records.
 
 </TabItem>
 </Tabs>

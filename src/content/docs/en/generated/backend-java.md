@@ -1,77 +1,110 @@
 ---
 title: Java Backend
-description: The Spring Boot template's layered structure, database migrations, authentication, and configuration.
+description: Layered structure, migrations, authentication, API docs and configuration of the Spring Boot template.
 ---
 
-The Java backend uses Spring Boot 3.2 + Spring Data JPA + SQLite, with code organized by **layer**.
+The Java backend uses Spring Boot 3.2 + Spring Data JPA + SQLite, organised **by layer**.
 
-## Layered Structure
+## Layered structure
 
 ```
 src/main/java/com/hmilyld/fullstack/
 ├── FullstackApplication.java
-├── common/            # ApiResponse, PageResult, global exception handling
-├── config/            # audit, CORS, Sa-Token, menu/permission catalogs, import freeze and sync
+├── common/            # ApiResponse, PageResult, domain exceptions, global handler
+├── config/            # Audit, CORS, Sa-Token, OpenAPI, catalog sync, import freeze
 ├── controller/        # 12 controllers: auth / user / role / permission / menu / data ...
-├── service/           # Business logic
+├── service/           # Business logic (throws on failure, so transactions roll back)
 ├── repository/        # Spring Data JPA repositories
 ├── entity/            # JPA entities
-├── dto/               # Request / response objects
+├── dto/               # Request objects and *Response records
 └── security/          # RateLimiter, StpInterfaceImpl
 ```
 
-## Database and Migrations
+Responses always use `dto/*Response` records — **never `Map<String, Object>`**.
 
-- The database is a SQLite file, by default `./data/app.db`.
-- Schema is managed with **Flyway**: `V1__init.sql` creates base tables and seed data; `V2__menu_and_app_state.sql` creates menu and runtime state tables.
-- JPA is set to `ddl-auto: none`, so the schema is controlled entirely by the migration scripts.
-- After startup, `PermissionSyncRunner` syncs permissions first, then `MenuSyncRunner` fills in built-in menus without overwriting administrator ordering.
+## Database and migrations
+
+- SQLite file, default `./data/app.db`.
+- Schema is managed by **Flyway**:
+  - `V1__init.sql`: tables and base seed data
+  - `V2__menu_and_app_state.sql`: menu and runtime state tables
+  - `V3__menu_hidden.sql`: sidebar visibility
+  - `V4__align_with_python.sql`: indexes and `app_state` row aligned with Python
+- JPA is set to `ddl-auto: none`; migrations fully control the schema.
+- On startup `PermissionSyncRunner` syncs permissions, then `MenuSyncRunner` adds built-in menus without overwriting admin-adjusted order.
+
+## Errors and transactions
+
+- Business failures **raise domain exceptions** (`AppException`, `NotFoundException`, `ConflictException`, `InvalidOperationException`, `ForbiddenException`), mapped by `GlobalExceptionHandler`.
+- Because failures are exceptions, `@Transactional` methods roll back — there is **no “write first, then return `error`”**.
+- The `data` key **always exists** in the envelope (`null` on failure). This requires `@JsonInclude(ALWAYS)` on `ApiResponse` and the global `non_null` filter disabled, otherwise `data`, `parent` and other nullable fields vanish from the JSON.
 
 ## Authentication: Sa-Token
 
-The Java version uses **Sa-Token** server-side session tokens (UUID-style) and **does not need `JWT_SECRET_KEY`**.
+The Java build uses **Sa-Token** server-side session tokens (UUID style) and **needs no `JWT_SECRET_KEY`**.
 
-- Tokens are valid for 86400 seconds (24 hours) by default.
+- Default token lifetime is 86400 seconds (24 hours).
 - `BearerTokenFilter` converts `Authorization: Bearer <token>` into the `satoken` header Sa-Token expects.
-- Login stores the global `session_epoch` in the Sa-Token session and every request checks it against the database; a successful data import invalidates all sessions.
-- Endpoint permissions are declared with the `@SaCheckPermission(...)` annotation, supporting `SaMode.OR` to combine multiple permission codes.
-- `BCrypt` is used for password hashing.
+- Login stores the global `session_epoch` in the Sa-Token session, checked against the database on every request; a successful data import invalidates all sessions.
+- Logout, password change and admin password reset call `StpUtil.logout(userId)`, revoking all sessions for that user.
+- Endpoints gate with `@SaCheckPermission(...)`, supporting `SaMode.OR` for several codes.
+- `BCrypt` hashes passwords.
+- SSRF protection resolves the hostname first, then rejects private, loopback, link-local and cloud-metadata addresses.
 
-:::caution[Not interchangeable with the Python version's tokens]
-Sa-Token's UUID tokens have a different format from the Python version's JWT, so switching backends requires the frontend to log in again.
+:::caution[Tokens are not interchangeable with Python]
+Sa-Token's UUID tokens differ from the Python JWT format; the frontend must log in again when switching backends.
 :::
+
+## API docs: SpringDoc
+
+The Java build integrates **SpringDoc OpenAPI 2.5.0** (Spring Boot 3.2.x maps to 2.3.x–2.5.x), with paths deliberately aligned to Python:
+
+| Purpose | URL |
+| --- | --- |
+| Swagger UI | `http://localhost:8088/docs` |
+| OpenAPI description | `http://localhost:8088/openapi.json` |
+
+`config/OpenApiConfig.java` declares only the global title, version and `bearerAuth` scheme — no per-endpoint annotations, since springdoc derives methods, parameters and DTO shapes by reflection. Use the **Authorize** button in Swagger UI with a token from login to call protected endpoints.
 
 ## Configuration
 
-The configuration file is at `src/main/resources/application.yml`:
+Settings live in `src/main/resources/application.yml`:
 
-| Config | Default | Description |
+| Key | Default | Description |
 | --- | --- | --- |
 | `server.port` | `8088` | Backend port |
 | `spring.datasource.url` | `jdbc:sqlite:./data/app.db` | SQLite file path |
 | `spring.jpa.hibernate.ddl-auto` | `none` | Schema managed by Flyway |
 | `spring.flyway.enabled` | `true` | Enable migrations |
+| `spring.jackson.default-property-inclusion` | `always` | Null fields are serialised (contract requirement) |
 | `sa-token.token-style` | `uuid` | Token style |
-| `sa-token.timeout` | `86400` | Token validity (seconds) |
-| `app.cors-origins` | `http://localhost:5173` | Allowed frontend origins |
-| `app.audit.exclude-paths` | `/api/auth` | Audit middleware excluded paths |
-| `app.data.tmp-dir` | `./data/tmp` | Temporary import/export directory |
+| `sa-token.timeout` | `86400` | Token lifetime (seconds) |
+| `app.cors-origins` | `http://localhost:5173` | Allowed frontend origin |
+| `app.rate-limit.max-attempts` | `5` | Login/register attempts per minute |
+| `app.rate-limit.window-ms` | `60000` | Rate-limit window (ms) |
+| `app.audit.exclude-paths` | `/api/auth` | Audit exclusions |
+| `app.data.tmp-dir` | `./data/tmp` | Import/export temp directory |
 | `app.data.max-import-size-bytes` | `1073741824` | Import archive size limit |
+| `springdoc.api-docs.path` | `/openapi.json` | OpenAPI description path |
+| `springdoc.swagger-ui.path` | `/docs` | Swagger UI path |
 | `spring.servlet.multipart.max-file-size` | `1GB` | Multipart upload limit |
 
-## Starting Manually
+## Running manually
 
 ```bash
 cd backend
 mvn spring-boot:run
 ```
 
-The backend listens on `http://localhost:8088`. Unlike the Python version, the Java version does not provide built-in Swagger documentation; the code under `controller/` is the source of truth for the API.
+The backend listens on `http://localhost:8088`, with API docs at `http://localhost:8088/docs`.
 
-## Code Checks
-
-The build script validates formatting with Spotless:
+## Linting and tests
 
 ```bash
-cd backend && mvn spotless:check
+cd backend
+mvn spotless:apply      # format before committing
+mvn spotless:check      # verify formatting
+mvn test                # 24 contract assertions
 ```
+
+Contract tests live in `src/test/java/com/hmilyld/fullstack/ContractTest.java` and assert the same `docs/contract/api.md` as the Python build.

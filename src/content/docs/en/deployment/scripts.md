@@ -49,8 +49,8 @@ Runs in order:
 
 1. Frontend build: `cd frontend && npm run build`
 2. Backend check:
-   - Python: `uv run ruff check .`
-   - Java: `mvn spotless:check`
+   - Python: `uv run ruff check . && uv run pytest -q`
+   - Java: `mvn spotless:check && mvn test`
 
 If any step fails, the script exits immediately due to `set -e`.
 

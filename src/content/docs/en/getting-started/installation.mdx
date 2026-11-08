@@ -20,12 +20,12 @@ import { Tabs, TabItem, Steps } from '@astrojs/starlight/components';
 <TabItem label="Python track">
 - Install [uv](https://docs.astral.sh/uv/) (dependency management and execution).
 - Python must be ≥ 3.12; `uv` handles the virtual environment automatically.
-- Linting uses `ruff` (installed as a development dependency by `uv sync`).
+- Linting uses `ruff` and contract tests use `pytest` (both installed by `uv sync --extra dev`).
 </TabItem>
 <TabItem label="Java track">
 - Install JDK 21 and Maven 3.9+.
 - Maven manages dependencies automatically and downloads them on the first build.
-- Formatting checks use `mvn spotless:check`.
+- Formatting checks use `mvn spotless:check` and contract tests use `mvn test`.
 </TabItem>
 </Tabs>
 

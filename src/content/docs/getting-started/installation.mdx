@@ -20,12 +20,12 @@ import { Tabs, TabItem, Steps } from '@astrojs/starlight/components';
 <TabItem label="Python 路线">
 - 安装 [uv](https://docs.astral.sh/uv/)（依赖管理与运行）。
 - Python 版本需 ≥ 3.12，`uv` 会自动处理虚拟环境。
-- 代码检查使用 `ruff`（作为开发依赖由 `uv sync` 安装）。
+- 代码检查使用 `ruff`，契约测试使用 `pytest`（均由 `uv sync --extra dev` 安装）。
 </TabItem>
 <TabItem label="Java 路线">
 - 安装 JDK 21 与 Maven 3.9+。
 - 依赖由 Maven 自动管理，首次构建会下载。
-- 代码格式化检查使用 `mvn spotless:check`。
+- 代码格式化检查使用 `mvn spotless:check`，契约测试使用 `mvn test`。
 </TabItem>
 </Tabs>
 

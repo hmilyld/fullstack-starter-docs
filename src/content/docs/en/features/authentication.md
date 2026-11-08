@@ -11,7 +11,7 @@ Authentication is provided uniformly by the backend, and the frontend carries th
 | --- | --- | --- | --- |
 | POST | `/api/auth/login` | Log in | No |
 | POST | `/api/auth/register` | Register | No |
-| POST | `/api/auth/logout` | Log out | Python: yes; Java: tolerates unauthenticated calls |
+| POST | `/api/auth/logout` | Log out (revokes the current token immediately) | Yes |
 
 ## Login
 
@@ -50,7 +50,9 @@ Administrators can enable maintenance mode in system settings. Once enabled:
 | --- | --- | --- |
 | Token type | JWT (PyJWT, HS256) | Sa-Token UUID session token |
 | Validity | 24 hours by default | 86400 seconds by default |
-| Logout | Requires login; deletes the server-side session | Tolerates unauthenticated calls and also returns success |
+| Logout | Requires login; bumps the user token version to invalidate existing tokens | Requires login; revokes every server-side session for the user |
+
+Logout takes effect **immediately** in both stacks: any request with the old token afterwards returns `401`. Changing a password, or an admin resetting one, also invalidates that user's existing tokens.
 
 :::caution[Tokens are not interchangeable]
 The two stacks use different token formats and cannot be swapped. Changing `JWT_SECRET_KEY` immediately invalidates every already-issued Python token.

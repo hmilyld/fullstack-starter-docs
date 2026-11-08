@@ -80,8 +80,8 @@ AI 模型连接测试默认拒绝访问本机、内网与云元数据地址，�
 **如何修改注册后的默认角色？**
 当前注册逻辑按人工审核开关决定为 `user` 或 `pending_review`，`defaultRoleId` 作为配置保留但暂未参与该逻辑。修改角色请通过用户管理，或在后端注册逻辑中调整。
 
-**Java 版为什么没有 Swagger？**
-Java 模板未集成 OpenAPI 文档，接口以 `controller/` 下的注解为准。Python 版访问 `http://localhost:8088/docs` 即可。
+**Java 版的 Swagger 文档在哪里？**
+访问 `http://localhost:8088/docs`，OpenAPI 描述在 `/openapi.json`。Java 使用 SpringDoc，Python 使用 FastAPI 内置文档，两者地址一致。
 
 **前端为什么不用 axios？**
 约定使用原生 `fetch` 封装（`api/client.ts`），便于统一处理 401 与响应结构。两个前端模板都没有引入 axios。

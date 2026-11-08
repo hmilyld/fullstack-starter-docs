@@ -1,11 +1,32 @@
 ---
 title: Testing and Verification
-description: The scaffold has no automated test framework; here is the verification process for changes.
+description: Contract tests shipped with the templates, and the verification process for changes.
 ---
 
 import { Steps } from '@astrojs/starlight/components';
 
-The scaffold itself has no automated test framework, so verification uses a manual process.
+Both backend templates ship **executable contract tests** asserting the same `docs/contract/api.md`. The scaffold itself has no automated test framework, so its verification uses a manual process.
+
+## Contract Tests
+
+```bash
+# Python: 26 assertions
+cd templates/backend-python
+uv sync --extra dev
+uv run ruff check .
+uv run pytest -q
+
+# Java: 24 assertions
+cd templates/backend-java
+mvn spotless:check
+mvn test
+```
+
+They cover the endpoint set, the response envelope (`data` must exist), resource field shapes, pagination clamping, token invalidation after logout, no partial writes on failure, SSRF rejection, and the export archive format. The Java suite also compares the SpringDoc-generated OpenAPI against the contract endpoint set.
+
+When changing the API, change the contract first, then both implementations and both test suites.
+
+## Manual Verification
 
 <Steps>
 
@@ -40,7 +61,7 @@ The scaffold itself has no automated test framework, so verification uses a manu
    mvn spring-boot:run
    ```
 
-   Confirm the backend starts, initializes the database and writes seed data, and that you can log in with `admin / 123456`.
+   Confirm the backend starts, initializes the database and writes seed data, and that you can log in with `admin / 123456`. API docs are at `http://localhost:8088/docs` in both stacks.
 
 4. Verify Docker
 
@@ -70,12 +91,15 @@ At minimum, verify the combinations affected by your changes. Because frontend a
 ## Quick Verification Checklist
 
 - [ ] `npm run build` (scaffold) passes
+- [ ] Backend contract tests pass (`pytest` / `mvn test`)
 - [ ] The generated project's frontend build passes
-- [ ] The backend starts and completes initialization
+- [ ] The backend starts and completes migrations and initialization
 - [ ] `admin / 123456` can log in
+- [ ] `/docs` opens in both stacks
 - [ ] Permission menus display correctly by role
 - [ ] Menu ordering, cross-group moves, and custom-menu permissions work
 - [ ] The export archive decrypts and contains the full table manifest
 - [ ] A successful import freezes ordinary requests and invalidates every session
 - [ ] A failed import rolls back and releases the freeze
+- [ ] Old tokens return `401` after logout
 - [ ] The Docker image builds and runs

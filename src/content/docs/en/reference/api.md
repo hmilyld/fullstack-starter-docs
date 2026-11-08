@@ -11,6 +11,10 @@ Except for file downloads, all endpoints are prefixed with `/api` and return uni
 
 On error, `code` is `-1` and `message` is a Chinese message. For paginated endpoints, `data` is `{ list, total, page, pageSize }`.
 
+The `data` key **always exists**: it is `null` on business failure and for successful responses without a payload. Both stacks behave identically here.
+
+Out-of-range `page` and `pageSize` are **clamped** to valid values (`page >= 1`, `pageSize` 1–100) rather than rejected.
+
 `POST /api/data/export` returns an `application/zip` file on success. The one-time random password is returned in the `X-Export-Password` response header.
 
 ## Authentication Notes
@@ -22,7 +26,7 @@ Meaning of the "Auth" column in the tables below:
 - `Yes(permission)`: login required and the corresponding permission point must be held.
 - `One-time job token`: login is not used; the request must include the `X-Import-Job-Token` returned when the import job was created.
 
-The Python version returns 401 when not logged in; the two stacks behave the same except for `logout`: the Java version also returns success when called without logging in.
+Both stacks behave identically: unauthenticated returns `401`, forbidden `403`, validation failure `422`. The only implementation difference is the token format (JWT vs Sa-Token), which is transparent to callers.
 
 ## Authentication
 
@@ -30,7 +34,7 @@ The Python version returns 401 when not logged in; the two stacks behave the sam
 | --- | --- | --- | --- |
 | POST | `/api/auth/login` | Log in | No |
 | POST | `/api/auth/register` | Register (controlled by open registration / manual review) | No |
-| POST | `/api/auth/logout` | Log out | Yes¹ |
+| POST | `/api/auth/logout` | Log out (revokes the current token immediately) | Yes¹ |
 
 ## Users
 
@@ -132,7 +136,7 @@ During import, ordinary requests return 503 except the status endpoint. A succes
 
 ---
 
-> **Note 1**: The Python version's `logout` requires login; the Java version tolerates unauthenticated calls.
+> **Note 1**: Logout requires login and immediately invalidates the current token; requests with the old token afterwards return `401`.
 >
 > **Note 2**: Creating a user with a non-default role also requires the `users.assign_role` permission.
 

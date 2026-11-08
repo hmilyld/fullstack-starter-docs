@@ -49,8 +49,8 @@ export JWT_SECRET_KEY="$(openssl rand -base64 48)"
 
 1. 前端构建：`cd frontend && npm run build`
 2. 后端检查：
-   - Python：`uv run ruff check .`
-   - Java：`mvn spotless:check`
+   - Python：`uv run ruff check . && uv run pytest -q`
+   - Java：`mvn spotless:check && mvn test`
 
 任一环节失败，脚本因 `set -e` 立即退出。
 

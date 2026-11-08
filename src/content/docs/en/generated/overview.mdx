@@ -34,10 +34,11 @@ All four combinations share the same feature set, API conventions, and response 
 | --- | --- | --- |
 | Framework | FastAPI | Spring Boot 3.2 |
 | ORM | SQLAlchemy 2.0 (async) | Spring Data JPA |
-| Database | SQLite (aiosqlite) | SQLite file (`./data/app.db`, Flyway migrations) |
-| Authentication | PyJWT + bcrypt | Sa-Token (uuid-style tokens) + BCrypt |
+| Database | SQLite (aiosqlite, Alembic migrations) | SQLite file (`./data/app.db`, Flyway migrations) |
+| Authentication | PyJWT + bcrypt (token revoked on logout) | Sa-Token (uuid-style tokens) + BCrypt |
 | Key | Environment variable `JWT_SECRET_KEY` (weak keys refuse to start) | No key needed (server-side session tokens) |
-| API docs | Built-in Swagger `/docs` | No built-in Swagger; the controllers are the source of truth |
+| API docs | Built-in Swagger `/docs` | Built-in Swagger `/docs` (SpringDoc) |
+| Contract tests | `pytest` (26 assertions) | `mvn test` (24 assertions) |
 
 :::caution[Tokens are not interchangeable]
 Python uses JWT and Java uses Sa-Token's UUID tokens; the formats differ and are incompatible. Switching backends requires the frontend to log in again, and already-issued tokens are invalid.
@@ -45,11 +46,12 @@ Python uses JWT and Java uses Sa-Token's UUID tokens; the formats differ and are
 
 ## Behavioral Differences
 
-The two backends have the same features and permission model, with only a few small differences:
+The two backends share the same features, permission model and API contract. Implementation-level differences:
 
-- **`logout`**: Python requires login; Java tolerates unauthenticated calls and also returns success.
+- **Error expression**: both stacks throw domain exceptions on business failure, mapped to `{ code: -1, message, data: null }`; the `data` key always exists.
+- **Startup initialization**: Python runs Alembic migrations, then seed data and permission/menu sync; Java runs Flyway migrations, then the permission and menu sync tasks.
+- **Token revocation**: Python invalidates tokens by bumping `users.token_version`; Java revokes server-side sessions with `StpUtil.logout(userId)`.
 - **Permission-denied response**: both stacks return 403 when permission is missing and record an audit log entry.
-- **Startup initialization**: Python runs `create_all` + seed data + permission/menu sync at startup; Java uses Flyway migrations and runs permission and menu sync tasks in order.
 
 ## Response Format
 

@@ -11,9 +11,11 @@ The generated project uses a **single Docker image** that contains both Nginx an
 
 ```
 Browser ──▶ :5173 (Nginx)
-              ├─ /          Frontend static files (/usr/share/nginx/html)
-              ├─ /api/      Reverse proxy to 127.0.0.1:8088 (backend in the same container)
-              └─ /docs      Proxy to the backend API docs (Python)
+              ├─ /              Frontend static files (/usr/share/nginx/html)
+              ├─ /api/          Reverse proxy to 127.0.0.1:8088 (backend in the same container)
+              ├─ /docs          Proxy to the backend API docs (identical in both stacks)
+              ├─ /openapi.json  OpenAPI description
+              └─ /swagger-ui/   Swagger UI static assets (Java)
 ```
 
 - The frontend is built into static files by the Node stage, served by Nginx, with the SPA fallback `try_files ... /index.html`.

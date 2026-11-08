@@ -11,9 +11,11 @@ import { Tabs, TabItem } from '@astrojs/starlight/components';
 
 ```
 浏览器 ──▶ :5173 (Nginx)
-              ├─ /          前端静态文件（/usr/share/nginx/html）
-              ├─ /api/      反向代理到 127.0.0.1:8088（同容器后端）
-              └─ /docs      代理后端接口文档（Python）
+              ├─ /              前端静态文件（/usr/share/nginx/html）
+              ├─ /api/          反向代理到 127.0.0.1:8088（同容器后端）
+              ├─ /docs          代理后端接口文档（两栈一致）
+              ├─ /openapi.json  OpenAPI 描述
+              └─ /swagger-ui/   Swagger UI 静态资源（Java）
 ```
 
 - 前端由 Node 阶段构建为静态文件，交给 Nginx 提供，并带 SPA 回退 `try_files ... /index.html`。

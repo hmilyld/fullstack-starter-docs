@@ -34,10 +34,11 @@ import { Tabs, TabItem } from '@astrojs/starlight/components';
 | --- | --- | --- |
 | 框架 | FastAPI | Spring Boot 3.2 |
 | ORM | SQLAlchemy 2.0（async） | Spring Data JPA |
-| 数据库 | SQLite（aiosqlite） | SQLite 文件（`./data/app.db`，Flyway 迁移） |
-| 认证 | PyJWT + bcrypt | Sa-Token（uuid 风格令牌）+ BCrypt |
+| 数据库 | SQLite（aiosqlite，Alembic 迁移） | SQLite 文件（`./data/app.db`，Flyway 迁移） |
+| 认证 | PyJWT + bcrypt（登出即失效） | Sa-Token（uuid 风格令牌）+ BCrypt |
 | 密钥 | 环境变量 `JWT_SECRET_KEY`（弱密钥拒绝启动） | 无需密钥（服务端会话令牌） |
-| 接口文档 | 内置 Swagger `/docs` | 无内置 Swagger，接口以控制器为准 |
+| 接口文档 | 内置 Swagger `/docs` | 内置 Swagger `/docs`（SpringDoc） |
+| 契约测试 | `pytest`（26 条） | `mvn test`（24 条） |
 
 :::caution[令牌不通用]
 Python 使用 JWT，Java 使用 Sa-Token 的 UUID 令牌，两者格式不同、互不兼容。切换后端时前端需要重新登录，已签发的令牌无效。
@@ -45,11 +46,12 @@ Python 使用 JWT，Java 使用 Sa-Token 的 UUID 令牌，两者格式不同、
 
 ## 行为差异
 
-两套后端的功能与权限模型一致，只有少数细节不同：
+两套后端的功能、权限模型与接口契约完全一致。实现层面的差异：
 
-- **`logout`**：Python 要求已登录；Java 兼容未登录调用并同样返回成功。
+- **错误表达**：两栈都在业务失败时抛领域异常，由统一处理器映射为 `{ code: -1, message, data: null }`；`data` 键始终存在。
+- **启动初始化**：Python 先执行 Alembic 迁移，再写入种子数据并同步权限/菜单；Java 由 Flyway 迁移，再依次执行权限和菜单同步任务。
+- **令牌吊销**：Python 通过递增 `users.token_version` 使令牌失效；Java 通过 `StpUtil.logout(userId)` 吊销服务端会话。
 - **权限拦截返回**：两栈在无权限时都返回 403，并记录一条审计日志。
-- **启动初始化**：Python 在启动时执行 `create_all` + 种子数据 + 权限/菜单同步；Java 由 Flyway 迁移并依次执行权限和菜单同步任务。
 
 ## 响应格式
 

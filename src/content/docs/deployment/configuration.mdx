@@ -68,7 +68,7 @@ Java 版使用 Sa-Token，**不需要 `JWT_SECRET_KEY`**。
 
 前端**没有 `.env` 文件**：
 
-- 请求基础地址在 `src/api/client.ts` 中固定为 `/api`。
+- 请求基础地址在 `src/api/http.ts` 中固定为 `/api`。
 - 开发时由 `vite.config.ts` 将 `/api` 代理到 `http://localhost:8088`；生产由 Nginx 反代。
 
 ## 端口

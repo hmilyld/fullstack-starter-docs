@@ -68,7 +68,7 @@ The Java version uses Sa-Token and **does not need `JWT_SECRET_KEY`**.
 
 The frontend **has no `.env` file**:
 
-- The request base URL is fixed at `/api` in `src/api/client.ts`.
+- The request base URL is fixed at `/api` in `src/api/http.ts`.
 - During development, `vite.config.ts` proxies `/api` to `http://localhost:8088`; in production, Nginx does the reverse proxying.
 
 ## Ports

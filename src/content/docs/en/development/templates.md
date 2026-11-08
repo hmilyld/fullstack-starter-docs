@@ -29,7 +29,7 @@ The directory organization of different stacks is **deliberately not unified**, 
 - Menu presentation is separate from authorization: `permissions` handles authorization, while `menu_groups` / `menu_items` own groups, routes, icons, order, and visibility (`hidden`).
 - Menu permissions must be created through Menu & Permissions; built-in items cannot be deleted, and deleting a custom item cascades to its operation permissions and role grants.
 - Export archives use `manifest.json + schema.sql + checksums.sha256 + data/*.jsonl`, support only same-backend/same-version restore, and exclude `app_state`.
-- The frontend HTTP layer is a lightweight fetch wrapper (`api/client.ts`); **do not introduce axios**.
+- The frontend HTTP layer is a lightweight fetch wrapper (`api/client.ts` over `api/http.ts`); **do not introduce axios**.
 - The fetch wrapper must support binary downloads, `FormData` uploads, and custom status headers instead of assuming every response is JSON.
 
 ## Related Pages

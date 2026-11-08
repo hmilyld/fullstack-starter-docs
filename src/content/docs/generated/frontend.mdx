@@ -9,50 +9,54 @@ React 与 Vue 模板采用同一套功能划分：按业务域拆分 API 与类�
 
 ## 请求层
 
-前端 HTTP 层是一个轻量的原生 `fetch` 封装 `src/api/client.ts`，**不使用 axios**。
+前端 HTTP 层是一个轻量的原生 `fetch` 封装，**不使用 axios**。它分成两层：
+
+- `src/api/http.ts` —— 基础设施：`BASE_URL`、查询串拼接、鉴权头、`Content-Disposition` 文件名解析、JSON 请求与原始请求。只被 `client.ts` 使用。
+- `src/api/client.ts` —— 对外的 `apiClient`：`get` / `post` / `put` / `delete` / `download` / `upload` / `getWithHeaders`。
+
+行为约定：
 
 - 基础地址固定为 `/api`，开发时由 Vite 代理到 `localhost:8088`。
 - 自动附加 `Authorization: Bearer <token>`。
 - 收到 **401** 时清除登录状态并跳转登录页。
-- 统一解析 `{ code, message, data }`，`code !== 0` 时抛出错误消息。
-- 支持二进制下载、`FormData` 上传和自定义状态头，用于数据导出、导入与任务轮询。
+- `get` / `post` / `put` / `delete` 统一返回 `{ code, message, data }`，网络与 HTTP 错误都不抛异常，调用方检查 `code`。
+- `download` / `upload` / `getWithHeaders` 走原始请求，失败时抛异常，并保留响应头（导出密码、任务 token 等）。
 
-各业务域的调用拆分在 `src/api/` 下：`auth.ts`、`user.ts`、`role.ts`、`permission.ts`、`menu.ts`、`system.ts`、`dashboard.ts`、`ai-model.ts`、`audit-log.ts`、`data-management.ts`。
+各业务域的调用拆分在 `src/api/` 下：`auth.ts`、`user.ts`、`role.ts`、`permission.ts`、`menu.ts`、`system.ts`、`dashboard.ts`、`ai-model.ts`、`audit-log.ts`、`data-management.ts`。请求体与响应类型统一放在 `src/types/` 对应的业务域文件里，`api/` 只保留调用函数。
 
 <Tabs>
 <TabItem label="React">
 ```ts
 // src/api/client.ts（示意）
-const BASE_URL = '/api';
+export const apiClient = new ApiClient();
 
-export async function request<T>(path: string, options?: RequestInit): Promise<T> {
-  const res = await fetch(`${BASE_URL}${path}`, {
-    ...options,
-    headers: { 'Content-Type': 'application/json', ...options?.headers },
-  });
-  // 401 → 清除 token 并跳转 /login
-  // code !== 0 → throw new Error(message)
-  return body.data;
+// src/api/user.ts
+export async function getUsers(params?: PageParams) {
+  return apiClient.get<PaginatedData<User>>('/users', params);
 }
 ```
 </TabItem>
 <TabItem label="Vue">
 ```ts
 // src/api/client.ts（示意）
-const BASE_URL = '/api';
+export const apiClient = new ApiClient();
 
-export async function request<T>(path: string, options?: RequestInit): Promise<T> {
-  const res = await fetch(`${BASE_URL}${path}`, {
-    ...options,
-    headers: { 'Content-Type': 'application/json', ...options?.headers },
-  });
-  // 401 → 清除 token 并跳转 /login
-  // code !== 0 → throw new Error(message)
-  return body.data;
+// src/api/user.ts
+export async function getUsers(params?: PageParams) {
+  return apiClient.get<PaginatedData<User>>('/users', params);
 }
 ```
 </TabItem>
 </Tabs>
+
+React 与 Vue 的 `src/api/` 和 `src/types/` 内容完全一致，改动时两边同步。
+
+### API 层规则
+
+1. **只放请求定义**：`api/` 下的文件只导出调用函数，不写格式化、DOM 操作、toast 或业务编排。
+2. **类型归 `types/`**：请求体、响应体、查询参数类型一律放在 `src/types/<域>.ts`，`api/` 用 `import type` 引入。
+3. **域内闭环**：业务域文件之间不互相 import；跨域共享的能力放到 `lib/`。
+4. **升级规则**：当某个域的文件超过约 150 行，或该域需要第二个文件时，才把 `api/<域>.ts` 升级为 `api/<域>/index.ts` + 同目录子文件；其余域保持平铺。不要在域数量还少的时候提前嵌套。
 
 ## 路由与鉴权
 

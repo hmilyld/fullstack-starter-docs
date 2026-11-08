@@ -9,50 +9,54 @@ The React and Vue templates use the same feature split: APIs and types are split
 
 ## Request Layer
 
-The frontend HTTP layer is a lightweight native `fetch` wrapper, `src/api/client.ts`, and **does not use axios**.
+The frontend HTTP layer is a lightweight native `fetch` wrapper and **does not use axios**. It has two layers:
+
+- `src/api/http.ts` — infrastructure: `BASE_URL`, query-string building, auth headers, `Content-Disposition` filename parsing, JSON requests, and raw requests. Used only by `client.ts`.
+- `src/api/client.ts` — the public `apiClient`: `get` / `post` / `put` / `delete` / `download` / `upload` / `getWithHeaders`.
+
+Behavior:
 
 - The base URL is fixed at `/api`; during development Vite proxies it to `localhost:8088`.
 - Automatically attaches `Authorization: Bearer <token>`.
 - On a **401** response, clears the login state and redirects to the login page.
-- Uniformly parses `{ code, message, data }` and throws an error message when `code !== 0`.
-- Supports binary downloads, `FormData` uploads, and custom status headers for export, import, and job polling.
+- `get` / `post` / `put` / `delete` all return `{ code, message, data }` and do not throw on network or HTTP errors; callers check `code`.
+- `download` / `upload` / `getWithHeaders` use raw requests, throw on failure, and keep the response headers (export password, job token, ...).
 
-The calls for each business domain are split under `src/api/`: `auth.ts`, `user.ts`, `role.ts`, `permission.ts`, `menu.ts`, `system.ts`, `dashboard.ts`, `ai-model.ts`, `audit-log.ts`, `data-management.ts`.
+The calls for each business domain are split under `src/api/`: `auth.ts`, `user.ts`, `role.ts`, `permission.ts`, `menu.ts`, `system.ts`, `dashboard.ts`, `ai-model.ts`, `audit-log.ts`, `data-management.ts`. Request and response types live in `src/types/<domain>.ts`; `api/` keeps only the call functions.
 
 <Tabs>
 <TabItem label="React">
 ```ts
 // src/api/client.ts (illustrative)
-const BASE_URL = '/api';
+export const apiClient = new ApiClient();
 
-export async function request<T>(path: string, options?: RequestInit): Promise<T> {
-  const res = await fetch(`${BASE_URL}${path}`, {
-    ...options,
-    headers: { 'Content-Type': 'application/json', ...options?.headers },
-  });
-  // 401 → clear token and redirect to /login
-  // code !== 0 → throw new Error(message)
-  return body.data;
+// src/api/user.ts
+export async function getUsers(params?: PageParams) {
+  return apiClient.get<PaginatedData<User>>('/users', params);
 }
 ```
 </TabItem>
 <TabItem label="Vue">
 ```ts
 // src/api/client.ts (illustrative)
-const BASE_URL = '/api';
+export const apiClient = new ApiClient();
 
-export async function request<T>(path: string, options?: RequestInit): Promise<T> {
-  const res = await fetch(`${BASE_URL}${path}`, {
-    ...options,
-    headers: { 'Content-Type': 'application/json', ...options?.headers },
-  });
-  // 401 → clear token and redirect to /login
-  // code !== 0 → throw new Error(message)
-  return body.data;
+// src/api/user.ts
+export async function getUsers(params?: PageParams) {
+  return apiClient.get<PaginatedData<User>>('/users', params);
 }
 ```
 </TabItem>
 </Tabs>
+
+React and Vue keep byte-identical `src/api/` and `src/types/`; change both together.
+
+### API layer rules
+
+1. **Call definitions only**: files under `api/` export call functions only — no formatting, DOM work, toasts, or business orchestration.
+2. **Types belong in `types/`**: request bodies, responses, and query-parameter types go in `src/types/<domain>.ts`; `api/` imports them with `import type`.
+3. **No cross-domain imports**: business-domain files do not import each other; shared capabilities go in `lib/`.
+4. **Upgrade rule**: only when a domain file grows past ~150 lines, or the domain needs a second file, promote `api/<domain>.ts` to `api/<domain>/index.ts` plus siblings. Keep the rest flat; do not nest ahead of need.
 
 ## Routing and Authorization
 

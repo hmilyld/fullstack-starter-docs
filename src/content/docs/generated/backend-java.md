@@ -20,7 +20,7 @@ src/main/java/com/hmilyld/fullstack/
 └── security/          # RateLimiter、StpInterfaceImpl
 ```
 
-响应一律使用 `dto/*Response` 类型化记录，**不再返回 `Map<String, Object>`**。
+响应一律使用 `dto/*Response` 类型化记录，**不再返回 `Map<String, Object>`**。controller 方法声明具体的 `ApiResponse<T>`，禁止 `ApiResponse<?>`——通配符会让 springdoc 生成 `ApiResponseObject`（`data` 为任意 JSON），客户端无法据此生成类型。
 
 ## 数据库与迁移
 
@@ -104,7 +104,7 @@ mvn spring-boot:run
 cd backend
 mvn spotless:apply      # 格式化（提交前必须执行）
 mvn spotless:check      # 校验格式
-mvn test                # 24 条契约测试
+mvn test                # 26 条契约测试
 ```
 
 契约测试位于 `src/test/java/com/hmilyld/fullstack/ContractTest.java`，与 Python 版断言同一份 `docs/contract/api.md`。

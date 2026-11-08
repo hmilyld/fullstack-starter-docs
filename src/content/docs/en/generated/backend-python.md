@@ -19,11 +19,12 @@ app/
 │   ├── pagination.py       # Pagination params (clamped)
 │   ├── audit.py            # Audit middleware
 │   ├── models.py           # Registers every ORM model
-│   ├── permissions_catalog.py  # Permission codes (single source)
-│   ├── menu_catalog.py     # Built-in menu groups and items
 │   ├── app_state.py        # Session epoch and menu layout version
 │   ├── seed.py             # Seed data
 │   └── schemas.py          # ApiResponse / PaginatedData
+├── catalogs/               # Permission codes and built-in menus (single source)
+│   ├── permissions.py
+│   └── menus.py
 ├── auth/  user/  role/  permission/  menu/
 ├── system/  ai_model/  audit/  data_management/  dashboard/  public/
 └── ...                     # Each domain has models / schemas / service / router
@@ -31,7 +32,7 @@ migrations/                 # Alembic migration scripts
 tests/                      # Executable contract tests
 ```
 
-**Routers only map HTTP** (parse input, return the envelope). Business rules and transaction boundaries live in `service.py`. The `user/` domain also keeps `crud.py` as a pure data-access layer.
+**Routers only map HTTP** (parse input, return the envelope). Business rules and transaction boundaries live in `service.py`. Every domain has a `service.py`; there is no separate `crud.py` layer.
 
 ## Database migrations
 
@@ -51,8 +52,8 @@ On startup (lifespan) the following run in order:
 
 1. `run_migrations()` — bring the database to the latest revision (Alembic).
 2. `seed_data()` — default roles, permissions and users (idempotent).
-3. `sync_catalog()` — sync the permission catalog and grant missing permissions to `admin`.
-4. `sync_menu_catalog()` — add built-in menu groups and items without overwriting existing order.
+3. `sync_catalog()` — sync permissions from `app/catalogs/permissions.py` and grant missing ones to `admin`.
+4. `sync_menu_catalog()` — add built-in groups and items from `app/catalogs/menus.py` without overwriting existing order.
 5. Initialise `app_state` and the menu layout version.
 6. `init_default_presets()` — AI model presets when the table is empty.
 
@@ -61,6 +62,18 @@ On startup (lifespan) the following run in order:
 - Business failures **raise domain exceptions** (`NotFoundError`, `ConflictError`, `InvalidOperationError`, …), mapped by handlers in `main.py` to `{ code: -1, message, data: null }`.
 - The session commits on a normal return and rolls back on any exception. There is **no “write first, then return `code: -1`”**.
 - Unauthenticated returns `401`, forbidden `403`, validation failure `422`, and `503` while a data import is running.
+
+## Response types
+
+`ApiResponse` and `PaginatedData` are generic, and every endpoint declares a concrete return type:
+
+```python
+@router.get("")
+async def get_users(...) -> ApiResponse[PaginatedData[UserOut]]:
+    return ApiResponse(data=PaginatedData[UserOut](list=users, total=total, page=1, pageSize=10))
+```
+
+FastAPI derives the `response_model` from it, so every response in `/openapi.json` is a complete structure (such as `ApiResponse_PaginatedData_UserOut__`) instead of blank. Returning a bare `dict` or omitting the generic degrades the response to a free-form object and fails the contract tests.
 
 ## Security
 

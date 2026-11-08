@@ -19,11 +19,12 @@ app/
 │   ├── pagination.py       # 分页参数（越界钳制）
 │   ├── audit.py            # 审计中间件
 │   ├── models.py           # 集中注册全部 ORM 模型
-│   ├── permissions_catalog.py  # 权限码目录（唯一来源）
-│   ├── menu_catalog.py     # 内置菜单与分组目录
 │   ├── app_state.py        # 会话世代与菜单布局版本
 │   ├── seed.py             # 种子数据
 │   └── schemas.py          # ApiResponse / PaginatedData
+├── catalogs/               # 权限码与内置菜单目录（唯一来源）
+│   ├── permissions.py
+│   └── menus.py
 ├── auth/  user/  role/  permission/  menu/
 ├── system/  ai_model/  audit/  data_management/  dashboard/  public/
 └── ...                     # 每个域含 models / schemas / service / router
@@ -31,7 +32,7 @@ migrations/                 # Alembic 迁移脚本
 tests/                      # 可执行契约测试
 ```
 
-**router 只做 HTTP 映射**（解析入参、返回信封），业务规则与事务边界在 `service.py`。`user/` 另外保留了 `crud.py` 作为纯数据访问层。
+**router 只做 HTTP 映射**（解析入参、返回信封），业务规则与事务边界在 `service.py`。每个域都有 `service.py`，没有单独的 `crud.py` 层。
 
 ## 数据库迁移
 
@@ -51,8 +52,8 @@ uv run alembic revision --autogenerate -m "说明"      # 生成迁移
 
 1. `run_migrations()` —— 将数据库升级到最新版本（Alembic）。
 2. `seed_data()` —— 写入默认角色、权限与用户（幂等：已有数据则跳过）。
-3. `sync_catalog()` —— 将权限目录与数据库同步，并补齐 `admin` 角色缺失的权限。
-4. `sync_menu_catalog()` —— 补齐内置菜单分组和菜单项，不覆盖已有顺序。
+3. `sync_catalog()` —— 按 `app/catalogs/permissions.py` 同步权限，并补齐 `admin` 角色缺失的权限。
+4. `sync_menu_catalog()` —— 按 `app/catalogs/menus.py` 补齐内置菜单分组和菜单项，不覆盖已有顺序。
 5. 初始化 `app_state` 与菜单布局版本。
 6. `init_default_presets()` —— 初始化 AI 模型预设（表为空时）。
 
@@ -61,6 +62,18 @@ uv run alembic revision --autogenerate -m "说明"      # 生成迁移
 - 业务失败**抛领域异常**（`NotFoundError`、`ConflictError`、`InvalidOperationError` 等），由 `main.py` 的异常处理器统一映射为 `{ code: -1, message, data: null }`。
 - 数据库会话在请求正常返回时提交，抛异常时回滚。因此**不会出现「先写库再返回 `code: -1`」**。
 - 未认证返回 `401`，无权限返回 `403`，参数校验失败返回 `422`，导入冻结期间返回 `503`。
+
+## 响应类型
+
+`ApiResponse` 与 `PaginatedData` 都是泛型，每个端点声明具体的返回类型：
+
+```python
+@router.get("")
+async def get_users(...) -> ApiResponse[PaginatedData[UserOut]]:
+    return ApiResponse(data=PaginatedData[UserOut](list=users, total=total, page=1, pageSize=10))
+```
+
+FastAPI 会据此生成 `response_model`，因此 `/openapi.json` 里每个端点的响应都是完整的结构（如 `ApiResponse_PaginatedData_UserOut__`），而不是空白。返回裸 `dict` 或省略泛型会让响应退化为自由对象，契约测试会失败。
 
 ## 安全
 

@@ -47,7 +47,7 @@ The structures are deliberately un-unified, but the quality bar is the same:
 ## Shared Infrastructure
 
 - Python's `ApiResponse` / `PaginatedData` live in `app/core/schemas.py`.
-- The permission code catalog is the single source of truth: Python `app/core/permissions_catalog.py`, Java `config/PermissionCatalog.java`.
+- The permission code catalog is the single source of truth: Python `app/catalogs/permissions.py`, Java `config/PermissionCatalog.java`.
 - Menu presentation is separate from authorization: `permissions` handles authorization, while `menu_groups` / `menu_items` own groups, routes, icons, order, and visibility (`hidden`).
 - Menu permissions must be created through Menu & Permissions; built-in items cannot be deleted, and deleting a custom item cascades to its operation permissions and role grants.
 - Export archives use `manifest.json + schema.sql + checksums.sha256 + data/*.jsonl`, support only same-backend/same-version restore, and exclude `app_state`.

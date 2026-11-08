@@ -10,19 +10,21 @@ import { Steps } from '@astrojs/starlight/components';
 ## 契约测试
 
 ```bash
-# Python：26 条断言
+# Python：28 条断言
 cd templates/backend-python
 uv sync --extra dev
 uv run ruff check .
 uv run pytest -q
 
-# Java：24 条断言
+# Java：26 条断言
 cd templates/backend-java
 mvn spotless:check
 mvn test
 ```
 
-测试覆盖：端点集合、响应信封（`data` 键必须存在）、各资源字段形状、分页钳制、登出后令牌失效、失败请求不落库、SSRF 拦截、导出包格式。Java 侧还会比对 SpringDoc 生成的 OpenAPI 与契约端点集合。
+测试覆盖：端点集合、响应信封（`data` 键必须存在）、各资源字段形状、分页钳制、登出后令牌失效、失败请求不落库、SSRF 拦截、导出包格式。
+
+两栈还各有一组断言检查 **OpenAPI 里的响应 schema 是否真实存在**：每个端点都必须有结构化响应，且成功响应必须指向具体的 `ApiResponse<T>` 泛型。这保证了客户端可以从 `/openapi.json` 直接生成类型，而不是面对一堆空白响应。
 
 改接口时必须先改契约，再同时改两栈实现与两侧测试。
 

@@ -20,7 +20,7 @@ src/main/java/com/hmilyld/fullstack/
 └── security/          # RateLimiter, StpInterfaceImpl
 ```
 
-Responses always use `dto/*Response` records — **never `Map<String, Object>`**.
+Responses always use `dto/*Response` records — **never `Map<String, Object>`**. Controller methods declare a concrete `ApiResponse<T>`; `ApiResponse<?>` is forbidden because the wildcard makes springdoc emit `ApiResponseObject` (`data` is arbitrary JSON), leaving clients unable to generate types.
 
 ## Database and migrations
 
@@ -104,7 +104,7 @@ The backend listens on `http://localhost:8088`, with API docs at `http://localho
 cd backend
 mvn spotless:apply      # format before committing
 mvn spotless:check      # verify formatting
-mvn test                # 24 contract assertions
+mvn test                # 26 contract assertions
 ```
 
 Contract tests live in `src/test/java/com/hmilyld/fullstack/ContractTest.java` and assert the same `docs/contract/api.md` as the Python build.

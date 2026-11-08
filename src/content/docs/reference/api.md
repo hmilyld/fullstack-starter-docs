@@ -15,6 +15,8 @@ description: 全部接口一览、统一响应格式与认证说明。
 
 `page` 与 `pageSize` 越界时会被**钳制**到合法区间（`page >= 1`，`pageSize` 为 1–100），不会返回错误。
 
+每个端点的响应结构都出现在 `/openapi.json` 中，可直接据此生成客户端类型。两栈的地址一致：Swagger UI 在 `/docs`，OpenAPI 描述在 `/openapi.json`。
+
 `POST /api/data/export` 成功时返回 `application/zip` 文件；一次性随机密码通过 `X-Export-Password` 响应头返回。
 
 ## 认证说明

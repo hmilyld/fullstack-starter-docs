@@ -36,7 +36,7 @@ All three roles are preset roles (`is_preset`), and **preset roles cannot be del
 
 ## Permission Sync
 
-At startup, the permission catalog in code (Python's `permissions_catalog.py`, Java's `PermissionCatalog`) is synchronized with the database, automatically filling in any permissions missing from `admin`. So after adding a permission code, restarting the backend is enough for it to take effect.
+At startup, the permission catalog in code (Python's `app/catalogs/permissions.py`, Java's `PermissionCatalog`) is synchronized with the database, automatically filling in any permissions missing from `admin`. So after adding a permission code, restarting the backend is enough for it to take effect.
 
 You can also trigger a sync manually from the Permission Overview page (`POST /api/permissions/sync`).
 

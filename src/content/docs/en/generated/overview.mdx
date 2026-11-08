@@ -38,7 +38,7 @@ All four combinations share the same feature set, API conventions, and response 
 | Authentication | PyJWT + bcrypt (token revoked on logout) | Sa-Token (uuid-style tokens) + BCrypt |
 | Key | Environment variable `JWT_SECRET_KEY` (weak keys refuse to start) | No key needed (server-side session tokens) |
 | API docs | Built-in Swagger `/docs` | Built-in Swagger `/docs` (SpringDoc) |
-| Contract tests | `pytest` (26 assertions) | `mvn test` (24 assertions) |
+| Contract tests | `pytest` (28 assertions) | `mvn test` (26 assertions) |
 
 :::caution[Tokens are not interchangeable]
 Python uses JWT and Java uses Sa-Token's UUID tokens; the formats differ and are incompatible. Switching backends requires the frontend to log in again, and already-issued tokens are invalid.

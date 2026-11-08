@@ -36,7 +36,7 @@ description: 基于权限点的 RBAC 模型、默认角色、权限同步与越�
 
 ## 权限同步
 
-启动时会将代码中的权限目录（Python 的 `permissions_catalog.py`、Java 的 `PermissionCatalog`）与数据库同步，自动补齐 `admin` 缺失的权限。因此新增权限码后重启后端即可生效。
+启动时会将代码中的权限目录（Python 的 `app/catalogs/permissions.py`、Java 的 `PermissionCatalog`）与数据库同步，自动补齐 `admin` 缺失的权限。因此新增权限码后重启后端即可生效。
 
 也可以在「权限总览」页手动触发同步（`POST /api/permissions/sync`）。
 

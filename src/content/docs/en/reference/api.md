@@ -15,6 +15,8 @@ The `data` key **always exists**: it is `null` on business failure and for succe
 
 Out-of-range `page` and `pageSize` are **clamped** to valid values (`page >= 1`, `pageSize` 1–100) rather than rejected.
 
+Every endpoint's response shape appears in `/openapi.json`, so client types can be generated from it. Both stacks use the same URLs: Swagger UI at `/docs`, the OpenAPI description at `/openapi.json`.
+
 `POST /api/data/export` returns an `application/zip` file on success. The one-time random password is returned in the `X-Export-Password` response header.
 
 ## Authentication Notes

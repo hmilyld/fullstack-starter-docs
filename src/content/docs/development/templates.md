@@ -12,7 +12,7 @@ description: 维护 templates/ 目录时需要遵守的组织与命名约定。
 | 模板 | 组织方式 |
 | --- | --- |
 | `backend-python/` | 领域模块化：`app/core/`（基础设施）+ 每个业务域一个包（`auth/`、`user/`、`role/`、`permission/`、`menu/` …），包内含 `models.py` / `schemas.py` / `service.py` / `router.py`；结构变更走 `migrations/`（Alembic） |
-| `backend-java/` | 按层：`controller/`、`service/`、`repository/`、`entity/`、`dto/`，另有 `common/`、`config/`、`security/`；结构变更走 `db/migration/`（Flyway） |
+| `backend-java/` | 按层：`controller/`、`service/`、`repository/`、`entity/`、`dto/`，基础设施按职责分在 `common/`、`config/`、`catalog/`、`bootstrap/`、`web/`、`data/`、`security/`；结构变更走 `db/migration/`（Flyway） |
 | `frontend-react/` 与 `frontend-vue/` | 按功能：页面在 `pages/settings/<Domain>/`，接口按域拆分在 `api/`，类型按域拆分在 `types/` |
 
 ## 契约优先
@@ -47,7 +47,7 @@ description: 维护 templates/ 目录时需要遵守的组织与命名约定。
 ## 共享基础设施
 
 - Python 的 `ApiResponse` / `PaginatedData` 位于 `app/core/schemas.py`。
-- 权限码目录是唯一来源：Python `app/catalogs/permissions.py`，Java `config/PermissionCatalog.java`。两处必须保持一致，`npm run sync:permissions:check` 会在不一致时失败；`reference/permissions.md` 的表格由同一脚本生成，不要手工编辑。迁移脚本里不再写权限种子。
+- 权限码目录是唯一来源：Python `app/catalogs/permissions.py`，Java `catalog/PermissionCatalog.java`。两处必须保持一致，`npm run sync:permissions:check` 会在不一致时失败；`reference/permissions.md` 的表格由同一脚本生成，不要手工编辑。迁移脚本里不再写权限种子。
 - 菜单展示与鉴权分离：`permissions` 只负责授权，`menu_groups` / `menu_items` 负责分组、路由、图标、顺序与显示状态（`hidden`）。
 - 菜单权限必须通过「菜单与权限」页创建；内置菜单不可删除，自定义菜单删除时会级联清理其操作权限与角色授权。
 - 数据导出包使用 `manifest.json + schema.sql + checksums.sha256 + data/*.jsonl`，只支持同后端、同版本恢复；`app_state` 不入包。

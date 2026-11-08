@@ -11,13 +11,17 @@ The Java backend uses Spring Boot 3.2 + Spring Data JPA + SQLite, organised **by
 src/main/java/com/hmilyld/fullstack/
 ├── FullstackApplication.java
 ├── common/            # ApiResponse, PageResult, domain exceptions, global handler
-├── config/            # Audit, CORS, Sa-Token, OpenAPI, catalog sync, import freeze
+├── config/            # Spring configuration: CORS, Sa-Token, OpenAPI, audit properties
+├── catalog/           # Permission and menu catalogs (plain data, no framework deps)
+├── bootstrap/         # Startup sync runners: permissions, menus
+├── web/               # Interceptors and filters: audit, bearer token, import freeze
+├── data/              # Import job runtime state and executor
+├── security/          # RateLimiter, StpInterfaceImpl
 ├── controller/        # 12 controllers: auth / user / role / permission / menu / data ...
 ├── service/           # Business logic (throws on failure, so transactions roll back)
 ├── repository/        # Spring Data JPA repositories
 ├── entity/            # JPA entities
-├── dto/               # Request objects and *Response records
-└── security/          # RateLimiter, StpInterfaceImpl
+└── dto/               # Request objects and *Response records
 ```
 
 Responses always use `dto/*Response` records — **never `Map<String, Object>`**. Controller methods declare a concrete `ApiResponse<T>`; `ApiResponse<?>` is forbidden because the wildcard makes springdoc emit `ApiResponseObject` (`data` is arbitrary JSON), leaving clients unable to generate types.

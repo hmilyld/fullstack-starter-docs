@@ -11,13 +11,17 @@ Java 后端使用 Spring Boot 3.2 + Spring Data JPA + SQLite，代码按**层**�
 src/main/java/com/hmilyld/fullstack/
 ├── FullstackApplication.java
 ├── common/            # ApiResponse、PageResult、领域异常、全局异常处理
-├── config/            # 审计、CORS、Sa-Token、OpenAPI、目录同步、导入冻结
+├── config/            # Spring 配置类：CORS、Sa-Token、OpenAPI、审计属性
+├── catalog/           # 权限与内置菜单目录（纯数据，无框架依赖）
+├── bootstrap/         # 启动同步任务：权限、菜单
+├── web/               # 拦截器与过滤器：审计、Bearer 令牌、导入冻结
+├── data/              # 导入任务运行时状态与执行器
+├── security/          # RateLimiter、StpInterfaceImpl
 ├── controller/        # 12 个控制器：auth / user / role / permission / menu / data ...
 ├── service/           # 业务逻辑（失败抛异常，事务因此可回滚）
 ├── repository/        # Spring Data JPA 仓储
 ├── entity/            # JPA 实体
-├── dto/               # 请求对象与 *Response 响应记录
-└── security/          # RateLimiter、StpInterfaceImpl
+└── dto/               # 请求对象与 *Response 响应记录
 ```
 
 响应一律使用 `dto/*Response` 类型化记录，**不再返回 `Map<String, Object>`**。controller 方法声明具体的 `ApiResponse<T>`，禁止 `ApiResponse<?>`——通配符会让 springdoc 生成 `ApiResponseObject`（`data` 为任意 JSON），客户端无法据此生成类型。

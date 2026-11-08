@@ -136,7 +136,11 @@ Domain-modular organization: one package per business domain, infrastructure kep
 - src/main/java/com/hmilyld/fullstack
   - FullstackApplication.java
   - common   ApiResponse / PageResult / domain exceptions / global handler
-  - config   audit, CORS, Sa-Token, OpenAPI, catalog and sync tasks
+  - config   Spring configuration: CORS, Sa-Token, OpenAPI, audit properties
+  - catalog  permission and menu catalogs (plain data)
+  - bootstrap  startup sync runners
+  - web   interceptors and filters
+  - data   import job runtime state
   - controller
   - dto      request objects and *Response records
   - entity
@@ -154,7 +158,7 @@ Domain-modular organization: one package per business domain, infrastructure kep
 - pom.xml
 </FileTree>
 
-Organized by layer: `controller / service / repository / entity / dto`, with infrastructure under `common/`, `config/`, and `security/`. Responses use `dto/*Response` records.
+Organized by layer: `controller / service / repository / entity / dto`, with infrastructure split by responsibility across `common/` (envelope and exceptions), `config/` (Spring configuration), `catalog/` (catalog data), `bootstrap/` (startup tasks), `web/` (interceptors and filters), `data/` (import runtime), and `security/` (rate limiting and permission source). Responses use `dto/*Response` records.
 
 </TabItem>
 </Tabs>

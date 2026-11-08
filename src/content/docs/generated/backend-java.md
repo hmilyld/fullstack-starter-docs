@@ -26,10 +26,11 @@ src/main/java/com/hmilyld/fullstack/
 
 - 数据库为 SQLite 文件，默认 `./data/app.db`。
 - 使用 **Flyway** 管理结构：
-  - `V1__init.sql`：建表与基础种子
+  - `V1__init.sql`：建表与角色/用户种子
   - `V2__menu_and_app_state.sql`：菜单与运行状态表
   - `V3__menu_hidden.sql`：菜单显示/隐藏
-  - `V4__align_with_python.sql`：与 Python 侧对齐的索引与 `app_state` 行
+  - `V4__align_with_python.sql`：与 Python 侧对齐的索引
+  - `V5__remove_seed_permissions.sql`：移除 V1 的权限种子（改由启动同步按目录补齐）
 - JPA 设为 `ddl-auto: none`，结构完全由迁移脚本控制。
 - 启动后 `PermissionSyncRunner` 先同步权限，`MenuSyncRunner` 再补齐内置菜单，不覆盖管理员调整的顺序。
 
@@ -104,7 +105,7 @@ mvn spring-boot:run
 cd backend
 mvn spotless:apply      # 格式化（提交前必须执行）
 mvn spotless:check      # 校验格式
-mvn test                # 26 条契约测试
+mvn test                # 28 条契约测试
 ```
 
 契约测试位于 `src/test/java/com/hmilyld/fullstack/ContractTest.java`，与 Python 版断言同一份 `docs/contract/api.md`。

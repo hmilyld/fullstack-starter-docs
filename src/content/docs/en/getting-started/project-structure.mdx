@@ -145,10 +145,11 @@ Domain-modular organization: one package per business domain, infrastructure kep
   - service
 - src/main/resources
   - application.yml
-  - db/migration/V1__init.sql   Base tables and seed data
+  - db/migration/V1__init.sql   Base tables plus role/user seed data
   - db/migration/V2__menu_and_app_state.sql   Menu tables and runtime state
   - db/migration/V3__menu_hidden.sql   Sidebar visibility
   - db/migration/V4__align_with_python.sql   Indexes aligned with Python
+  - db/migration/V5__remove_seed_permissions.sql   Removes the permission seed
 - src/test/java/com/hmilyld/fullstack/ContractTest.java   Contract tests
 - pom.xml
 </FileTree>

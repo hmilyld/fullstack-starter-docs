@@ -26,10 +26,11 @@ Responses always use `dto/*Response` records — **never `Map<String, Object>`**
 
 - SQLite file, default `./data/app.db`.
 - Schema is managed by **Flyway**:
-  - `V1__init.sql`: tables and base seed data
+  - `V1__init.sql`: tables plus role/user seed data
   - `V2__menu_and_app_state.sql`: menu and runtime state tables
   - `V3__menu_hidden.sql`: sidebar visibility
-  - `V4__align_with_python.sql`: indexes and `app_state` row aligned with Python
+  - `V4__align_with_python.sql`: indexes aligned with Python
+  - `V5__remove_seed_permissions.sql`: removes the V1 permission seed (startup sync fills them from the catalog)
 - JPA is set to `ddl-auto: none`; migrations fully control the schema.
 - On startup `PermissionSyncRunner` syncs permissions, then `MenuSyncRunner` adds built-in menus without overwriting admin-adjusted order.
 
@@ -104,7 +105,7 @@ The backend listens on `http://localhost:8088`, with API docs at `http://localho
 cd backend
 mvn spotless:apply      # format before committing
 mvn spotless:check      # verify formatting
-mvn test                # 26 contract assertions
+mvn test                # 28 contract assertions
 ```
 
 Contract tests live in `src/test/java/com/hmilyld/fullstack/ContractTest.java` and assert the same `docs/contract/api.md` as the Python build.

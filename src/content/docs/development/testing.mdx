@@ -10,13 +10,13 @@ import { Steps } from '@astrojs/starlight/components';
 ## 契约测试
 
 ```bash
-# Python：28 条断言
+# Python：30 条断言
 cd templates/backend-python
 uv sync --extra dev
 uv run ruff check .
 uv run pytest -q
 
-# Java：26 条断言
+# Java：28 条断言
 cd templates/backend-java
 mvn spotless:check
 mvn test

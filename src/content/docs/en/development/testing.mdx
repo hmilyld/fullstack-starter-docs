@@ -10,13 +10,13 @@ Both backend templates ship **executable contract tests** asserting the same `do
 ## Contract Tests
 
 ```bash
-# Python: 28 assertions
+# Python: 30 assertions
 cd templates/backend-python
 uv sync --extra dev
 uv run ruff check .
 uv run pytest -q
 
-# Java: 26 assertions
+# Java: 28 assertions
 cd templates/backend-java
 mvn spotless:check
 mvn test

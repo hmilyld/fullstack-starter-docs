@@ -1,8 +1,11 @@
 ---
 title: 权限码
-description: 全部 32 个权限码及其含义。
+description: 全部权限码及其含义，由后端权限目录自动生成。
 ---
 
+<!-- 本页表格由 npm run sync:permissions 生成，请勿手工编辑标记之间的内容。 -->
+
+<!-- BEGIN GENERATED: permissions -->
 权限码是接口鉴权的唯一依据。共 32 个：9 个菜单权限 + 23 个操作权限。
 
 ## 菜单权限
@@ -12,10 +15,10 @@ description: 全部 32 个权限码及其含义。
 | `dashboard` | 仪表盘 |
 | `users` | 用户管理 |
 | `roles` | 角色管理 |
-| `permissions` | 权限总览 |
+| `permissions` | 权限管理 |
 | `menus` | 菜单与权限 |
 | `settings` | 系统设置 |
-| `ai_models` | AI 模型配置 |
+| `ai_models` | AI模型配置 |
 | `audit_logs` | 审计日志 |
 | `data_management` | 数据管理 |
 
@@ -23,29 +26,29 @@ description: 全部 32 个权限码及其含义。
 
 | 权限码 | 名称 |
 | --- | --- |
-| `users.create` | 创建用户 |
+| `users.create` | 新增用户 |
 | `users.edit` | 编辑用户 |
 | `users.delete` | 删除用户 |
-| `users.assign_role` | 分配角色（非默认角色） |
-| `roles.create` | 创建角色 |
+| `users.assign_role` | 角色维护 |
+| `roles.create` | 新增角色 |
 | `roles.edit` | 编辑角色 |
 | `roles.delete` | 删除角色 |
-| `permissions.create` | 创建权限 / 同步 |
+| `permissions.create` | 新增权限 |
 | `permissions.edit` | 编辑权限 |
 | `permissions.delete` | 删除权限 |
-| `menus.create` | 创建菜单 / 分组 |
-| `menus.edit` | 编辑菜单 / 分组 |
-| `menus.delete` | 删除自定义菜单 / 空分组 |
-| `menus.reorder` | 保存菜单排序 |
-| `settings.edit` | 修改系统设置 / 测试邮件 |
-| `ai_models.create` | 创建模型 |
-| `ai_models.edit` | 编辑模型 |
-| `ai_models.delete` | 删除模型 |
-| `ai_models.presets.create` | 创建预设 |
-| `ai_models.presets.edit` | 编辑预设 |
-| `ai_models.presets.delete` | 删除预设 |
-| `data_management.export` | 导出完整数据 |
-| `data_management.import` | 导入完整数据 |
+| `menus.create` | 新增菜单 |
+| `menus.edit` | 编辑菜单 |
+| `menus.delete` | 删除菜单 |
+| `menus.reorder` | 菜单排序 |
+| `settings.edit` | 编辑系统设置 |
+| `ai_models.create` | 新增AI模型 |
+| `ai_models.edit` | 编辑AI模型 |
+| `ai_models.delete` | 删除AI模型 |
+| `ai_models.presets.create` | 新增预设模型 |
+| `ai_models.presets.edit` | 编辑预设模型 |
+| `ai_models.presets.delete` | 删除预设模型 |
+| `data_management.export` | 导出数据 |
+| `data_management.import` | 导入数据 |
 
 ## 默认角色映射
 
@@ -54,6 +57,7 @@ description: 全部 32 个权限码及其含义。
 | `admin` | 全部 32 个 |
 | `user` | `dashboard`、`users`、`settings` |
 | `pending_review` | 无 |
+<!-- END GENERATED: permissions -->
 
 ## 同步
 

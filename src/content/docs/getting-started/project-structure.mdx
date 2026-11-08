@@ -145,10 +145,11 @@ my-project/
   - service
 - src/main/resources
   - application.yml
-  - db/migration/V1__init.sql   基础表与种子数据
+  - db/migration/V1__init.sql   基础表与角色/用户种子
   - db/migration/V2__menu_and_app_state.sql   菜单表与运行状态
   - db/migration/V3__menu_hidden.sql   菜单显示/隐藏
   - db/migration/V4__align_with_python.sql   与 Python 侧对齐的索引
+  - db/migration/V5__remove_seed_permissions.sql   移除权限种子
 - src/test/java/com/hmilyld/fullstack/ContractTest.java   契约测试
 - pom.xml
 </FileTree>

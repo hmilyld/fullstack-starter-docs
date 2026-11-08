@@ -38,7 +38,7 @@ import { Tabs, TabItem } from '@astrojs/starlight/components';
 | 认证 | PyJWT + bcrypt（登出即失效） | Sa-Token（uuid 风格令牌）+ BCrypt |
 | 密钥 | 环境变量 `JWT_SECRET_KEY`（弱密钥拒绝启动） | 无需密钥（服务端会话令牌） |
 | 接口文档 | 内置 Swagger `/docs` | 内置 Swagger `/docs`（SpringDoc） |
-| 契约测试 | `pytest`（30 条） | `mvn test`（28 条） |
+| 契约测试 | `pytest`（32 条） | `mvn test`（28 条） |
 
 :::caution[令牌不通用]
 Python 使用 JWT，Java 使用 Sa-Token 的 UUID 令牌，两者格式不同、互不兼容。切换后端时前端需要重新登录，已签发的令牌无效。

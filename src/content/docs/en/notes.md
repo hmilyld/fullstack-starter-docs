@@ -87,7 +87,7 @@ Open `http://localhost:8088/docs`; the OpenAPI description is at `/openapi.json`
 The convention is to use a native `fetch` wrapper (`api/client.ts`) for consistent handling of 401s and the response structure. Neither frontend template depends on axios.
 
 **Can a phone access the admin panel?**
-Yes. The UI adapts across three modes: cards and a drawer below `768px`, an icon rail from `768px` to `1023px`, and the full sidebar at `1024px` and above.
+Yes. The UI adapts across three modes: cards and a drawer below `768px`, an icon rail from `768px` to `1279px`, and the full sidebar at `1280px` and above. Below 1280 it starts collapsed.
 
 **Where is the data stored?**
 During development it is a SQLite file in the backend directory; in Docker it lives at `/app/data` in the container, persisted by the named volume `app-data`.

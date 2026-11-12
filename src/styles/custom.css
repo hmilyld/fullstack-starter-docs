@@ -1,11 +1,14 @@
 /* ==========================================================================
    fullstack-starter docs — visual identity
-   Mirrors the generated admin template: neutral oklch greys, Inter, 0.625rem
-   radius, the same surface / border / muted tokens, and the same three-tier
-   responsive rules (compact < 768px, medium 768–1023px, expanded >= 1024px).
+   Mirrors the generated admin template: blue-grey oklch neutrals (hue 256–265)
+   with a deep navy primary, Inter for body text and Manrope for headings, the
+   same 6/8/10/14/18 radius scale, the same surface / border / muted tokens,
+   and the same three-tier responsive rules (compact < 768px,
+   medium 768–1279px, expanded >= 1280px, content max width 1536px).
    ========================================================================== */
 
 @import '@fontsource-variable/inter';
+@import '@fontsource-variable/manrope';
 
 /* --------------------------------------------------------------------------
    Tokens — light (default). Values copied from templates/frontend-react/src/index.css
@@ -19,21 +22,22 @@
   --ff-radius-2xl: calc(var(--radius) * 1.8);
 
   --background: oklch(1 0 0);
-  --foreground: oklch(0.145 0 0);
+  --foreground: oklch(0.129 0.042 264.695);
   --card: oklch(1 0 0);
-  --muted: oklch(0.97 0 0);
-  --muted-foreground: oklch(0.556 0 0);
-  --secondary: oklch(0.97 0 0);
-  --primary: oklch(0.205 0 0);
-  --primary-foreground: oklch(0.985 0 0);
-  --border: oklch(0.922 0 0);
-  --input: oklch(0.922 0 0);
-  --ring: oklch(0.708 0 0);
+  --muted: oklch(0.968 0.007 247.896);
+  --muted-foreground: oklch(0.554 0.046 257.417);
+  --secondary: oklch(0.968 0.007 247.896);
+  --primary: oklch(0.208 0.042 265.755);
+  --primary-foreground: oklch(0.984 0.003 247.858);
+  --border: oklch(0.929 0.013 255.508);
+  --input: oklch(0.929 0.013 255.508);
+  --ring: oklch(0.62 0.035 257);
   --success: oklch(0.52 0.13 152);
-  --warning: oklch(0.58 0.14 75);
+  --warning: oklch(0.666 0.157 74.3);
   --destructive: oklch(0.577 0.245 27.325);
-  --sidebar: oklch(0.985 0 0);
-  --sidebar-accent: oklch(0.97 0 0);
+  --sidebar: oklch(0.985 0.002 247.839);
+  --sidebar-accent: oklch(0.968 0.007 247.896);
+  --shadow-sm: 0 1px 3px 0 oklch(0 0 0 / 10%), 0 1px 2px -1px oklch(0 0 0 / 10%);
 
   --ff-gutter: 1rem;
   --ff-max: 100%;
@@ -49,71 +53,72 @@
 
   --sl-color-black: oklch(1 0 0);
   --sl-color-white: oklch(0.145 0 0);
-  --sl-color-gray-1: oklch(0.205 0 0);
-  --sl-color-gray-2: oklch(0.32 0 0);
-  --sl-color-gray-3: oklch(0.556 0 0);
-  --sl-color-gray-4: oklch(0.708 0 0);
-  --sl-color-gray-5: oklch(0.922 0 0);
-  --sl-color-gray-6: oklch(0.97 0 0);
-  --sl-color-gray-7: oklch(0.985 0 0);
+  --sl-color-gray-1: oklch(0.208 0.042 265.755);
+  --sl-color-gray-2: oklch(0.372 0.044 257.287);
+  --sl-color-gray-3: oklch(0.554 0.046 257.417);
+  --sl-color-gray-4: oklch(0.704 0.04 256.788);
+  --sl-color-gray-5: oklch(0.929 0.013 255.508);
+  --sl-color-gray-6: oklch(0.968 0.007 247.896);
+  --sl-color-gray-7: oklch(0.984 0.003 247.858);
 
-  --sl-color-accent-low: oklch(0.97 0 0);
-  --sl-color-accent: oklch(0.205 0 0);
-  --sl-color-accent-high: oklch(0.145 0 0);
+  --sl-color-accent-low: oklch(0.968 0.007 247.896);
+  --sl-color-accent: oklch(0.208 0.042 265.755);
+  --sl-color-accent-high: oklch(0.129 0.042 264.695);
 
   --sl-color-bg: oklch(1 0 0);
   --sl-color-bg-nav: oklch(1 0 0);
-  --sl-color-bg-sidebar: oklch(0.985 0 0);
-  --sl-color-bg-inline-code: oklch(0.97 0 0);
-  --sl-color-hairline: oklch(0.922 0 0);
-  --sl-color-hairline-light: oklch(0.94 0 0);
-  --sl-color-text-accent: oklch(0.205 0 0);
-  --sl-color-text-invert: oklch(0.985 0 0);
+  --sl-color-bg-sidebar: oklch(0.985 0.002 247.839);
+  --sl-color-bg-inline-code: oklch(0.968 0.007 247.896);
+  --sl-color-hairline: oklch(0.929 0.013 255.508);
+  --sl-color-hairline-light: oklch(0.945 0.01 255.508);
+  --sl-color-text-accent: oklch(0.208 0.042 265.755);
+  --sl-color-text-invert: oklch(0.984 0.003 247.858);
 }
 
 /* --------------------------------------------------------------------------
    Tokens — dark. Mirrors the template's .dark block
    -------------------------------------------------------------------------- */
 :root[data-theme='dark'] {
-  --background: oklch(0.145 0 0);
-  --foreground: oklch(0.985 0 0);
-  --card: oklch(0.205 0 0);
-  --muted: oklch(0.269 0 0);
-  --muted-foreground: oklch(0.708 0 0);
-  --secondary: oklch(0.269 0 0);
-  --primary: oklch(0.922 0 0);
-  --primary-foreground: oklch(0.205 0 0);
+  --background: oklch(0.129 0.042 264.695);
+  --foreground: oklch(0.984 0.003 247.858);
+  --card: oklch(0.14 0.04 259.21);
+  --muted: oklch(0.279 0.041 260.031);
+  --muted-foreground: oklch(0.704 0.04 256.788);
+  --secondary: oklch(0.279 0.041 260.031);
+  --primary: oklch(0.929 0.013 255.508);
+  --primary-foreground: oklch(0.208 0.042 265.755);
   --border: oklch(1 0 0 / 10%);
   --input: oklch(1 0 0 / 15%);
-  --ring: oklch(0.556 0 0);
+  --ring: oklch(0.704 0.04 256.788);
   --success: oklch(0.72 0.14 152);
   --warning: oklch(0.78 0.13 78);
   --destructive: oklch(0.704 0.191 22.216);
-  --sidebar: oklch(0.205 0 0);
-  --sidebar-accent: oklch(0.269 0 0);
+  --sidebar: oklch(0.14 0.04 259.21);
+  --sidebar-accent: oklch(0.279 0.041 260.031);
+  --shadow-sm: 0 1px 3px 0 oklch(0 0 0 / 40%), 0 1px 2px -1px oklch(0 0 0 / 40%);
 
   --sl-color-black: oklch(0.145 0 0);
   --sl-color-white: oklch(0.985 0 0);
-  --sl-color-gray-1: oklch(0.985 0 0);
-  --sl-color-gray-2: oklch(0.87 0 0);
-  --sl-color-gray-3: oklch(0.708 0 0);
-  --sl-color-gray-4: oklch(0.556 0 0);
-  --sl-color-gray-5: oklch(0.371 0 0);
-  --sl-color-gray-6: oklch(0.269 0 0);
-  --sl-color-gray-7: oklch(0.205 0 0);
+  --sl-color-gray-1: oklch(0.984 0.003 247.858);
+  --sl-color-gray-2: oklch(0.869 0.022 252.894);
+  --sl-color-gray-3: oklch(0.704 0.04 256.788);
+  --sl-color-gray-4: oklch(0.551 0.027 264.364);
+  --sl-color-gray-5: oklch(0.372 0.044 257.287);
+  --sl-color-gray-6: oklch(0.279 0.041 260.031);
+  --sl-color-gray-7: oklch(0.208 0.042 265.755);
 
-  --sl-color-accent-low: oklch(0.269 0 0);
-  --sl-color-accent: oklch(0.922 0 0);
-  --sl-color-accent-high: oklch(0.985 0 0);
+  --sl-color-accent-low: oklch(0.279 0.041 260.031);
+  --sl-color-accent: oklch(0.929 0.013 255.508);
+  --sl-color-accent-high: oklch(0.984 0.003 247.858);
 
-  --sl-color-bg: oklch(0.145 0 0);
-  --sl-color-bg-nav: oklch(0.145 0 0);
-  --sl-color-bg-sidebar: oklch(0.205 0 0);
-  --sl-color-bg-inline-code: oklch(0.269 0 0);
+  --sl-color-bg: oklch(0.129 0.042 264.695);
+  --sl-color-bg-nav: oklch(0.129 0.042 264.695);
+  --sl-color-bg-sidebar: oklch(0.14 0.04 259.21);
+  --sl-color-bg-inline-code: oklch(0.279 0.041 260.031);
   --sl-color-hairline: oklch(1 0 0 / 10%);
   --sl-color-hairline-light: oklch(1 0 0 / 15%);
-  --sl-color-text-accent: oklch(0.985 0 0);
-  --sl-color-text-invert: oklch(0.205 0 0);
+  --sl-color-text-accent: oklch(0.984 0.003 247.858);
+  --sl-color-text-invert: oklch(0.208 0.042 265.755);
 }
 
 /* --------------------------------------------------------------------------
@@ -126,9 +131,10 @@
   }
 }
 
-@media (min-width: 1024px) {
+/* Expanded: 1280px, same as the templates; content is capped at 1536px */
+@media (min-width: 1280px) {
   :root {
-    --ff-max: 90rem;
+    --ff-max: 96rem;
   }
 }
 
@@ -137,7 +143,12 @@
    -------------------------------------------------------------------------- */
 h1,
 h2,
-h3 {
+h3,
+h4 {
+  font-family:
+    'Manrope Variable', 'Inter Variable', 'PingFang SC', 'Microsoft YaHei',
+    system-ui, sans-serif;
+  font-weight: 600;
   letter-spacing: -0.02em;
   text-wrap: balance;
 }
@@ -177,6 +188,7 @@ table {
   border-radius: var(--ff-radius-xl);
   background: var(--card);
   padding: 1.25rem;
+  box-shadow: var(--shadow-sm);
 }
 
 /* --------------------------------------------------------------------------
@@ -192,7 +204,7 @@ table {
 }
 
 .sidebar-content a {
-  border-radius: var(--ff-radius-xl);
+  border-radius: var(--ff-radius-md);
   padding-inline: 0.75rem;
   padding-block: 0.4rem;
   color: var(--sl-color-gray-2);
@@ -244,7 +256,7 @@ table {
 }
 
 /* Compact / coarse pointer: 44px targets, same rule as the templates */
-@media (max-width: 49.99rem), (pointer: coarse) {
+@media (max-width: 47.99rem), (pointer: coarse) {
   .sidebar-content a {
     min-height: 2.75rem;
     padding-block: 0.55rem;
@@ -352,6 +364,60 @@ table {
   border: 1px solid var(--sl-color-hairline);
   border-inline-start-width: 3px;
   background: var(--card);
+}
+
+/* --------------------------------------------------------------------------
+   Landing — product screenshots, framed like the app's cards
+   -------------------------------------------------------------------------- */
+.ff-shots {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(16rem, 1fr));
+  gap: 1rem;
+  margin-block: 1.25rem 1.75rem;
+}
+
+.ff-shots--wide {
+  grid-template-columns: 1fr 1fr;
+}
+
+/* Three-up rail: fixed aspect so a portrait phone shot doesn't stretch the row */
+.ff-shots--rail {
+  grid-template-columns: repeat(3, 1fr);
+  align-items: start;
+}
+
+.ff-shots--rail img {
+  aspect-ratio: 16 / 10;
+  object-fit: cover;
+  object-position: top center;
+}
+
+.ff-shots figure {
+  margin: 0;
+}
+
+.ff-shots img {
+  display: block;
+  width: 100%;
+  height: auto;
+  border: 1px solid var(--sl-color-hairline);
+  border-radius: var(--ff-radius-xl);
+  background: var(--card);
+  box-shadow: var(--shadow-sm);
+}
+
+.ff-shots figcaption {
+  margin-top: 0.5rem;
+  font-size: var(--sl-text-xs);
+  color: var(--sl-color-gray-3);
+}
+
+@media (max-width: 47.99rem) {
+  .ff-shots,
+  .ff-shots--wide,
+  .ff-shots--rail {
+    grid-template-columns: 1fr;
+  }
 }
 
 /* --------------------------------------------------------------------------

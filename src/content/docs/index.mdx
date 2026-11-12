@@ -6,7 +6,7 @@ head:
   - tag: title
     content: 全栈工坊 · 全栈后台管理系统生成器
 hero:
-  tagline: 全栈工坊 —— 一条命令，生成整套后台管理系统。React / Vue 前端，FastAPI / Spring Boot 后端。
+  tagline: 全栈工坊 —— 一条命令，生成整套后台管理系统。前端 React / Vue 任选，后端 FastAPI / Spring Boot 任选。
   actions:
     - text: 开始生成
       link: /getting-started/quickstart/
@@ -20,6 +20,57 @@ import StackBoard from '../../components/StackBoard.astro';
 import { CardGrid, LinkCard } from '@astrojs/starlight/components';
 
 <StackBoard />
+
+## 四种组合，同一套系统
+
+前端和后端可以任意搭配，四种组合共用一份接口契约、一套权限目录和一套视觉规范：
+
+| | Python · FastAPI | Java · Spring Boot |
+| --- | --- | --- |
+| **React 19** | React + Vite + Tailwind v4 + shadcn/ui ／ FastAPI + SQLAlchemy 2 | React + Vite + Tailwind v4 + shadcn/ui ／ Spring Boot 3 + JPA |
+| **Vue 3** | Vue 3 + Vite + Tailwind v4 + shadcn-vue ／ FastAPI + SQLAlchemy 2 | Vue 3 + Vite + Tailwind v4 + shadcn-vue ／ Spring Boot 3 + JPA |
+
+所以换前端不用动后端，换后端不用改前端：两套前端保持像素级与交互级同步，两套后端通过同一组契约测试。
+
+## 生成出来的是什么
+
+不是空壳。认证、RBAC、菜单管理、审计、数据管理与仪表盘开箱即用，默认账号 `admin / 123456` 即可登录。
+
+<div class="ff-shots ff-shots--wide">
+  <figure>
+    <img src="/shots/dashboard.webp" alt="仪表盘：统计卡片、近 7 天操作趋势与最近动态" />
+    <figcaption>仪表盘 · 统计卡片、自绘趋势图、最近动态</figcaption>
+  </figure>
+  <figure>
+    <img src="/shots/users.webp" alt="用户管理：列显隐、表格密度、分页与行操作" />
+    <figcaption>列表页 · 列显隐、表格密度、多选与分页</figcaption>
+  </figure>
+  <figure>
+    <img src="/shots/settings.webp" alt="系统设置：左侧导航与表单" />
+    <figcaption>设置页 · 左侧导航 + 分组表单</figcaption>
+  </figure>
+  <figure>
+    <img src="/shots/datepicker.webp" alt="审计日志：中文日期时间选择器" />
+    <figcaption>审计日志 · 自绘中文日期时间选择器</figcaption>
+  </figure>
+</div>
+
+深色模式与多端适配都是内置能力：桌面完整侧边栏、平板图标栏、手机卡片列表；`⌘K` 命令面板、外观抽屉、表格密度一并生成。
+
+<div class="ff-shots ff-shots--rail">
+  <figure>
+    <img src="/shots/dashboard-dark.webp" alt="深色模式下的仪表盘" />
+    <figcaption>深色模式</figcaption>
+  </figure>
+  <figure>
+    <img src="/shots/tablet.webp" alt="平板宽度：侧边栏收成图标栏" />
+    <figcaption>平板 · 图标栏</figcaption>
+  </figure>
+  <figure>
+    <img src="/shots/mobile.webp" alt="手机宽度：卡片列表与抽屉筛选" />
+    <figcaption>手机 · 卡片列表</figcaption>
+  </figure>
+</div>
 
 <CardGrid>
   <LinkCard

@@ -6,7 +6,7 @@ head:
   - tag: title
     content: Fullstack Forge · Full-stack admin panel generator
 hero:
-  tagline: Fullstack Forge — one command to generate a complete admin panel. React / Vue frontend, FastAPI / Spring Boot backend.
+  tagline: Fullstack Forge — one command to generate a complete admin panel. Pick React or Vue, then FastAPI or Spring Boot.
   actions:
     - text: Start Generating
       link: /en/getting-started/quickstart/
@@ -20,6 +20,57 @@ import StackBoard from '../../../components/StackBoard.astro';
 import { CardGrid, LinkCard } from '@astrojs/starlight/components';
 
 <StackBoard />
+
+## Four combinations, one system
+
+Frontend and backend combine freely: all four share one API contract, one permission catalog and one visual spec.
+
+| | Python · FastAPI | Java · Spring Boot |
+| --- | --- | --- |
+| **React 19** | React + Vite + Tailwind v4 + shadcn/ui ／ FastAPI + SQLAlchemy 2 | React + Vite + Tailwind v4 + shadcn/ui ／ Spring Boot 3 + JPA |
+| **Vue 3** | Vue 3 + Vite + Tailwind v4 + shadcn-vue ／ FastAPI + SQLAlchemy 2 | Vue 3 + Vite + Tailwind v4 + shadcn-vue ／ Spring Boot 3 + JPA |
+
+Swap the frontend without touching the backend, or the backend without touching the frontend: both frontends stay in sync down to interaction details, and both backends run the same contract tests.
+
+## What you get
+
+Not an empty shell: authentication, RBAC, menu management, audit logs, data management and a dashboard work out of the box. Sign in with `admin / 123456`.
+
+<div class="ff-shots ff-shots--wide">
+  <figure>
+    <img src="/shots/dashboard.webp" alt="Dashboard: stat cards, a 7-day trend chart and recent activity" />
+    <figcaption>Dashboard · stat cards, hand-drawn trend chart, recent activity</figcaption>
+  </figure>
+  <figure>
+    <img src="/shots/users.webp" alt="User management: column visibility, row density, pagination and row actions" />
+    <figcaption>List page · column visibility, row density, selection, pagination</figcaption>
+  </figure>
+  <figure>
+    <img src="/shots/settings.webp" alt="System settings: a left rail with grouped forms" />
+    <figcaption>Settings · left rail with grouped forms</figcaption>
+  </figure>
+  <figure>
+    <img src="/shots/datepicker.webp" alt="Audit logs: a custom date-time picker" />
+    <figcaption>Audit logs · custom date-time picker</figcaption>
+  </figure>
+</div>
+
+Dark mode and responsive layouts are built in: full sidebar on desktop, an icon rail on tablets, card lists on phones. The ⌘K command palette, appearance drawer and row density ship with every project.
+
+<div class="ff-shots ff-shots--rail">
+  <figure>
+    <img src="/shots/dashboard-dark.webp" alt="Dashboard in dark mode" />
+    <figcaption>Dark mode</figcaption>
+  </figure>
+  <figure>
+    <img src="/shots/tablet.webp" alt="Tablet width: the sidebar collapses to an icon rail" />
+    <figcaption>Tablet · icon rail</figcaption>
+  </figure>
+  <figure>
+    <img src="/shots/mobile.webp" alt="Phone width: card lists and a filter drawer" />
+    <figcaption>Phone · card list</figcaption>
+  </figure>
+</div>
 
 <CardGrid>
   <LinkCard

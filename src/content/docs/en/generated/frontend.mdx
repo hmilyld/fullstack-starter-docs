@@ -80,7 +80,8 @@ Site config comes from the public endpoint `GET /api/public/config` and is used 
 
 ## UI Conventions and Theming
 
-- Three responsive modes: cards and a drawer below `768px`, an icon rail from `768px` to `1023px`, and the full sidebar at `1024px` and above.
+- Three responsive modes: cards and a drawer below `768px`, an icon rail from `768px` to `1279px`, and the full sidebar at `1280px` and above. Below 1280 it starts collapsed (also when the viewport shrinks at runtime, without overwriting the saved desktop preference); content is capped at 1536px.
+- The design spec lives in `templates/frontend-react/DESIGN.md` (the Vue template is identical): blue-grey neutrals (`oklch` hue 256–265) with a deep navy primary, Inter body text and Manrope headings, a 6/8/10/14/18 radius scale, 36px controls (44px on touch).
 - Light/dark theme switching is provided (`ThemeToggle`), and the preference is persisted.
 - Both templates use Tailwind CSS v4 + shadcn: shadcn/ui (Radix UI) for React and shadcn-vue (Reka UI) for Vue. Shared components such as forms, tables, pagination, and delete confirmation live under `components/shared/`.
 

@@ -3,7 +3,7 @@ title: 仪表盘
 description: 仪表盘统计的哪些数据是真实的，哪些是示例数据。
 ---
 
-仪表盘提供统计卡片与近期活动，接口如下：
+仪表盘提供统计卡片、近 7 天操作趋势、最近动态与快捷入口，接口如下：
 
 | 方法 | 路径 | 说明 | 认证 |
 | --- | --- | --- | --- |
@@ -22,6 +22,7 @@ description: 仪表盘统计的哪些数据是真实的，哪些是示例数据�
 | `revenue` | 示例值 |
 | `growth` | 示例值 |
 | 近期活动列表 | 全部为示例数据 |
+| 近 7 天趋势 | 真实，取自审计日志（`GET /api/audit-logs`，按天聚合成功/失败） |
 :::
 
 接入真实数据时，修改后端 `dashboard` 模块（Python `app/dashboard/router.py`，Java `service/DashboardService.java`）即可，前端无需改动字段结构。
@@ -34,3 +35,5 @@ description: 仪表盘统计的哪些数据是真实的，哪些是示例数据�
 - Vue：`src/pages/dashboard/Index.vue`
 
 如需新增统计卡片，沿用现有的卡片组件与类型定义（`types/dashboard.ts`）即可。
+
+趋势图由 `components/shared/trend-chart.tsx`（Vue 为 `TrendChart.vue`）自绘 SVG 实现，**不引入图表库**：成功为面积、失败为折线，悬停显示当天数字，并附带一份屏幕阅读器可读的数据表。修改配色时使用 `--chart-1` 与 `--destructive` 令牌，不要写死颜色。

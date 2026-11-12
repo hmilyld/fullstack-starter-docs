@@ -57,10 +57,19 @@ my-project/
     - admin-layout.tsx  app-sidebar.tsx  nav-main.tsx  header.tsx
     - brand-mark.tsx  login-form.tsx  user-menu.tsx  error-boundary.tsx
     - protected-route.tsx  theme-provider.tsx  theme-toggle.tsx  pwa-manifest.tsx
-    - shared  分页 / 确认删除 / 表格状态 / 加载按钮
-    - ui  30 个 shadcn/ui 组件
+    - command-menu.tsx  config-drawer.tsx  layout-config.tsx
+    - shared
+      - data-list.tsx  列驱动表格 + 卡片 + 状态
+      - page-header.tsx  list-shell.tsx  record-card.tsx  table-pagination.tsx
+      - column-toggle.tsx  density-toggle.tsx  date-time-field.tsx
+      - row-actions.tsx  form-dialog.tsx  confirm-delete-dialog.tsx  empty-state.tsx
+      - trend-chart.tsx  自绘 SVG 趋势图
+    - ui  32 个 shadcn/ui 组件（含 popover）
+  - hooks
+    - use-paged-list.ts  use-url-list-state.ts  use-column-visibility.ts
+    - use-table-density.ts  use-navigation.ts  use-media-query.ts  use-mobile.ts
   - lib
-    - auth-context.tsx  site-config.tsx  toast.ts  utils.ts
+    - auth-context.tsx  site-config.tsx  toast.ts  utils.ts  date-time.ts  format.ts
   - pages
     - auth  login.tsx  register.tsx
     - dashboard  index.tsx
@@ -84,8 +93,14 @@ my-project/
   - types  按业务域拆分
   - components
     - AppHeader.vue  AppSidebar.vue  NavMain.vue  BrandMark.vue
-    - ThemeToggle.vue  UserMenu.vue
-    - shared  分页 / 确认删除 / 表格状态 / 加载按钮 / 骨架屏
+    - ThemeToggle.vue  UserMenu.vue  CommandMenu.vue  ConfigDrawer.vue
+    - shared
+      - DataList.vue  列驱动表格 + 卡片 + 状态
+      - PageHeader.vue  ListShell.vue  RecordCard.vue  TablePagination.vue
+      - ColumnToggle.vue  DensityToggle.vue  DateTimeField.vue
+      - RowActions.vue  FormDialog.vue  ConfirmDeleteDialog.vue  EmptyState.vue
+      - TrendChart.vue  自绘 SVG 趋势图
+    - ui  31 个 shadcn-vue 组件（含 popover）
   - layouts  AdminLayout.vue
   - pages
     - auth  Login.vue  Register.vue
@@ -94,7 +109,10 @@ my-project/
     - NotFound.vue
   - router  index.ts
   - stores  auth.ts  site-config.ts  theme.ts
-  - composables  use-toast.ts  use-media-query.ts  use-paged-list.ts  use-url-list-state.ts
+  - composables
+    - use-paged-list.ts  use-url-list-state.ts  use-column-visibility.ts
+    - use-table-density.ts  use-navigation.ts  use-layout-config.ts  use-command-menu.ts
+    - use-debounced-value.ts  use-media-query.ts  use-toast.ts
   - App.vue
   - main.ts
 - vite.config.ts    开发代理 /api → localhost:8088

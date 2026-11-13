@@ -33,7 +33,8 @@ description: 仪表盘统计的哪些数据是真实的，哪些是示例数据�
 
 - React：`src/pages/dashboard/index.tsx`
 - Vue：`src/pages/dashboard/Index.vue`
+- Svelte：`src/routes/(app)/dashboard/+page.svelte`
 
-如需新增统计卡片，沿用现有的卡片组件与类型定义（`types/dashboard.ts`）即可。
+如需新增统计卡片，沿用现有的卡片组件与类型定义（`types/dashboard.ts`，Svelte 为 `src/lib/types/dashboard.ts`）即可。
 
-趋势图由 `components/shared/trend-chart.tsx`（Vue 为 `TrendChart.vue`）自绘 SVG 实现，**不引入图表库**：成功为面积、失败为折线，悬停显示当天数字，并附带一份屏幕阅读器可读的数据表。修改配色时使用 `--chart-1` 与 `--destructive` 令牌，不要写死颜色。
+趋势图由 `components/shared/trend-chart.tsx`（Vue 为 `TrendChart.vue`，Svelte 为 `src/lib/components/shared/trend-chart.svelte`）自绘 SVG 实现，**不引入图表库**：成功为面积、失败为折线，悬停显示当天数字，并附带一份屏幕阅读器可读的数据表。修改配色时使用 `--chart-1` 与 `--destructive` 令牌，不要写死颜色。

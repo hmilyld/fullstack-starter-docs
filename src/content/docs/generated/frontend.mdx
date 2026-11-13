@@ -22,7 +22,9 @@ import { Tabs, TabItem } from '@astrojs/starlight/components';
 - `get` / `post` / `put` / `delete` 统一返回 `{ code, message, data }`，网络与 HTTP 错误都不抛异常，调用方检查 `code`。
 - `download` / `upload` / `getWithHeaders` 走原始请求，失败时抛异常，并保留响应头（导出密码、任务 token 等）。
 
-各业务域的调用拆分在 `src/api/` 下：`auth.ts`、`user.ts`、`role.ts`、`permission.ts`、`menu.ts`、`system.ts`、`dashboard.ts`、`ai-model.ts`、`audit-log.ts`、`data-management.ts`。请求体与响应类型统一放在 `src/types/` 对应的业务域文件里，`api/` 只保留调用函数。
+Svelte 的这两层位于 `src/lib/api/http.ts` 与 `src/lib/api/client.ts`，行为与另外两套一致。
+
+各业务域的调用拆分在 `src/api/`（Svelte 为 `src/lib/api/`）下：`auth.ts`、`user.ts`、`role.ts`、`permission.ts`、`menu.ts`、`system.ts`、`dashboard.ts`、`ai-model.ts`、`audit-log.ts`、`data-management.ts`。请求体与响应类型统一放在 `src/types/`（Svelte 为 `src/lib/types/`）对应的业务域文件里，`api/` 只保留调用函数。
 
 <Tabs>
 <TabItem label="React">
@@ -65,7 +67,7 @@ React 与 Vue 的 `src/api/` 和 `src/types/` 内容完全一致，改动时两�
 ### API 层规则
 
 1. **只放请求定义**：`api/` 下的文件只导出调用函数，不写格式化、DOM 操作、toast 或业务编排。
-2. **类型归 `types/`**：请求体、响应体、查询参数类型一律放在 `src/types/<域>.ts`，`api/` 用 `import type` 引入。
+2. **类型归 `types/`**：请求体、响应体、查询参数类型一律放在 `src/types/<域>.ts`（Svelte 为 `src/lib/types/<域>.ts`），`api/` 用 `import type` 引入。
 3. **域内闭环**：业务域文件之间不互相 import；跨域共享的能力放到 `lib/`。
 4. **升级规则**：当某个域的文件超过约 150 行，或该域需要第二个文件时，才把 `api/<域>.ts` 升级为 `api/<域>/index.ts` + 同目录子文件；其余域保持平铺。不要在域数量还少的时候提前嵌套。
 
@@ -106,6 +108,9 @@ React 版本通过 `vite-plugin-pwa` 提供 PWA 支持，构建产物可安装�
 <TabItem label="Vue">
 Vue 版本通过 `vite-plugin-pwa` 提供 PWA 支持，图标使用 `@lucide/vue`，提示由 `use-toast` 组合式函数管理。请求统一走 `api/client.ts` 的 fetch 封装，模板未引入 axios。
 </TabItem>
+<TabItem label="Svelte">
+Svelte 版本通过 `@vite-pwa/sveltekit` 提供 PWA 支持，图标使用 `@lucide/svelte`，提示由 `svelte-sonner` 管理。请求统一走 `src/lib/api/client.ts` 的 fetch 封装，模板未引入 axios。
+</TabItem>
 </Tabs>
 
 ## 新增一个页面
@@ -118,3 +123,5 @@ Vue 版本通过 `vite-plugin-pwa` 提供 PWA 支持，图标使用 `@lucide/vue
 4. 在 `src/api/` 与 `src/types/` 下补充该业务域的调用与类型。
 
 Vue 对应修改 `pages/`、`router/index.ts`、`api/`、`types/`，菜单配置仍在后台完成。
+
+Svelte 对应在 `src/routes/(app)/` 下新建 `+page.svelte`（子组件放在同目录），在 `src/lib/api` 与 `src/lib/types` 补充调用与类型，菜单配置同样在后台完成。

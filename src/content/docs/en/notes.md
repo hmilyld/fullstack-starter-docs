@@ -84,7 +84,7 @@ The current registration logic decides between `user` or `pending_review` based 
 Open `http://localhost:8088/docs`; the OpenAPI description is at `/openapi.json`. Java uses SpringDoc and Python uses the built-in FastAPI docs — the URLs are the same.
 
 **Why doesn't the frontend use axios?**
-The convention is to use a native `fetch` wrapper (`api/client.ts`) for consistent handling of 401s and the response structure. Neither frontend template depends on axios.
+The convention is to use a native `fetch` wrapper (`api/client.ts`) for consistent handling of 401s and the response structure. None of the three frontend templates depends on axios.
 
 **Can a phone access the admin panel?**
 Yes. The UI adapts across three modes: cards and a drawer below `768px`, an icon rail from `768px` to `1279px`, and the full sidebar at `1280px` and above. Below 1280 it starts collapsed.

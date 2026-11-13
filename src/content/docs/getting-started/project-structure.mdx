@@ -121,6 +121,44 @@ my-project/
 </FileTree>
 
 </TabItem>
+
+<TabItem label="Svelte">
+
+<FileTree>
+- src
+  - routes
+    - +layout.svelte  +layout.ts  +page.ts  +error.svelte  layout.css
+    - (auth)  login  register
+    - (app)  +layout.svelte  +layout.ts  受保护布局
+      - dashboard  +page.svelte
+      - settings  ai-model / audit-log / data / menu / permission / profile / role / system / user
+    - 页面文件为 +page.svelte，子组件与页面同目录
+  - lib
+    - api  同 React，按业务域拆分（client.ts + 业务域文件）
+    - types  按业务域拆分
+    - components
+      - app-shell
+        - app-header.svelte  app-sidebar.svelte  nav-main.svelte
+        - command-menu.svelte  config-drawer.svelte  theme-toggle.svelte  user-menu.svelte
+      - shared
+        - data-list.svelte  列驱动表格 + 卡片 + 状态
+        - page-header.svelte  list-shell.svelte  record-card.svelte  table-pagination.svelte
+        - column-toggle.svelte  density-toggle.svelte  date-time-field.svelte
+        - row-actions.svelte  form-dialog.svelte  confirm-delete-dialog.svelte  empty-state.svelte
+        - trend-chart.svelte  自绘 SVG 趋势图
+      - ui  31 个 shadcn-svelte 组件（含 popover）
+    - hooks
+      - use-paged-list.svelte.ts  use-url-list-state.svelte.ts  use-column-visibility.svelte.ts
+      - use-table-density.svelte.ts  use-navigation.svelte.ts  use-layout-config.svelte.ts
+      - use-command-menu.svelte.ts  use-debounced-value.svelte.ts  use-media-query.svelte.ts  use-toast.ts
+    - stores  auth.svelte.ts  site-config.svelte.ts  theme.svelte.ts
+    - utils.ts  date-time.ts  format.ts  pwa.ts  icons.ts  routes.ts
+- components.json   shadcn 配置
+- vite.config.ts    开发代理 /api → localhost:8088
+- package.json
+</FileTree>
+
+</TabItem>
 </Tabs>
 
 ### 后端目录

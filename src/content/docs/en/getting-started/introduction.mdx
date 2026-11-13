@@ -9,13 +9,13 @@ The generated project is not a hollow shell: login and registration, user manage
 
 ## What It Can Generate
 
-- **Choice of frontend**: React 19 (Vite + TypeScript + Tailwind CSS v4 + shadcn/ui) or Vue 3 (Vite + TypeScript + Tailwind CSS v4 + shadcn-vue). Both ship PWA support.
+- **Choice of frontend**: React 19 (Vite + TypeScript + Tailwind CSS v4 + shadcn/ui), Vue 3 (Vite + TypeScript + Tailwind CSS v4 + shadcn-vue), or Svelte 5 (SvelteKit 3 + TypeScript + Tailwind CSS v4 + shadcn-svelte). All three ship PWA support.
 - **Choice of backend**: Python (FastAPI + SQLAlchemy async + SQLite) or Java (Spring Boot 3.2 + JPA + SQLite/Flyway).
 - **Authentication built in**: login, registration, logout; Python uses JWT, Java uses Sa-Token; includes login/registration rate limiting and automatic logout on 401.
 - **Complete admin panel**: users, roles, permissions, menus, system settings, AI models and presets, audit logs, data management, dashboard, and profile.
 - **Deployment ready**: a single Docker image containing Nginx and the backend, started with one command.
 
-## Four Combinations
+## Six Combinations
 
 | Frontend | Backend | Description |
 | --- | --- | --- |
@@ -23,6 +23,8 @@ The generated project is not a hollow shell: login and registration, user manage
 | React | Java | Vite + shadcn/ui, Spring Boot + JPA |
 | Vue | Python | Vite + shadcn-vue + Pinia, FastAPI async |
 | Vue | Java | Vite + shadcn-vue + Pinia, Spring Boot + JPA |
+| Svelte | Python | SvelteKit 3 + shadcn-svelte, FastAPI async |
+| Svelte | Java | SvelteKit 3 + shadcn-svelte, Spring Boot + JPA |
 
 All six combinations implement the same feature set and API conventions, so frontend and backend behave identically and you can choose freely based on your team's stack. See [Stacks and Combinations](/en/generated/overview/).
 

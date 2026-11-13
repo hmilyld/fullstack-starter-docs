@@ -22,7 +22,9 @@ Behavior:
 - `get` / `post` / `put` / `delete` all return `{ code, message, data }` and do not throw on network or HTTP errors; callers check `code`.
 - `download` / `upload` / `getWithHeaders` use raw requests, throw on failure, and keep the response headers (export password, job token, ...).
 
-The calls for each business domain are split under `src/api/`: `auth.ts`, `user.ts`, `role.ts`, `permission.ts`, `menu.ts`, `system.ts`, `dashboard.ts`, `ai-model.ts`, `audit-log.ts`, `data-management.ts`. Request and response types live in `src/types/<domain>.ts`; `api/` keeps only the call functions.
+In Svelte these two layers live at `src/lib/api/http.ts` and `src/lib/api/client.ts`, with the same behaviour.
+
+The calls for each business domain are split under `src/api/` (`src/lib/api/` in Svelte): `auth.ts`, `user.ts`, `role.ts`, `permission.ts`, `menu.ts`, `system.ts`, `dashboard.ts`, `ai-model.ts`, `audit-log.ts`, `data-management.ts`. Request and response types live in `src/types/<domain>.ts` (`src/lib/types/<domain>.ts` in Svelte); `api/` keeps only the call functions.
 
 <Tabs>
 <TabItem label="React">
@@ -65,7 +67,7 @@ React and Vue keep byte-identical `src/api/` and `src/types/`; change both toget
 ### API layer rules
 
 1. **Call definitions only**: files under `api/` export call functions only — no formatting, DOM work, toasts, or business orchestration.
-2. **Types belong in `types/`**: request bodies, responses, and query-parameter types go in `src/types/<domain>.ts`; `api/` imports them with `import type`.
+2. **Types belong in `types/`**: request bodies, responses, and query-parameter types go in `src/types/<domain>.ts` (`src/lib/types/<domain>.ts` in Svelte); `api/` imports them with `import type`.
 3. **No cross-domain imports**: business-domain files do not import each other; shared capabilities go in `lib/`.
 4. **Upgrade rule**: only when a domain file grows past ~150 lines, or the domain needs a second file, promote `api/<domain>.ts` to `api/<domain>/index.ts` plus siblings. Keep the rest flat; do not nest ahead of need.
 
@@ -118,3 +120,5 @@ Taking React as an example:
 4. Add the domain's calls and types under `src/api/` and `src/types/`.
 
 For Vue, modify the corresponding `pages/`, `router/index.ts`, `api/`, and `types/`; menu configuration is still performed in the admin panel.
+
+For Svelte, create `+page.svelte` under `src/routes/(app)/` (with subcomponents in the same folder), add calls and types under `src/lib/api` and `src/lib/types`, and configure the menu in the admin panel as well.

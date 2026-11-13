@@ -87,6 +87,7 @@ Operation permissions under each menu (such as `users.create`) are maintained on
 
 - React: `src/pages/settings/menu/index.tsx` (desktop table in `MenuTreeTable.tsx`)
 - Vue: `src/pages/settings/MenuManage/index.vue` (desktop table in `MenuTreeTable.vue`)
+- Svelte: `src/routes/(app)/settings/menu/+page.svelte` (drag logic in `menu-drag.ts` alongside it)
 
 The backend stores stable icon names, and the frontend renders them through a restricted icon map instead of loading components from database data.
 

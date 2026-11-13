@@ -47,7 +47,7 @@ import { Tabs, TabItem } from '@astrojs/starlight/components';
 # 构建镜像
 docker build -t my-project .
 
-# 运行（必须提供强随机 JWT_SECRET_KEY）
+# 运行（Python 路线必须提供强随机 JWT_SECRET_KEY；Java 使用 Sa-Token，无需额外密钥）
 docker run -d -p 5173:5173 \
   -e JWT_SECRET_KEY="$(openssl rand -base64 48)" \
   my-project
@@ -59,7 +59,7 @@ JWT_SECRET_KEY="$(openssl rand -base64 48)" docker compose up -d
 访问 http://localhost:5173。
 
 :::danger[未设置密钥会直接失败]
-`docker-compose.yml` 使用 `JWT_SECRET_KEY=${JWT_SECRET_KEY:?...}` 语法：未设置该变量时，`docker compose up` 会直接报错退出，而不是使用弱默认值启动。这是有意为之的安全设计。
+Python 路线的 `docker-compose.yml` 使用 `JWT_SECRET_KEY=${JWT_SECRET_KEY:?...}` 语法：未设置该变量时，`docker compose up` 会直接报错退出，而不是使用弱默认值启动。这是有意为之的安全设计。
 :::
 
 ## 数据持久化

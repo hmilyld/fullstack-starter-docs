@@ -81,6 +81,7 @@ data/audit_logs.jsonl
 
 - React：`src/pages/settings/data-management/index.tsx`
 - Vue：`src/pages/settings/DataManagement/index.vue`
+- Svelte：`src/routes/(app)/settings/data/+page.svelte`
 
 ## 相关页面
 

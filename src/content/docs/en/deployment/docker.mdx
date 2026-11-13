@@ -47,7 +47,7 @@ Browser ──▶ :5173 (Nginx)
 # Build the image
 docker build -t my-project .
 
-# Run (a strong random JWT_SECRET_KEY is required)
+# Run (the Python route requires a strong random JWT_SECRET_KEY; Java uses Sa-Token and needs none)
 docker run -d -p 5173:5173 \
   -e JWT_SECRET_KEY="$(openssl rand -base64 48)" \
   my-project
@@ -59,7 +59,7 @@ JWT_SECRET_KEY="$(openssl rand -base64 48)" docker compose up -d
 Visit http://localhost:5173.
 
 :::danger[Missing key fails immediately]
-`docker-compose.yml` uses the `JWT_SECRET_KEY=${JWT_SECRET_KEY:?...}` syntax: when the variable is not set, `docker compose up` immediately errors and exits rather than starting with a weak default. This is an intentional security design.
+On the Python route, `docker-compose.yml` uses the `JWT_SECRET_KEY=${JWT_SECRET_KEY:?...}` syntax: when the variable is not set, `docker compose up` immediately errors and exits rather than starting with a weak default. This is an intentional security design.
 :::
 
 ## Data Persistence

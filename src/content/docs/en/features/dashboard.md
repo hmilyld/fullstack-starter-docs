@@ -32,5 +32,6 @@ The dashboard page is located at:
 
 - React: `src/pages/dashboard/index.tsx`
 - Vue: `src/pages/dashboard/Index.vue`
+- Svelte: `src/routes/(app)/dashboard/+page.svelte`
 
-To add more stat cards, reuse the existing card components and type definitions (`types/dashboard.ts`).
+To add more stat cards, reuse the existing card components and type definitions (`types/dashboard.ts`, or `src/lib/types/dashboard.ts` in Svelte).

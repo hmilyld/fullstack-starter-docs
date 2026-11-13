@@ -5,7 +5,7 @@ description: Contract tests shipped with the templates, and the verification pro
 
 import { Steps } from '@astrojs/starlight/components';
 
-Both backend templates ship **executable contract tests** asserting the same `docs/contract/api.md`. The scaffold itself has no automated test framework, so its verification uses a manual process.
+Both backend templates ship **executable contract tests** asserting the same `docs/contract/api.md`, and all three frontend templates include Vitest unit tests and Playwright E2E tests. The scaffold CLI itself has no automated tests, so generator changes still use a manual verification process.
 
 ## Contract Tests
 
@@ -27,6 +27,18 @@ They cover the endpoint set, the response envelope (`data` must exist), resource
 Both suites also assert that **every endpoint has a real response schema in OpenAPI**: each one must have structured content, and successful responses must point at a concrete `ApiResponse<T>` generic. That is what lets a client generate types straight from `/openapi.json` instead of facing blank responses.
 
 When changing the API, change the contract first, then both implementations and both test suites.
+
+## Frontend Tests
+
+All three frontend templates ship Vitest unit tests and Playwright E2E tests:
+
+```bash
+cd templates/frontend-react   # or templates/frontend-vue / templates/frontend-svelte
+npm test
+npm run test:e2e              # first run: npx playwright install chromium
+```
+
+React/Vue use Testing Library; Svelte uses Vitest browser mode (`vitest-browser-svelte`) and can run `svelte-check` via `npm run check`.
 
 ## Manual Verification
 
@@ -56,7 +68,7 @@ When changing the API, change the contract first, then both implementations and 
    # Python
    cd <project>/backend
    uv sync
-   JWT_SECRET_KEY="$(openssl rand -base64 48)" uv run uvicorn app.main:app --reload --port 8088
+   JWT_SECRET_KEY="$(openssl rand -base64 48)" uv run uvicorn app.main:app --reload --host 127.0.0.1 --port 8088
 
    # Java
    cd <project>/backend

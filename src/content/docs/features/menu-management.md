@@ -87,6 +87,7 @@ description: 动态侧边栏的数据模型、分组与排序方式、显示/隐
 
 - React：`src/pages/settings/menu/index.tsx`（桌面表格 `MenuTreeTable.tsx`）
 - Vue：`src/pages/settings/MenuManage/index.vue`（桌面表格 `MenuTreeTable.vue`）
+- Svelte：`src/routes/(app)/settings/menu/+page.svelte`（拖拽逻辑在同目录 `menu-drag.ts`）
 
 图标由后端保存稳定的图标名称，前端在受限的图标映射表中渲染，避免后端数据直接控制组件加载。
 

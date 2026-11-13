@@ -103,6 +103,44 @@ my-project/
 </FileTree>
 
 </TabItem>
+
+<TabItem label="Svelte">
+
+<FileTree>
+- src
+  - routes
+    - +layout.svelte  +layout.ts  +page.ts  +error.svelte  layout.css
+    - (auth)  login  register
+    - (app)  +layout.svelte  +layout.ts  protected layout
+      - dashboard  +page.svelte
+      - settings  ai-model / audit-log / data / menu / permission / profile / role / system / user
+    - Pages are +page.svelte files; subcomponents live beside them
+  - lib
+    - api  same as React, split by business domain (client.ts + domain files)
+    - types  split by business domain
+    - components
+      - app-shell
+        - app-header.svelte  app-sidebar.svelte  nav-main.svelte
+        - command-menu.svelte  config-drawer.svelte  theme-toggle.svelte  user-menu.svelte
+      - shared
+        - data-list.svelte  column-driven table + cards + states
+        - page-header.svelte  list-shell.svelte  record-card.svelte  table-pagination.svelte
+        - column-toggle.svelte  density-toggle.svelte  date-time-field.svelte
+        - row-actions.svelte  form-dialog.svelte  confirm-delete-dialog.svelte  empty-state.svelte
+        - trend-chart.svelte  hand-drawn SVG trend chart
+      - ui  31 shadcn-svelte components (including popover)
+    - hooks
+      - use-paged-list.svelte.ts  use-url-list-state.svelte.ts  use-column-visibility.svelte.ts
+      - use-table-density.svelte.ts  use-navigation.svelte.ts  use-layout-config.svelte.ts
+      - use-command-menu.svelte.ts  use-debounced-value.svelte.ts  use-media-query.svelte.ts  use-toast.ts
+    - stores  auth.svelte.ts  site-config.svelte.ts  theme.svelte.ts
+    - utils.ts  date-time.ts  format.ts  pwa.ts  icons.ts  routes.ts
+- components.json  shadcn config
+- vite.config.ts    dev proxy /api → localhost:8088
+- package.json
+</FileTree>
+
+</TabItem>
 </Tabs>
 
 ### Backend Directory

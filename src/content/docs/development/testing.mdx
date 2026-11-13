@@ -5,7 +5,7 @@ description: 模板自带的契约测试，以及改动后的验证流程。
 
 import { Steps } from '@astrojs/starlight/components';
 
-两个后端模板都自带**可执行的契约测试**，断言同一份 `docs/contract/api.md`。脚手架本身没有自动化测试，验证采用手动流程。
+两个后端模板都自带**可执行的契约测试**，断言同一份 `docs/contract/api.md`；三套前端模板也各自带有 Vitest 单测与 Playwright E2E。脚手架 CLI 本身没有自动化测试，改动生成器时仍需手动验证。
 
 ## 契约测试
 
@@ -27,6 +27,18 @@ mvn test
 两栈还各有一组断言检查 **OpenAPI 里的响应 schema 是否真实存在**：每个端点都必须有结构化响应，且成功响应必须指向具体的 `ApiResponse<T>` 泛型。这保证了客户端可以从 `/openapi.json` 直接生成类型，而不是面对一堆空白响应。
 
 改接口时必须先改契约，再同时改两栈实现与两侧测试。
+
+## 前端测试
+
+三套前端模板都自带 Vitest 单测与 Playwright E2E：
+
+```bash
+cd templates/frontend-react   # 或 templates/frontend-vue / templates/frontend-svelte
+npm test
+npm run test:e2e              # 首次运行：npx playwright install chromium
+```
+
+React/Vue 使用 Testing Library，Svelte 使用 Vitest browser mode（`vitest-browser-svelte`），并可用 `npm run check` 执行 `svelte-check`。
 
 ## 手动验证
 
@@ -56,7 +68,7 @@ mvn test
    # Python
    cd <项目>/backend
    uv sync
-   JWT_SECRET_KEY="$(openssl rand -base64 48)" uv run uvicorn app.main:app --reload --port 8088
+   JWT_SECRET_KEY="$(openssl rand -base64 48)" uv run uvicorn app.main:app --reload --host 127.0.0.1 --port 8088
 
    # Java
    cd <项目>/backend

@@ -84,7 +84,7 @@ AI 模型连接测试默认拒绝访问本机、内网与云元数据地址，�
 访问 `http://localhost:8088/docs`，OpenAPI 描述在 `/openapi.json`。Java 使用 SpringDoc，Python 使用 FastAPI 内置文档，两者地址一致。
 
 **前端为什么不用 axios？**
-约定使用原生 `fetch` 封装（`api/client.ts`），便于统一处理 401 与响应结构。两个前端模板都没有引入 axios。
+约定使用原生 `fetch` 封装（`api/client.ts`），便于统一处理 401 与响应结构。三套前端模板都没有引入 axios。
 
 **手机能访问后台吗？**
 可以。界面三端自适应：`< 768px` 使用卡片列表与抽屉导航，`768–1279px` 使用图标栏，`≥ 1280px` 使用完整侧边栏；低于 1280 默认收起。

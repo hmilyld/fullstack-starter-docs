@@ -5,7 +5,7 @@ description: 生成项目的前端目录、请求层、路由、状态与界面�
 
 import { Tabs, TabItem } from '@astrojs/starlight/components';
 
-React 与 Vue 模板采用同一套功能划分：按业务域拆分 API 与类型，页面放在 `pages/`，共享技术代码放在 `components/` 与 `lib/`（Vue 为 `stores/`、`composables/`）。
+三套模板采用同一套功能划分：按业务域拆分 API 与类型，页面放在各栈的页面目录，共享技术代码放在 `components/` 与 `lib/`。React/Vue 代码在 `src/`，Svelte 使用 `src/lib/` 与 `src/routes/`。
 
 ## 请求层
 
@@ -47,9 +47,20 @@ export async function getUsers(params?: PageParams) {
 }
 ```
 </TabItem>
+<TabItem label="Svelte">
+```ts
+// src/lib/api/client.ts（示意）
+export const apiClient = new ApiClient();
+
+// src/lib/api/user.ts
+export async function getUsers(params?: PageParams) {
+  return apiClient.get<PaginatedData<User>>('/users', params);
+}
+```
+</TabItem>
 </Tabs>
 
-React 与 Vue 的 `src/api/` 和 `src/types/` 内容完全一致，改动时两边同步。
+React 与 Vue 的 `src/api/` 和 `src/types/` 内容完全一致，改动时两边同步；Svelte 在 `src/lib/api` 与 `src/lib/types` 保持同一套领域文件与导出签名。
 
 ### API 层规则
 
@@ -60,8 +71,8 @@ React 与 Vue 的 `src/api/` 和 `src/types/` 内容完全一致，改动时两�
 
 ## 路由与鉴权
 
-- 路由使用 `react-router`（React）或 `vue-router`（Vue）。
-- `ProtectedRoute`（Vue 为路由守卫）只校验**是否已登录**；未登录跳转登录页。
+- 路由使用 `react-router`（React）、`vue-router`（Vue）或 SvelteKit 文件路由（Svelte）。
+- `ProtectedRoute`（Vue 为路由守卫，Svelte 为 `(app)/+layout.ts`）只校验**是否已登录**；未登录跳转登录页。
 - 侧边栏调用 `GET /api/menus/navigation` 动态加载；后端按当前用户权限过滤，分组内没有可见菜单时整组隐藏。
 - 菜单顺序、分组、路由和图标来自 `menu_groups` / `menu_items`，不再硬编码在 `AppSidebar` 中。
 - **真正的访问控制在后端**：前端隐藏菜单只是体验优化，后端仍按权限点拒绝越权请求。
@@ -70,20 +81,20 @@ React 与 Vue 的 `src/api/` 和 `src/types/` 内容完全一致，改动时两�
 
 ## 状态管理
 
-| | React | Vue |
-| --- | --- | --- |
-| 认证状态 | `lib/auth-context.tsx` | `stores/auth.ts`（Pinia） |
-| 站点配置 | `lib/site-config.tsx` | `stores/site-config.ts` |
-| 主题 | `components/theme-provider.tsx` | `stores/theme.ts` |
+| | React | Vue | Svelte |
+| --- | --- | --- | --- |
+| 认证状态 | `lib/auth-context.tsx` | `stores/auth.ts`（Pinia） | `lib/stores/auth.svelte.ts` |
+| 站点配置 | `lib/site-config.tsx` | `stores/site-config.ts` | `lib/stores/site-config.svelte.ts` |
+| 主题 | `components/theme-provider.tsx` | `stores/theme.ts` | `lib/stores/theme.svelte.ts` |
 
 站点配置来自公开接口 `GET /api/public/config`，用于登录页显示站点名称、维护提示，以及判断是否开放注册。
 
 ## 界面约定与主题
 
 - 三端自适应：`< 768px` 使用卡片列表与抽屉导航，`768–1279px` 使用图标栏，`≥ 1280px` 使用完整侧边栏。低于 1280 默认收起（运行时缩小窗口同样收起，但不覆盖已保存的桌面偏好）；内容最大宽 1536px。
-- 设计规范见 `templates/frontend-react/DESIGN.md`（Vue 版同构）：蓝灰中性色（`oklch` hue 256–265）+ 深藏蓝主色，Inter 正文 + Manrope 标题，6/8/10/14/18 圆角阶梯，控件 36px（触屏 44px）。
+- 设计规范见 `templates/frontend-react/DESIGN.md`（Vue / Svelte 版同构）：蓝灰中性色（`oklch` hue 256–265）+ 深藏蓝主色，Inter 正文 + Manrope 标题，6/8/10/14/18 圆角阶梯，控件 36px（触屏 44px）。
 - 提供明暗主题切换（`ThemeToggle`），偏好会被持久化；外观抽屉（`ConfigDrawer`）可切换侧栏样式（默认 / 浮动 / 内嵌）与折叠方式（图标栏 / 抽屉），保存在 localStorage。
-- 两端都基于 Tailwind CSS v4 + shadcn：React 用 shadcn/ui（Radix UI），Vue 用 shadcn-vue（Reka UI）；表单、表格、分页、确认删除等共享组件位于 `components/shared/`。
+- 三套都基于 Tailwind CSS v4 + shadcn：React 用 shadcn/ui（Radix UI），Vue 用 shadcn-vue（Reka UI），Svelte 用 shadcn-svelte（Bits UI）；表单、表格、分页、确认删除等共享组件位于 `components/shared/` 或 `src/lib/components/shared/`。
 - 列表统一使用 `DataList`：列驱动表格 + 手机卡片 + 加载/错误/空态；工具栏提供列显隐（`ColumnToggle`）、表格密度（`DensityToggle`）与每页条数，表头吸顶。
 - `⌘K` 命令面板（`CommandMenu`）搜索路由、菜单与外观动作，空查询先列「最近」访问。
 - 日期时间使用自绘的 `DateTimeField`（中文月历 + 时分输入），不使用原生 `datetime-local`。

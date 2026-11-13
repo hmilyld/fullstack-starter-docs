@@ -14,6 +14,7 @@ The directory organization of different stacks is **deliberately not unified**, 
 | `backend-python/` | Domain-modular: `app/core/` (infrastructure) + one package per business domain (`auth/`, `user/`, `role/`, `permission/`, `menu/`, …), each containing `models.py` / `schemas.py` / `service.py` / `router.py`; schema changes go through `migrations/` (Alembic) |
 | `backend-java/` | Layered: `controller/`, `service/`, `repository/`, `entity/`, `dto/`, with infrastructure split by responsibility across `common/`, `config/`, `catalog/`, `bootstrap/`, `web/`, `data/`, `security/`; schema changes go through `db/migration/` (Flyway) |
 | `frontend-react/` and `frontend-vue/` | Feature-based: pages under `pages/settings/<Domain>/`, APIs split by domain under `api/`, types split by domain under `types/` |
+| `frontend-svelte/` | SvelteKit file routing + `src/lib/`: pages under `src/routes/(app)/settings/<domain>/`, APIs/types under `src/lib/api` and `src/lib/types` |
 
 ## Contract First
 

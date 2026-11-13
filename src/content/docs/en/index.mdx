@@ -1,12 +1,12 @@
 ---
 title: Fullstack Forge
-description: "Generate a full-stack application with a complete admin panel in one command: React / Vue frontend, Python FastAPI / Java Spring Boot backend."
+description: "Generate a full-stack application with a complete admin panel in one command: React / Vue / Svelte frontend, Python FastAPI / Java Spring Boot backend."
 template: splash
 head:
   - tag: title
     content: Fullstack Forge · Full-stack admin panel generator
 hero:
-  tagline: Fullstack Forge — one command to generate a complete admin panel. Pick React or Vue, then FastAPI or Spring Boot.
+  tagline: Fullstack Forge — one command to generate a complete admin panel. Pick React, Vue or Svelte, then FastAPI or Spring Boot.
   actions:
     - text: Start Generating
       link: /en/getting-started/quickstart/
@@ -21,16 +21,17 @@ import { CardGrid, LinkCard } from '@astrojs/starlight/components';
 
 <StackBoard />
 
-## Four combinations, one system
+## Six combinations, one system
 
-Frontend and backend combine freely: all four share one API contract, one permission catalog and one visual spec.
+Frontend and backend combine freely: all six share one API contract, one permission catalog and one visual spec.
 
 | | Python · FastAPI | Java · Spring Boot |
 | --- | --- | --- |
 | **React 19** | React + Vite + Tailwind v4 + shadcn/ui ／ FastAPI + SQLAlchemy 2 | React + Vite + Tailwind v4 + shadcn/ui ／ Spring Boot 3 + JPA |
 | **Vue 3** | Vue 3 + Vite + Tailwind v4 + shadcn-vue ／ FastAPI + SQLAlchemy 2 | Vue 3 + Vite + Tailwind v4 + shadcn-vue ／ Spring Boot 3 + JPA |
+| **Svelte 5** | SvelteKit 3 + Vite + Tailwind v4 + shadcn-svelte ／ FastAPI + SQLAlchemy 2 | SvelteKit 3 + Vite + Tailwind v4 + shadcn-svelte ／ Spring Boot 3 + JPA |
 
-Swap the frontend without touching the backend, or the backend without touching the frontend: both frontends stay in sync down to interaction details, and both backends run the same contract tests.
+Swap the frontend without touching the backend, or the backend without touching the frontend: all three frontends stay in sync down to interaction details, and both backends run the same contract tests.
 
 ## What you get
 

@@ -5,7 +5,7 @@ description: The generated project's frontend directories, request layer, routin
 
 import { Tabs, TabItem } from '@astrojs/starlight/components';
 
-The React and Vue templates use the same feature split: APIs and types are split by business domain, pages live under `pages/`, and shared technical code lives under `components/` and `lib/` (`stores/`, `composables/` for Vue).
+All three templates use the same feature split: APIs and types are split by business domain, pages live under each stack's page directory, and shared technical code lives under `components/` and `lib/`. React/Vue use `src/`; Svelte uses `src/lib/` and `src/routes/`.
 
 ## Request Layer
 
@@ -47,9 +47,20 @@ export async function getUsers(params?: PageParams) {
 }
 ```
 </TabItem>
+<TabItem label="Svelte">
+```ts
+// src/lib/api/client.ts (illustrative)
+export const apiClient = new ApiClient();
+
+// src/lib/api/user.ts
+export async function getUsers(params?: PageParams) {
+  return apiClient.get<PaginatedData<User>>('/users', params);
+}
+```
+</TabItem>
 </Tabs>
 
-React and Vue keep byte-identical `src/api/` and `src/types/`; change both together.
+React and Vue keep byte-identical `src/api/` and `src/types/`; change both together. Svelte keeps the same domain files and export signatures under `src/lib/api` and `src/lib/types`.
 
 ### API layer rules
 
@@ -60,8 +71,8 @@ React and Vue keep byte-identical `src/api/` and `src/types/`; change both toget
 
 ## Routing and Authorization
 
-- Routing uses `react-router` (React) or `vue-router` (Vue).
-- `ProtectedRoute` (a route guard in Vue) checks only whether the user **is logged in**; if not, it redirects to the login page.
+- Routing uses `react-router` (React), `vue-router` (Vue), or SvelteKit file routing (Svelte).
+- `ProtectedRoute` (a route guard in Vue, `(app)/+layout.ts` in Svelte) checks only whether the user **is logged in**; if not, it redirects to the login page.
 - The sidebar is loaded dynamically from `GET /api/menus/navigation`; the backend filters by current-user permissions and omits groups with no visible items.
 - Menu order, groups, routes, and icons come from `menu_groups` / `menu_items` instead of hard-coded data in `AppSidebar`.
 - **The real access control is in the backend**: hiding menus on the frontend is only a UX improvement, and the backend still rejects unauthorized requests by permission point.
@@ -70,20 +81,20 @@ Security tip: do not rely solely on frontend routing for permission decisions; t
 
 ## State Management
 
-| | React | Vue |
-| --- | --- | --- |
-| Auth state | `lib/auth-context.tsx` | `stores/auth.ts` (Pinia) |
-| Site config | `lib/site-config.tsx` | `stores/site-config.ts` |
-| Theme | `components/theme-provider.tsx` | `stores/theme.ts` |
+| | React | Vue | Svelte |
+| --- | --- | --- | --- |
+| Auth state | `lib/auth-context.tsx` | `stores/auth.ts` (Pinia) | `lib/stores/auth.svelte.ts` |
+| Site config | `lib/site-config.tsx` | `stores/site-config.ts` | `lib/stores/site-config.svelte.ts` |
+| Theme | `components/theme-provider.tsx` | `stores/theme.ts` | `lib/stores/theme.svelte.ts` |
 
 Site config comes from the public endpoint `GET /api/public/config` and is used on the login page to display the site name and maintenance message, and to determine whether registration is open.
 
 ## UI Conventions and Theming
 
 - Three responsive modes: cards and a drawer below `768px`, an icon rail from `768px` to `1279px`, and the full sidebar at `1280px` and above. Below 1280 it starts collapsed (also when the viewport shrinks at runtime, without overwriting the saved desktop preference); content is capped at 1536px.
-- The design spec lives in `templates/frontend-react/DESIGN.md` (the Vue template is identical): blue-grey neutrals (`oklch` hue 256–265) with a deep navy primary, Inter body text and Manrope headings, a 6/8/10/14/18 radius scale, 36px controls (44px on touch).
+- The design spec lives in `templates/frontend-react/DESIGN.md` (the Vue and Svelte templates are identical): blue-grey neutrals (`oklch` hue 256–265) with a deep navy primary, Inter body text and Manrope headings, a 6/8/10/14/18 radius scale, 36px controls (44px on touch).
 - Light/dark theme switching is provided (`ThemeToggle`), and the preference is persisted.
-- Both templates use Tailwind CSS v4 + shadcn: shadcn/ui (Radix UI) for React and shadcn-vue (Reka UI) for Vue. Shared components such as forms, tables, pagination, and delete confirmation live under `components/shared/`.
+- All three templates use Tailwind CSS v4 + shadcn: shadcn/ui (Radix UI) for React, shadcn-vue (Reka UI) for Vue, and shadcn-svelte (Bits UI) for Svelte. Shared components such as forms, tables, pagination, and delete confirmation live under `components/shared/` or `src/lib/components/shared/`.
 
 <Tabs>
 <TabItem label="React">
@@ -91,6 +102,9 @@ The React version ships PWA support through `vite-plugin-pwa`, so the build outp
 </TabItem>
 <TabItem label="Vue">
 The Vue version ships PWA support through `vite-plugin-pwa`, uses `@lucide/vue` icons, and manages notifications with the `use-toast` composable. All requests go through the `api/client.ts` fetch wrapper; the template does not depend on axios.
+</TabItem>
+<TabItem label="Svelte">
+The Svelte version ships PWA support through `@vite-pwa/sveltekit`, uses `@lucide/svelte` icons, and manages notifications with `svelte-sonner`. All requests go through the `src/lib/api/client.ts` fetch wrapper; the template does not depend on axios.
 </TabItem>
 </Tabs>
 

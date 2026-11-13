@@ -1,11 +1,11 @@
 ---
 title: Stacks and Combinations
-description: Technology choices and a difference comparison for the four frontend/backend combinations.
+description: Technology choices and a difference comparison for the six frontend/backend combinations.
 ---
 
 import { Tabs, TabItem } from '@astrojs/starlight/components';
 
-All four combinations share the same feature set, API conventions, and response format, so you can choose freely based on your team's familiarity.
+All six combinations share the same feature set, API conventions, and response format, so you can choose freely based on your team's familiarity.
 
 ## Combination Matrix
 
@@ -13,20 +13,21 @@ All four combinations share the same feature set, API conventions, and response 
 | --- | --- | --- |
 | **React** | React 19 + Vite + shadcn/ui · FastAPI async | React 19 + Vite + shadcn/ui · Spring Boot 3.2 |
 | **Vue** | Vue 3 + Vite + shadcn-vue · FastAPI async | Vue 3 + Vite + shadcn-vue · Spring Boot 3.2 |
+| **Svelte** | SvelteKit 3 + Vite + shadcn-svelte · FastAPI async | SvelteKit 3 + Vite + shadcn-svelte · Spring Boot 3.2 |
 
 ## Frontend Stack
 
-| Component | React template | Vue template |
-| --- | --- | --- |
-| Framework | React 19 | Vue 3.5+ (Composition API) |
-| Build | Vite | Vite |
-| Language | TypeScript | TypeScript |
-| Styling | Tailwind CSS v4 + shadcn/ui (Radix UI) | Tailwind CSS v4 + shadcn-vue (Reka UI) |
-| HTTP | Native fetch wrapper (auto logout on 401) | Native fetch wrapper (auto logout on 401) |
-| Routing | react-router v7 | vue-router v5 |
-| State | React Context (`lib/`) | Pinia (`stores/`) |
-| PWA | `vite-plugin-pwa` | `vite-plugin-pwa` |
-| Icons | lucide-react | `@lucide/vue` |
+| Component | React template | Vue template | Svelte template |
+| --- | --- | --- | --- |
+| Framework | React 19 | Vue 3.5+ (Composition API) | Svelte 5 (runes) |
+| Build | Vite | Vite | SvelteKit 3 + Vite |
+| Language | TypeScript | TypeScript | TypeScript |
+| Styling | Tailwind CSS v4 + shadcn/ui (Radix UI) | Tailwind CSS v4 + shadcn-vue (Reka UI) | Tailwind CSS v4 + shadcn-svelte (Bits UI) |
+| HTTP | Native fetch wrapper (auto logout on 401) | Native fetch wrapper (auto logout on 401) | Native fetch wrapper (auto logout on 401) |
+| Routing | react-router v7 | vue-router v5 | SvelteKit file routing |
+| State | React Context (`lib/`) | Pinia (`stores/`) | runes (`stores/`) |
+| PWA | `vite-plugin-pwa` | `vite-plugin-pwa` | `@vite-pwa/sveltekit` |
+| Icons | lucide-react | `@lucide/vue` | `@lucide/svelte` |
 
 ## Backend Stack
 

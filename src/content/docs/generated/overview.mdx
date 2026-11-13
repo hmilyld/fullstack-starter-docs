@@ -1,11 +1,11 @@
 ---
 title: 技术栈与组合
-description: 四种前后端组合的技术选型与差异对照。
+description: 六种前后端组合的技术选型与差异对照。
 ---
 
 import { Tabs, TabItem } from '@astrojs/starlight/components';
 
-四种组合共享同一套功能、接口约定与响应格式，因此可以按团队熟悉的技术栈自由选择。
+六种组合共享同一套功能、接口约定与响应格式，因此可以按团队熟悉的技术栈自由选择。
 
 ## 组合矩阵
 
@@ -13,20 +13,21 @@ import { Tabs, TabItem } from '@astrojs/starlight/components';
 | --- | --- | --- |
 | **React** | React 19 + Vite + shadcn/ui · FastAPI async | React 19 + Vite + shadcn/ui · Spring Boot 3.2 |
 | **Vue** | Vue 3 + Vite + shadcn-vue · FastAPI async | Vue 3 + Vite + shadcn-vue · Spring Boot 3.2 |
+| **Svelte** | SvelteKit 3 + Vite + shadcn-svelte · FastAPI async | SvelteKit 3 + Vite + shadcn-svelte · Spring Boot 3.2 |
 
 ## 前端技术栈
 
-| 组件 | React 模板 | Vue 模板 |
-| --- | --- | --- |
-| 框架 | React 19 | Vue 3.5+（Composition API） |
-| 构建 | Vite | Vite |
-| 语言 | TypeScript | TypeScript |
-| 样式 | Tailwind CSS v4 + shadcn/ui（Radix UI） | Tailwind CSS v4 + shadcn-vue（Reka UI） |
-| HTTP | 原生 fetch 封装（401 自动登出） | 原生 fetch 封装（401 自动登出） |
-| 路由 | react-router v7 | vue-router v5 |
-| 状态 | React Context（`lib/`） | Pinia（`stores/`） |
-| PWA | `vite-plugin-pwa` | `vite-plugin-pwa` |
-| 图标 | lucide-react | `@lucide/vue` |
+| 组件 | React 模板 | Vue 模板 | Svelte 模板 |
+| --- | --- | --- | --- |
+| 框架 | React 19 | Vue 3.5+（Composition API） | Svelte 5（runes） |
+| 构建 | Vite | Vite | SvelteKit 3 + Vite |
+| 语言 | TypeScript | TypeScript | TypeScript |
+| 样式 | Tailwind CSS v4 + shadcn/ui（Radix UI） | Tailwind CSS v4 + shadcn-vue（Reka UI） | Tailwind CSS v4 + shadcn-svelte（Bits UI） |
+| HTTP | 原生 fetch 封装（401 自动登出） | 原生 fetch 封装（401 自动登出） | 原生 fetch 封装（401 自动登出） |
+| 路由 | react-router v7 | vue-router v5 | SvelteKit 文件路由 |
+| 状态 | React Context（`lib/`） | Pinia（`stores/`） | runes（`stores/`） |
+| PWA | `vite-plugin-pwa` | `vite-plugin-pwa` | `@vite-pwa/sveltekit` |
+| 图标 | lucide-react | `@lucide/vue` | `@lucide/svelte` |
 
 ## 后端技术栈
 

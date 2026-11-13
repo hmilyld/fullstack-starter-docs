@@ -14,6 +14,7 @@ description: 维护 templates/ 目录时需要遵守的组织与命名约定。
 | `backend-python/` | 领域模块化：`app/core/`（基础设施）+ 每个业务域一个包（`auth/`、`user/`、`role/`、`permission/`、`menu/` …），包内含 `models.py` / `schemas.py` / `service.py` / `router.py`；结构变更走 `migrations/`（Alembic） |
 | `backend-java/` | 按层：`controller/`、`service/`、`repository/`、`entity/`、`dto/`，基础设施按职责分在 `common/`、`config/`、`catalog/`、`bootstrap/`、`web/`、`data/`、`security/`；结构变更走 `db/migration/`（Flyway） |
 | `frontend-react/` 与 `frontend-vue/` | 按功能：页面在 `pages/settings/<Domain>/`，接口按域拆分在 `api/`，类型按域拆分在 `types/` |
+| `frontend-svelte/` | SvelteKit 文件路由 + `src/lib/`：页面在 `src/routes/(app)/settings/<domain>/`，接口/类型在 `src/lib/api`、`src/lib/types` |
 
 ## 契约优先
 

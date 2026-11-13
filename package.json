@@ -1,7 +1,7 @@
 {
   "name": "fullstack-starter-docs",
   "version": "1.0.0",
-  "description": "create-fullstack-app 使用文档",
+  "description": "Fullstack Forge 使用文档",
   "type": "module",
   "scripts": {
     "dev": "astro dev",

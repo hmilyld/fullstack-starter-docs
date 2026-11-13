@@ -1,6 +1,6 @@
 # fullstack-starter-docs
 
-`create-fullstack-app` 的官方文档站，基于 **Astro 7 + Starlight**，中英双语、明暗双色，静态输出。
+`Fullstack Forge` 的官方文档站，基于 **Astro 7 + Starlight**，中英双语、明暗双色，静态输出。
 
 ## 开发
 

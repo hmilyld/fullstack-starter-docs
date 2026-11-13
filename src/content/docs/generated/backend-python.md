@@ -117,7 +117,7 @@ openssl rand -base64 48
 ```bash
 cd backend
 uv sync
-JWT_SECRET_KEY="$(openssl rand -base64 48)" uv run uvicorn app.main:app --reload --host 0.0.0.0 --port 8088
+JWT_SECRET_KEY="$(openssl rand -base64 48)" uv run uvicorn app.main:app --reload --host 127.0.0.1 --port 8088
 ```
 
 启动后可访问：

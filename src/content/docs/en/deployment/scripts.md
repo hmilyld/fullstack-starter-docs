@@ -18,7 +18,7 @@ The generated project root contains two scripts: `dev.sh` for development and `b
 
 1. Run `install`: frontend `npm install`; Python backend `uv sync`; Java backend dependencies managed automatically by Maven.
 2. Start the backend:
-   - Python: `uv run uvicorn app.main:app --reload --host 0.0.0.0 --port 8088`
+   - Python: `uv run uvicorn app.main:app --reload --host 127.0.0.1 --port 8088`
    - Java: `mvn spring-boot:run`
 3. Start the frontend: `npm run dev` (port 5173).
 4. Print the access addresses and wait (`wait`).

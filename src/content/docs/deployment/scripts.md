@@ -18,7 +18,7 @@ description: dev.sh 与 build.sh 的行为、子命令与依赖假设。
 
 1. 运行 `install`：前端 `npm install`；Python 后端 `uv sync`；Java 后端依赖由 Maven 自动管理。
 2. 启动后端：
-   - Python：`uv run uvicorn app.main:app --reload --host 0.0.0.0 --port 8088`
+   - Python：`uv run uvicorn app.main:app --reload --host 127.0.0.1 --port 8088`
    - Java：`mvn spring-boot:run`
 3. 启动前端：`npm run dev`（端口 5173）。
 4. 打印访问地址，并等待（`wait`）。

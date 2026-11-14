@@ -11,7 +11,11 @@ npm run build      # 构建到 dist/（含 Pagefind 搜索索引）
 npm run preview    # 预览构建产物
 ```
 
-要求 Node.js ≥ 18。
+要求 Node.js ≥ 22。
+
+## CI
+
+每次 pull request 和推送到 `main` 都会通过 GitHub Actions 执行 `npm ci && npm run build`。
 
 ## 目录
 

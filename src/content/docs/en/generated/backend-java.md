@@ -11,7 +11,7 @@ The Java backend uses Spring Boot 3.2 + Spring Data JPA + SQLite, organised **by
 src/main/java/com/hmilyld/fullstack/
 ├── FullstackApplication.java
 ├── common/            # ApiResponse, PageResult, domain exceptions, global handler
-├── config/            # Spring configuration: CORS, Sa-Token, OpenAPI, audit properties
+├── config/            # Spring configuration: CORS, Sa-Token, OpenAPI, audit properties, Flyway strategy
 ├── catalog/           # Permission and menu catalogs (plain data, no framework deps)
 ├── bootstrap/         # Startup sync runners: permissions, menus
 ├── web/               # Interceptors and filters: audit, bearer token, import freeze
@@ -37,6 +37,7 @@ Responses always use `dto/*Response` records — **never `Map<String, Object>`**
   - `V5__remove_seed_permissions.sql`: removes the V1 permission seed (startup sync fills them from the catalog)
 - JPA is set to `ddl-auto: none`; migrations fully control the schema.
 - On startup `PermissionSyncRunner` syncs permissions, then `MenuSyncRunner` adds built-in menus without overwriting admin-adjusted order.
+- `config/FlywayConfig.java` handles a database whose `menu_items.hidden` already exists while Flyway has no successful `V3` record (for example one created by the Python stack, or one with a missing `V3` entry): it records `V3` as applied instead of replaying it. With no usable history it baselines rather than re-running the `V1`/`V2` seed, so deleted accounts are not resurrected; an Alembic database skips `V5__remove_seed_permissions.sql` so custom permissions and custom-role grants survive.
 
 ## Errors and transactions
 

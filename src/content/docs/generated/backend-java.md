@@ -11,7 +11,7 @@ Java 后端使用 Spring Boot 3.2 + Spring Data JPA + SQLite，代码按**层**�
 src/main/java/com/hmilyld/fullstack/
 ├── FullstackApplication.java
 ├── common/            # ApiResponse、PageResult、领域异常、全局异常处理
-├── config/            # Spring 配置类：CORS、Sa-Token、OpenAPI、审计属性
+├── config/            # Spring 配置类：CORS、Sa-Token、OpenAPI、审计属性、Flyway 迁移策略
 ├── catalog/           # 权限与内置菜单目录（纯数据，无框架依赖）
 ├── bootstrap/         # 启动同步任务：权限、菜单
 ├── web/               # 拦截器与过滤器：审计、Bearer 令牌、导入冻结
@@ -37,6 +37,7 @@ src/main/java/com/hmilyld/fullstack/
   - `V5__remove_seed_permissions.sql`：移除 V1 的权限种子（改由启动同步按目录补齐）
 - JPA 设为 `ddl-auto: none`，结构完全由迁移脚本控制。
 - 启动后 `PermissionSyncRunner` 先同步权限，`MenuSyncRunner` 再补齐内置菜单，不覆盖管理员调整的顺序。
+- `config/FlywayConfig.java` 处理「`menu_items.hidden` 已存在但 Flyway 未记账 V3」的库（例如由 Python 栈建出、或 V3 记录缺失）：补记 V3 而不重放它。没有可用历史时建立基线而不重跑 V1/V2 的种子，因此已删除的账号不会被复活；来自 Alembic 的库会跳过 `V5__remove_seed_permissions.sql`，保留自建权限与自定义角色授权。
 
 ## 错误与事务
 

@@ -23,6 +23,10 @@ On first startup, the generated project writes the following accounts, all with 
 
 Newly registered accounts enter the `user` or `pending_review` role according to system settings; see [Authentication and Accounts](/en/features/authentication/).
 
+:::note[Live demo account]
+The public demo sites use a separate `demo / hmilyld.com` account; it is unrelated to the generated default accounts above.
+:::
+
 ## Related Pages
 
 - [Quick Start](/en/getting-started/quickstart/)

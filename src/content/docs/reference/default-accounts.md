@@ -23,6 +23,10 @@ description: 生成项目预置的管理员与普通用户账号。
 
 新注册账号根据系统设置进入 `user` 或 `pending_review` 角色，详见[认证与账号](/features/authentication/)。
 
+:::note[在线演示账号]
+公开演示站使用单独的 `demo / hmilyld.com` 账号，与上面生成的默认账号无关。
+:::
+
 ## 相关页面
 
 - [快速开始](/getting-started/quickstart/)

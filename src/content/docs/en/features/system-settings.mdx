@@ -1,6 +1,6 @@
 ---
 title: System Settings
-description: Site information, maintenance mode, open registration, manual review, and email configuration.
+description: Site information, default language, maintenance mode, open registration, manual review, and email configuration.
 ---
 
 System settings are a singleton configuration, read and written through the following endpoints:
@@ -22,6 +22,9 @@ System settings are a singleton configuration, read and written through the foll
 | `siteDescription` | Site description | Empty |
 | `keywords` | Keywords | Empty |
 | `welcomeMessage` | Welcome message | Empty |
+| `defaultLocale` | Site default language (`zh-CN` or `en`) | `zh-CN` |
+
+`defaultLocale` only decides the language a visitor or user sees on first entry. A manual switch is stored in the browser and wins over the site default; changing the default later does not override those users. Updates accept only `zh-CN` or `en`; any other value returns `422`.
 
 ### Behavior Switches
 
@@ -62,7 +65,7 @@ This lets the frontend safely echo the configuration without leaking the real pa
 
 `GET /api/public/config`, which is accessible without logging in, exposes only the following fields:
 
-`siteName`, `siteDescription`, `maintenanceEnabled`, `maintenanceMessage`, `openRegistration`, `manualReview`.
+`siteName`, `siteDescription`, `maintenanceEnabled`, `maintenanceMessage`, `openRegistration`, `manualReview`, `defaultLocale`.
 
 **SMTP-related fields never appear in the public configuration.**
 

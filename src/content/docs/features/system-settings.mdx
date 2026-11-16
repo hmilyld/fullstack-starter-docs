@@ -1,6 +1,6 @@
 ---
 title: 系统设置
-description: 站点信息、维护模式、开放注册、人工审核与邮件配置。
+description: 站点信息、默认语言、维护模式、开放注册、人工审核与邮件配置。
 ---
 
 系统设置是单例配置，通过以下接口读写：
@@ -22,6 +22,9 @@ description: 站点信息、维护模式、开放注册、人工审核与邮件�
 | `siteDescription` | 站点描述 | 空 |
 | `keywords` | 关键词 | 空 |
 | `welcomeMessage` | 欢迎语 | 空 |
+| `defaultLocale` | 站点默认语言（`zh-CN` 或 `en`） | `zh-CN` |
+
+`defaultLocale` 只决定未手动切换语言的访客/用户首次进入时使用的语言。用户手动切换后，选择保存在浏览器本地并优先于站点默认；管理员之后修改默认语言不会覆盖这些用户的选择。更新时只接受 `zh-CN` 或 `en`，其他值返回 `422`。
 
 ### 行为开关
 
@@ -62,7 +65,7 @@ description: 站点信息、维护模式、开放注册、人工审核与邮件�
 
 未登录也能访问的 `GET /api/public/config` 只暴露以下字段：
 
-`siteName`、`siteDescription`、`maintenanceEnabled`、`maintenanceMessage`、`openRegistration`、`manualReview`。
+`siteName`、`siteDescription`、`maintenanceEnabled`、`maintenanceMessage`、`openRegistration`、`manualReview`、`defaultLocale`。
 
 **SMTP 相关字段不会出现在公开配置中。**
 
